@@ -61,7 +61,107 @@
         
         .main-container {
             min-height: calc(100vh - 76px);
-            padding: 2rem 0;
+        }
+        
+        /* 側邊欄樣式 */
+        .sidebar {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border-right: 1px solid var(--border-color);
+            min-height: calc(100vh - 76px);
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 76px;
+            overflow-y: auto;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            transform: translateX(4px);
+        }
+        
+        .sidebar-nav a i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* 主內容區域 */
+        .main-content {
+            padding: 2rem;
+            background: var(--light-bg);
+            min-height: calc(100vh - 76px);
+        }
+        
+        /* 頁尾樣式 */
+        .footer {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: auto;
+        }
+        
+        .footer h5 {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+        }
+        
+        .footer a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: #fbbf24;
+        }
+        
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                width: 280px;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .sidebar-toggle {
+                display: block !important;
+            }
+        }
+        
+        .sidebar-toggle {
+            display: none;
         }
         
         .card {
@@ -241,11 +341,14 @@
 <body>
     <!-- 導航欄 -->
     <nav class="navbar navbar-expand-lg">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="fas fa-search"></i>
+                <i class="fas fa-briefcase"></i>
                 jobseeker
             </a>
+            <button class="btn btn-outline-light sidebar-toggle d-md-none" type="button" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="navbar-nav ms-auto">
                 <a class="nav-link text-white" href="#about">
                     <i class="fas fa-info-circle me-1"></i>
@@ -259,23 +362,83 @@
         </div>
     </nav>
     
-    <!-- 主要內容 -->
+    <!-- 主要佈局 -->
     <div class="main-container">
-        <div class="container">
-            <!-- Flash 訊息 -->
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                            <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }} me-2"></i>
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+        <div class="row g-0">
+            <!-- 側邊欄 -->
+            <div class="col-md-3 col-lg-2">
+                <div class="sidebar" id="sidebar">
+                    <div class="mb-4">
+                        <h6 class="text-muted text-uppercase fw-bold mb-3">主要功能</h6>
+                        <ul class="sidebar-nav">
+                            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
+                                <i class="fas fa-home"></i>
+                                首頁搜尋
+                            </a></li>
+                            <li><a href="/demo" class="{% if request.endpoint == 'demo' %}active{% endif %}">
+                                <i class="fas fa-chart-bar"></i>
+                                測試結果
+                            </a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="text-muted text-uppercase fw-bold mb-3">工具與資源</h6>
+                        <ul class="sidebar-nav">
+                            <li><a href="#" onclick="downloadSample()">
+                                <i class="fas fa-download"></i>
+                                下載範例CSV
+                            </a></li>
+                            <li><a href="https://github.com/jason660519/jobseeker" target="_blank">
+                                <i class="fab fa-github"></i>
+                                GitHub 專案
+                            </a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="text-muted text-uppercase fw-bold mb-3">支援平台</h6>
+                        <ul class="sidebar-nav">
+                            <li><a href="#" class="text-sm">
+                                <i class="fab fa-linkedin"></i>
+                                LinkedIn
+                            </a></li>
+                            <li><a href="#" class="text-sm">
+                                <i class="fas fa-briefcase"></i>
+                                Indeed
+                            </a></li>
+                            <li><a href="#" class="text-sm">
+                                <i class="fas fa-building"></i>
+                                Glassdoor
+                            </a></li>
+                            <li><a href="#" class="text-sm">
+                                <i class="fas fa-search"></i>
+                                更多平台...
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             
-            {% block content %}{% endblock %}
+            <!-- 主內容區域 -->
+            <div class="col-md-9 col-lg-10">
+                <div class="main-content">
+                    <!-- Flash 訊息 -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }} me-2"></i>
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
         </div>
     </div>
     
@@ -283,18 +446,54 @@
     <footer class="footer">
         <div class="container">
             <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5><i class="fas fa-briefcase me-2"></i>jobseeker</h5>
+                    <p class="text-muted">智能職位搜尋平台，使用 AI 技術為您找到最適合的工作機會。</p>
+                    <div class="d-flex gap-3">
+                        <a href="https://github.com/jason660519/jobseeker" target="_blank">
+                            <i class="fab fa-github fa-lg"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-linkedin fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>功能</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('index') }}">智能搜尋</a></li>
+                        <li><a href="/demo">測試結果</a></li>
+                        <li><a href="#">API 文檔</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>支援平台</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Indeed</a></li>
+                        <li><a href="#">Glassdoor</a></li>
+                        <li><a href="#">更多平台</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>聯絡我們</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i>support@jobseeker.com</li>
+                        <li><i class="fas fa-phone me-2"></i>+886-2-1234-5678</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>台北市信義區</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: #475569;">
+            <div class="row align-items-center">
                 <div class="col-md-6">
-                    <h5><i class="fas fa-search me-2"></i>jobseeker</h5>
-                    <p class="mb-0">智能職位搜尋平台，讓找工作變得更簡單</p>
+                    <p class="mb-0 text-muted">&copy; 2024 jobseeker. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="mb-0">
-                        <i class="fas fa-heart text-danger me-1"></i>
-                        Made with love by jobseeker Team
-                    </p>
-                    <small class="text-muted">
-                        © 2025 jobseeker. All rights reserved.
-                    </small>
+                    <p class="mb-0 text-muted">Powered by AI & Machine Learning</p>
                 </div>
             </div>
         </div>
@@ -304,6 +503,44 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    
+    <script>
+        // 側邊欄切換功能
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        }
+        
+        // 下載範例CSV功能
+        function downloadSample() {
+            const link = document.createElement('a');
+            link.href = '/static/csv_format_sample.csv';
+            link.download = 'csv_format_sample.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // 響應式側邊欄處理
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('show');
+            }
+        });
+        
+        // 點擊主內容區域時關閉側邊欄（移動設備）
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            
+            if (window.innerWidth < 768 && 
+                !sidebar.contains(e.target) && 
+                !sidebarToggle.contains(e.target)) {
+                sidebar.classList.remove('show');
+            }
+        });
+    </script>
     
     {% block extra_js %}{% endblock %}
 </body>

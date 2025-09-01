@@ -3,106 +3,113 @@
 {% block title %}jobseeker - 智能職位搜尋平台{% endblock %}
 
 {% block content %}
-<!-- 歡迎區塊 -->
-<div class="row mb-5">
-    <div class="col-lg-8 mx-auto text-center">
-        <h1 class="display-4 fw-bold text-primary mb-3">
-            <i class="fas fa-rocket me-3"></i>
-            找到您的理想工作
-        </h1>
-        <p class="lead text-secondary mb-4">
-            使用 AI 智能搜尋技術，從全球多個求職平台為您找到最適合的職位機會
-        </p>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <div class="stats-number">50+</div>
-                    <div class="stats-label">支援網站</div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <div class="stats-number">100+</div>
-                    <div class="stats-label">國家地區</div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <div class="stats-number">AI</div>
-                    <div class="stats-label">智能路由</div>
+<div class="container-fluid px-4">
+    <!-- 歡迎區塊 -->
+    <div class="welcome-section text-center mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-search text-primary me-3"></i>
+                    找到您的理想工作
+                </h1>
+                <p class="lead text-muted mb-4">
+                    使用 AI 驅動的智能搜尋引擎，從多個求職平台為您找到最適合的職位機會
+                </p>
+                
+                <!-- 統計數據 -->
+                <div class="row text-center mb-5">
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="stat-item">
+                            <h3 class="text-primary fw-bold">50+</h3>
+                            <p class="text-muted">支援網站</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="stat-item">
+                            <h3 class="text-primary fw-bold">100+</h3>
+                            <p class="text-muted">國家地區</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="stat-item">
+                            <h3 class="text-primary fw-bold">AI</h3>
+                            <p class="text-muted">智能路由</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="stat-item">
+                            <h3 class="text-primary fw-bold">24/7</h3>
+                            <p class="text-muted">即時搜尋</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 <!-- 搜尋表單 -->
-<div class="row mb-5">
-    <div class="col-lg-8 mx-auto">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title mb-0">
-                    <i class="fas fa-search me-2 text-primary"></i>
-                    開始搜尋職位
-                </h3>
-            </div>
-            <div class="card-body p-4">
-                <form id="searchForm">
+<div class="search-section">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="search-card">
+                <form id="searchForm" method="POST" action="{{ url_for('search') }}">
                     <div class="row g-3">
-                        <!-- 搜尋關鍵字 -->
+                        <!-- 職位關鍵字 -->
                         <div class="col-md-6">
-                            <label for="query" class="form-label fw-semibold">
-                                <i class="fas fa-briefcase me-1"></i>
-                                職位關鍵字 *
+                            <label for="job_title" class="form-label">
+                                <i class="fas fa-briefcase me-2"></i>職位關鍵字
                             </label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="query" 
-                                   name="query" 
-                                   placeholder="例如：軟體工程師、數據分析師、產品經理"
-                                   required>
-                            <div class="form-text">輸入您想搜尋的職位名稱或技能關鍵字</div>
+                            <input type="text" class="form-control" id="job_title" name="job_title" 
+                                   placeholder="例如：軟體工程師、產品經理" required>
                         </div>
                         
-                        <!-- 地點 -->
+                        <!-- 工作地點 -->
                         <div class="col-md-6">
-                            <label for="location" class="form-label fw-semibold">
-                                <i class="fas fa-map-marker-alt me-1"></i>
-                                工作地點
+                            <label for="location" class="form-label">
+                                <i class="fas fa-map-marker-alt me-2"></i>工作地點
                             </label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="location" 
-                                   name="location" 
+                            <input type="text" class="form-control" id="location" name="location" 
                                    placeholder="例如：台北、新竹、遠端工作">
-                            <div class="form-text">留空將搜尋所有地區</div>
                         </div>
                         
                         <!-- 結果數量 -->
-                        <div class="col-md-6">
-                            <label for="results_wanted" class="form-label fw-semibold">
-                                <i class="fas fa-list-ol me-1"></i>
-                                搜尋結果數量
+                        <div class="col-md-4">
+                            <label for="results_wanted" class="form-label">
+                                <i class="fas fa-list-ol me-2"></i>結果數量
                             </label>
                             <select class="form-select" id="results_wanted" name="results_wanted">
-                                <option value="20" selected>20 個結果</option>
+                                <option value="10">10 個結果</option>
+                                <option value="25" selected>25 個結果</option>
                                 <option value="50">50 個結果</option>
                                 <option value="100">100 個結果</option>
                             </select>
                         </div>
                         
-                        <!-- 時間限制 -->
-                        <div class="col-md-6">
-                            <label for="hours_old" class="form-label fw-semibold">
-                                <i class="fas fa-clock me-1"></i>
-                                發布時間限制
+                        <!-- 發布時間 -->
+                        <div class="col-md-4">
+                            <label for="days_since_posted" class="form-label">
+                                <i class="fas fa-calendar-alt me-2"></i>發布時間
                             </label>
-                            <select class="form-select" id="hours_old" name="hours_old">
-                                <option value="">不限制</option>
-                                <option value="24">24 小時內</option>
-                                <option value="72">3 天內</option>
-                                <option value="168">1 週內</option>
-                                <option value="720">1 個月內</option>
+                            <select class="form-select" id="days_since_posted" name="days_since_posted">
+                                <option value="1">1 天內</option>
+                                <option value="3">3 天內</option>
+                                <option value="7" selected>7 天內</option>
+                                <option value="14">14 天內</option>
+                                <option value="30">30 天內</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 搜尋網站 -->
+                        <div class="col-md-4">
+                            <label for="site_name" class="form-label">
+                                <i class="fas fa-globe me-2"></i>搜尋網站
+                            </label>
+                            <select class="form-select" id="site_name" name="site_name">
+                                <option value="">所有網站</option>
+                                <option value="linkedin">LinkedIn</option>
+                                <option value="indeed">Indeed</option>
+                                <option value="glassdoor">Glassdoor</option>
+                                <option value="zip_recruiter">ZipRecruiter</option>
                             </select>
                         </div>
                     </div>
@@ -110,9 +117,9 @@
                     <!-- 搜尋按鈕 -->
                     <div class="row mt-4">
                         <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 py-3">
                                 <i class="fas fa-search me-2"></i>
-                                開始智能搜尋
+                                開始搜尋職位
                             </button>
                         </div>
                     </div>
@@ -123,17 +130,13 @@
 </div>
 
 <!-- 載入中動畫 -->
-<div id="loadingSpinner" class="loading-spinner">
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">搜尋中...</span>
-    </div>
-    <h4 class="mt-3 text-primary">AI 智能搜尋中...</h4>
-    <p class="text-secondary">正在從多個平台為您搜尋最佳職位機會</p>
-    <div class="progress mt-3" style="width: 300px; margin: 0 auto;">
-        <div class="progress-bar progress-bar-striped progress-bar-animated" 
-             role="progressbar" 
-             style="width: 0%" 
-             id="searchProgress"></div>
+<div id="loadingSection" class="text-center" style="display: none;">
+    <div class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">載入中...</span>
+        </div>
+        <h4 class="mt-3 text-primary">正在搜尋職位...</h4>
+        <p class="text-muted">請稍候，我們正在為您搜尋最適合的工作機會</p>
     </div>
 </div>
 

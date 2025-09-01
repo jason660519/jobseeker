@@ -1,0 +1,4 @@
+﻿SITE,TITLE,COMPANY,CITY,STATE,JOB_TYPE,INTERVAL,MIN_AMOUNT,MAX_AMOUNT,JOB_URL,DESCRIPTION
+linkedin,軟體工程師,科技公司A,台北,台灣,全職,月薪,50000,80000,https://www.linkedin.com/jobs/view/1234567890,負責軟體開發、系統設計與維護，需具備Python、Java等程式語言經驗
+indeed,AI Engineer,AI公司B,新竹,台灣,全職,年薪,800000,1200000,https://www.indeed.com/viewjob?jk=1234567891,開發AI模型，進行機器學習演算法研究，需熟悉TensorFlow、PyTorch
+glassdoor,UX Designer,設計公司C,台中,台灣,遠端,月薪,45000,65000,https://www.glassdoor.com/job-listing/1234567892,負責使用者介面設計，提升使用者體驗，需熟悉Figma、Sketch等設計工具
