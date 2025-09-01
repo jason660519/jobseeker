@@ -1,0 +1,19 @@
+﻿city,country,job_count,status
+Tokyo,Japan,5,success
+Seoul,South Korea,5,success
+Beijing,China,2,success
+Singapore,Singapore,5,success
+Bangkok,Thailand,5,success
+Jakarta,Indonesia,5,success
+Manila,Philippines,9,success
+New Delhi,India,5,success
+Kuala Lumpur,Malaysia,5,success
+Hanoi,Vietnam,5,success
+Dhaka,Bangladesh,5,success
+Colombo,Sri Lanka,0,"error: Invalid country string: 'sri lanka'. Valid countries are: argentina, australia, austria, bahrain, bangladesh, belgium, bulgaria, brazil, canada, chile, china, colombia, costa rica, croatia, cyprus, czech republic,czechia, denmark, ecuador, egypt, estonia, finland, france, germany, greece, hong kong, hungary, india, indonesia, ireland, israel, italy, japan, kuwait, latvia, lithuania, luxembourg, malaysia, malta, mexico, morocco, netherlands, new zealand, nigeria, norway, oman, pakistan, panama, peru, philippines, poland, portugal, qatar, romania, saudi arabia, singapore, slovakia, slovenia, south africa, south korea, spain, sweden, switzerland, taiwan, thailand, türkiye,turkey, ukraine, united arab emirates, uk,united kingdom, usa,us,united states, uruguay, venezuela, vietnam, usa/ca, worldwide"
+Kathmandu,Nepal,0,"error: Invalid country string: 'nepal'. Valid countries are: argentina, australia, austria, bahrain, bangladesh, belgium, bulgaria, brazil, canada, chile, china, colombia, costa rica, croatia, cyprus, czech republic,czechia, denmark, ecuador, egypt, estonia, finland, france, germany, greece, hong kong, hungary, india, indonesia, ireland, israel, italy, japan, kuwait, latvia, lithuania, luxembourg, malaysia, malta, mexico, morocco, netherlands, new zealand, nigeria, norway, oman, pakistan, panama, peru, philippines, poland, portugal, qatar, romania, saudi arabia, singapore, slovakia, slovenia, south africa, south korea, spain, sweden, switzerland, taiwan, thailand, türkiye,turkey, ukraine, united arab emirates, uk,united kingdom, usa,us,united states, uruguay, venezuela, vietnam, usa/ca, worldwide"
+Yangon,Myanmar,0,success
+Phnom Penh,Cambodia,0,"error: Invalid country string: 'cambodia'. Valid countries are: argentina, australia, austria, bahrain, bangladesh, belgium, bulgaria, brazil, canada, chile, china, colombia, costa rica, croatia, cyprus, czech republic,czechia, denmark, ecuador, egypt, estonia, finland, france, germany, greece, hong kong, hungary, india, indonesia, ireland, israel, italy, japan, kuwait, latvia, lithuania, luxembourg, malaysia, malta, mexico, morocco, netherlands, new zealand, nigeria, norway, oman, pakistan, panama, peru, philippines, poland, portugal, qatar, romania, saudi arabia, singapore, slovakia, slovenia, south africa, south korea, spain, sweden, switzerland, taiwan, thailand, türkiye,turkey, ukraine, united arab emirates, uk,united kingdom, usa,us,united states, uruguay, venezuela, vietnam, usa/ca, worldwide"
+Vientiane,Laos,0,success
+Bandar Seri Begawan,Brunei,0,"error: Invalid country string: 'brunei'. Valid countries are: argentina, australia, austria, bahrain, bangladesh, belgium, bulgaria, brazil, canada, chile, china, colombia, costa rica, croatia, cyprus, czech republic,czechia, denmark, ecuador, egypt, estonia, finland, france, germany, greece, hong kong, hungary, india, indonesia, ireland, israel, italy, japan, kuwait, latvia, lithuania, luxembourg, malaysia, malta, mexico, morocco, netherlands, new zealand, nigeria, norway, oman, pakistan, panama, peru, philippines, poland, portugal, qatar, romania, saudi arabia, singapore, slovakia, slovenia, south africa, south korea, spain, sweden, switzerland, taiwan, thailand, türkiye,turkey, ukraine, united arab emirates, uk,united kingdom, usa,us,united states, uruguay, venezuela, vietnam, usa/ca, worldwide"
+Dili,East Timor,3,success
