@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 jobseeker 路由管理器
@@ -94,7 +94,7 @@ class RouteManager:
         location: Optional[str] = None,
         results_wanted: int = 15,
         hours_old: Optional[int] = None,
-        country_indeed: str = 'worldwide',
+        country_indeed: str = 'usa',
         **kwargs
     ) -> AggregatedResult:
         """
@@ -307,14 +307,28 @@ class RouteManager:
             
         except Exception as e:
             execution_time = time.time() - start_time
-            logger.error(f"代理 {agent.value} 執行失敗: {e}")
+            error_msg = str(e)
             
+            # 特殊處理 Glassdoor 地區限制錯誤
+            if agent == AgentType.GLASSDOOR and "not available for" in error_msg:
+                logger.warning(f"代理 {agent.value} 地區限制: {error_msg}")
+                # 對於地區限制錯誤，不記錄為嚴重錯誤
+                return RouteExecutionResult(
+                    agent=agent,
+                    success=False,
+                    job_count=0,
+                    execution_time=execution_time,
+                    error_message=f"地區限制: {error_msg}"
+                )
+            else:
+                logger.error(f"代理 {agent.value} 執行失敗: {e}")
+                
             return RouteExecutionResult(
                 agent=agent,
                 success=False,
                 job_count=0,
                 execution_time=execution_time,
-                error_message=str(e)
+                error_message=error_msg
             )
     
     def _aggregate_results(
@@ -469,7 +483,7 @@ def smart_scrape_jobs(
     location: Optional[str] = None,
     results_wanted: int = 15,
     hours_old: Optional[int] = None,
-    country_indeed: str = 'worldwide',
+    country_indeed: str = 'usa',
     **kwargs
 ) -> AggregatedResult:
     """

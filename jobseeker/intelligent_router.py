@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 jobseeker 智能路由系統
@@ -126,7 +126,7 @@ class IntelligentRouter:
                 ],
                 keywords=["美國", "美国", "usa", "usd", "mile", "miles", "州", "state", "america", "北美"],
                 primary_agents=[AgentType.INDEED, AgentType.ZIPRECRUITER],
-                secondary_agents=[AgentType.LINKEDIN, AgentType.GLASSDOOR, AgentType.GOOGLE]
+                secondary_agents=[AgentType.LINKEDIN, AgentType.GOOGLE]
             ),
             
             # 印度
@@ -208,7 +208,7 @@ class IntelligentRouter:
                     "台灣", "taiwan", "臺灣", "日本", "japan", "首都", "asia", "亞洲"
                 ],
                 primary_agents=[AgentType.INDEED, AgentType.LINKEDIN],
-                secondary_agents=[AgentType.GLASSDOOR, AgentType.GOOGLE]
+                secondary_agents=[AgentType.GOOGLE]
             ),
             
             # 歐洲
@@ -260,7 +260,7 @@ class IntelligentRouter:
                     "歐盟", "european union", "schengen", "eurozone", "首都", "capital"
                 ],
                 primary_agents=[AgentType.INDEED, AgentType.LINKEDIN],
-                secondary_agents=[AgentType.GLASSDOOR, AgentType.GOOGLE]
+                secondary_agents=[AgentType.GOOGLE]
             )
         ]
     
@@ -280,7 +280,7 @@ class IntelligentRouter:
                     "data scientist", "devops", "cloud", "aws", "azure", "技術", "工程師",
                     "程式設計", "軟體", "開發", "人工智慧", "機器學習"
                 ],
-                preferred_agents=[AgentType.LINKEDIN, AgentType.INDEED, AgentType.GLASSDOOR],
+                preferred_agents=[AgentType.LINKEDIN, AgentType.INDEED],
                 weight=1.2
             ),
             
@@ -313,7 +313,7 @@ class IntelligentRouter:
                     "insurance", "audit", "tax", "cpa", "bookkeeper", "金融", "銀行", "會計", "投資",
                     "保險", "審計", "稅務", "記帳"
                 ],
-                preferred_agents=[AgentType.LINKEDIN, AgentType.GLASSDOOR, AgentType.INDEED],
+                preferred_agents=[AgentType.LINKEDIN, AgentType.INDEED],
                 weight=1.1
             ),
             
@@ -696,26 +696,42 @@ class IntelligentRouter:
                 reasoning_parts.append(f"本地搜索 ({distance_info.get('distance_km', 0):.1f}km)")
                 confidence_score += 0.1
         
-        # 4. 如果沒有地理匹配，使用全球代理
+        # 4. 如果沒有地理匹配，使用全球代理（排除 Glassdoor）
         if not geographic_match:
             global_agents = [AgentType.INDEED, AgentType.LINKEDIN, AgentType.GOOGLE]
             selected_agents.update(global_agents)
-            reasoning_parts.append("使用全球代理")
+            reasoning_parts.append("使用全球代理（排除 Glassdoor）")
         
-        # 5. 確保至少有一些代理被選中
+        # 5. Glassdoor 地區限制檢查
+        if AgentType.GLASSDOOR in selected_agents:
+            # 檢查是否為全球查詢或無具體地理位置
+            is_worldwide_query = (
+                not geographic_match or 
+                'worldwide' in original_query.lower() or
+                (not geographic_match and not distance_info.get('is_local_search', False))
+            )
+            
+            if is_worldwide_query:
+                selected_agents.discard(AgentType.GLASSDOOR)
+                reasoning_parts.append("排除 Glassdoor（不支援全球查詢）")
+        
+        # 6. 確保至少有一些代理被選中
         if not selected_agents:
             selected_agents = {AgentType.INDEED, AgentType.LINKEDIN, AgentType.GOOGLE}
-            reasoning_parts.append("默認代理選擇")
+            reasoning_parts.append("默認代理選擇（排除 Glassdoor）")
         
-        # 6. 基於代理可靠性排序
+        # 7. 基於代理可靠性排序
         sorted_agents = self._sort_agents_by_reliability(list(selected_agents))
         
-        # 7. 設置後備代理
+        # 8. 設置後備代理（排除 Glassdoor）
         fallback_agents = [AgentType.INDEED, AgentType.GOOGLE]
         if geographic_match:
-            fallback_agents.extend(geographic_match.secondary_agents)
+            # 只添加非 Glassdoor 的後備代理
+            for agent in geographic_match.secondary_agents:
+                if agent != AgentType.GLASSDOOR:
+                    fallback_agents.append(agent)
         
-        # 8. 限制代理數量（避免過多並發請求）
+        # 9. 限制代理數量（避免過多並發請求）
         max_agents = 4
         if len(sorted_agents) > max_agents:
             sorted_agents = sorted_agents[:max_agents]
