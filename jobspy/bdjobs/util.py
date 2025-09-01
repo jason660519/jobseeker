@@ -1,9 +1,9 @@
-#util.py
+﻿#util.py
 from bs4 import BeautifulSoup
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 
-from jobspy.model import Location, Country
+from jobseeker.model import Location, Country
 
 
 def parse_location(location_text: str, country: str = "bangladesh") -> Location:

@@ -1,4 +1,4 @@
-name: JobSpy Tests
+﻿name: jobseeker Tests
 
 # 觸發條件
 on:
@@ -49,14 +49,14 @@ jobs:
         if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
     
     - name: Run Black (code formatting)
-      run: black --check --diff jobspy tests
+      run: black --check --diff jobseeker tests
     
     - name: Run isort (import sorting)
-      run: isort --check-only --diff jobspy tests
+      run: isort --check-only --diff jobseeker tests
     
     - name: Run Flake8 (linting)
       run: |
-        flake8 jobspy tests \
+        flake8 jobseeker tests \
           --max-line-length=88 \
           --extend-ignore=E203,W503 \
           --statistics \
@@ -64,7 +64,7 @@ jobs:
     
     - name: Run mypy (type checking)
       run: |
-        mypy jobspy \
+        mypy jobseeker \
           --ignore-missing-imports \
           --no-strict-optional \
           --show-error-codes
@@ -72,7 +72,7 @@ jobs:
     
     - name: Run Bandit (security check)
       run: |
-        bandit -r jobspy \
+        bandit -r jobseeker \
           -f json \
           -o bandit-report.json
       continue-on-error: true
@@ -144,7 +144,7 @@ jobs:
           --tb=short \
           --strict-markers \
           --disable-warnings \
-          --cov=jobspy \
+          --cov=jobseeker \
           --cov-report=xml \
           --cov-report=term-missing \
           --junit-xml=junit-unit.xml \
@@ -210,9 +210,9 @@ jobs:
           --timeout=600
       env:
         # 設置測試環境變數
-        JOBSPY_TEST_MODE: "integration"
-        JOBSPY_CACHE_ENABLED: "true"
-        JOBSPY_LOG_LEVEL: "INFO"
+        jobseeker_TEST_MODE: "integration"
+        jobseeker_CACHE_ENABLED: "true"
+        jobseeker_LOG_LEVEL: "INFO"
     
     - name: Upload integration test results
       uses: actions/upload-artifact@v3
@@ -263,8 +263,8 @@ jobs:
           --junit-xml=junit-performance.xml \
           --timeout=1200
       env:
-        JOBSPY_TEST_MODE: "performance"
-        JOBSPY_PERFORMANCE_BASELINE: "true"
+        jobseeker_TEST_MODE: "performance"
+        jobseeker_PERFORMANCE_BASELINE: "true"
     
     - name: Upload performance test results
       uses: actions/upload-artifact@v3
@@ -317,8 +317,8 @@ jobs:
           --junit-xml=junit-network.xml \
           --timeout=900
       env:
-        JOBSPY_TEST_MODE: "network"
-        JOBSPY_NETWORK_TIMEOUT: "30"
+        jobseeker_TEST_MODE: "network"
+        jobseeker_NETWORK_TIMEOUT: "30"
     
     - name: Upload network test results
       uses: actions/upload-artifact@v3
@@ -427,7 +427,7 @@ jobs:
     - name: Build test report site
       run: |
         mkdir -p public
-        echo "<h1>JobSpy 測試報告</h1>" > public/index.html
+        echo "<h1>jobseeker 測試報告</h1>" > public/index.html
         echo "<p>最後更新: $(date)</p>" >> public/index.html
         
         # 複製測試報告檔案

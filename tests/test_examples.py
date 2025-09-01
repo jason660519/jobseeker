@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 測試範例
+jobseeker 測試範例
 
-這個檔案展示了如何為 JobSpy 專案實施各種類型的測試，
+這個檔案展示了如何為 jobseeker 專案實施各種類型的測試，
 包括單元測試、整合測試、效能測試和 Mock 測試。
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -24,22 +24,22 @@ try:
 except ImportError:
     print("請安裝測試依賴: pip install responses aioresponses")
 
-# JobSpy 模組導入
-from jobspy import scrape_jobs
+# jobseeker 模組導入
+from jobseeker import scrape_jobs
 try:
-    from jobspy import scrape_jobs_async
-    from jobspy.async_scraping import AsyncScrapingManager, AsyncConfig, AsyncMode
-    from jobspy.cache_system import JobCache, get_global_cache
-    from jobspy.data_quality import DataQualityChecker, clean_job_data
-    from jobspy.error_handling import retry_with_backoff, JobSpyException
-    from jobspy.performance_monitoring import get_global_metrics, performance_monitor
-    from jobspy.model import Site, ScraperInput, JobPost
+    from jobseeker import scrape_jobs_async
+    from jobseeker.async_scraping import AsyncScrapingManager, AsyncConfig, AsyncMode
+    from jobseeker.cache_system import JobCache, get_global_cache
+    from jobseeker.data_quality import DataQualityChecker, clean_job_data
+    from jobseeker.error_handling import retry_with_backoff, jobseekerException
+    from jobseeker.performance_monitoring import get_global_metrics, performance_monitor
+    from jobseeker.model import Site, ScraperInput, JobPost
 except ImportError as e:
     print(f"某些模組尚未實現: {e}")
 
 
-class TestJobSpyCore:
-    """JobSpy 核心功能測試類別"""
+class TestjobseekerCore:
+    """jobseeker 核心功能測試類別"""
     
     def test_scrape_jobs_basic(self):
         """測試基本的同步爬取功能"""
@@ -78,7 +78,7 @@ class TestJobSpyCore:
     
     def test_invalid_site(self):
         """測試無效網站處理"""
-        with pytest.raises((ValueError, KeyError, JobSpyException)):
+        with pytest.raises((ValueError, KeyError, jobseekerException)):
             scrape_jobs(
                 site_name="invalid_site",
                 search_term="test",
@@ -295,8 +295,8 @@ class TestErrorHandling:
     def test_custom_exceptions(self):
         """測試自定義異常"""
         try:
-            with pytest.raises(JobSpyException):
-                raise JobSpyException("測試異常")
+            with pytest.raises(jobseekerException):
+                raise jobseekerException("測試異常")
         except NameError:
             pytest.skip("自定義異常尚未實現")
 
@@ -512,7 +512,7 @@ class TestIntegration:
 
 def run_performance_benchmark():
     """執行效能基準測試"""
-    print("\n=== JobSpy 效能基準測試 ===")
+    print("\n=== jobseeker 效能基準測試 ===")
     
     test_cases = [
         {"site": "indeed", "term": "python", "location": "Sydney"},

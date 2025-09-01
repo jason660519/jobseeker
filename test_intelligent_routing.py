@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 智能路由系統測試腳本
 
-此腳本用於測試 JobSpy 智能路由系統的各項功能，包括：
+此腳本用於測試 jobseeker 智能路由系統的各項功能，包括：
 1. 路由決策分析
 2. 智能搜索執行
 3. 多語言支持
@@ -24,11 +24,11 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from jobspy.intelligent_router import IntelligentRouter, RoutingDecision
-    from jobspy.route_manager import RouteManager, smart_scrape_jobs
+    from jobseeker.intelligent_router import IntelligentRouter, RoutingDecision
+    from jobseeker.route_manager import RouteManager, smart_scrape_jobs
 except ImportError as e:
     print(f"❌ 導入錯誤: {e}")
-    print("請確保已正確安裝 JobSpy 及其依賴")
+    print("請確保已正確安裝 jobseeker 及其依賴")
     sys.exit(1)
 
 # 設置日誌
@@ -323,7 +323,7 @@ class IntelligentRoutingTester:
         report_file = f"intelligent_routing_test_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
         try:
             with open(report_file, 'w', encoding='utf-8') as f:
-                f.write(f"JobSpy 智能路由系統測試報告\n")
+                f.write(f"jobseeker 智能路由系統測試報告\n")
                 f.write(f"生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
                 f.write(f"總體統計:\n")
                 f.write(f"  測試項目: {total_tests}\n")
@@ -384,7 +384,7 @@ class IntelligentRoutingTester:
 def main():
     """主函數"""
     print("\n" + "="*60)
-    print("🧪 JobSpy 智能路由系統測試")
+    print("🧪 jobseeker 智能路由系統測試")
     print("="*60)
     
     # 創建測試器

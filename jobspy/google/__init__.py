@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import math
 import re
@@ -6,8 +6,8 @@ import json
 from typing import Tuple
 from datetime import datetime, timedelta
 
-from jobspy.google.constant import headers_jobs, headers_initial, async_param
-from jobspy.model import (
+from jobseeker.google.constant import headers_jobs, headers_initial, async_param
+from jobseeker.model import (
     Scraper,
     ScraperInput,
     Site,
@@ -16,8 +16,8 @@ from jobspy.model import (
     Location,
     JobType,
 )
-from jobspy.util import extract_emails_from_text, extract_job_type, create_session
-from jobspy.google.util import log, find_job_info_initial_page, find_job_info
+from jobseeker.util import extract_emails_from_text, extract_job_type, create_session
+from jobseeker.google.util import log, find_job_info_initial_page, find_job_info
 
 
 class Google(Scraper):
@@ -200,3 +200,4 @@ class Google(Scraper):
             job_type=extract_job_type(description),
         )
         return job_post
+

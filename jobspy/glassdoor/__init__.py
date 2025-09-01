@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import re
 import json
@@ -7,20 +7,20 @@ from typing import Tuple
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from jobspy.glassdoor.constant import fallback_token, query_template, headers
-from jobspy.glassdoor.util import (
+from jobseeker.glassdoor.constant import fallback_token, query_template, headers
+from jobseeker.glassdoor.util import (
     get_cursor_for_page,
     parse_compensation,
     parse_location,
 )
-from jobspy.util import (
+from jobseeker.util import (
     extract_emails_from_text,
     create_logger,
     create_session,
     markdown_converter,
 )
-from jobspy.exception import GlassdoorException
-from jobspy.model import (
+from jobseeker.exception import GlassdoorException
+from jobseeker.model import (
     JobPost,
     JobResponse,
     DescriptionFormat,
@@ -320,3 +320,4 @@ class Glassdoor(Scraper):
                 {"filterKey": "jobType", "values": self.scraper_input.job_type.value[0]}
             )
         return json.dumps([payload])
+

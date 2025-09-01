@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 各國首都智能路由測試腳本
 測試智能路由器對世界主要首都的識別和路由能力
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2025-01-27
 """
 
@@ -12,7 +12,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from jobspy.intelligent_router import IntelligentRouter
+from jobseeker.intelligent_router import IntelligentRouter
 
 def test_capital_routing():
     """

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import math
@@ -9,15 +9,15 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
-from jobspy.ziprecruiter.constant import headers, get_cookie_data
-from jobspy.util import (
+from jobseeker.ziprecruiter.constant import headers, get_cookie_data
+from jobseeker.util import (
     extract_emails_from_text,
     create_session,
     markdown_converter,
     remove_attributes,
     create_logger,
 )
-from jobspy.model import (
+from jobseeker.model import (
     JobPost,
     Compensation,
     Location,
@@ -28,7 +28,7 @@ from jobspy.model import (
     ScraperInput,
     Site,
 )
-from jobspy.ziprecruiter.util import get_job_type_enum, add_params
+from jobseeker.ziprecruiter.util import get_job_type_enum, add_params
 
 log = create_logger("ZipRecruiter")
 
@@ -217,3 +217,4 @@ class ZipRecruiter(Scraper):
         """
         url = f"{self.api_url}/jobs-app/event"
         self.session.post(url, data=get_cookie_data)
+

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 ML Engineer 職位測試腳本 (修正版)
@@ -17,8 +17,8 @@ import random
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
 import pandas as pd
-from jobspy import scrape_jobs
-from jobspy.model import Site
+from jobseeker import scrape_jobs
+from jobseeker.model import Site
 
 
 def create_output_directory() -> str:

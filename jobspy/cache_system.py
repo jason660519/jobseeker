@@ -1,4 +1,4 @@
-"""智能快取系統
+﻿"""智能快取系統
 
 此模組提供多層次的快取機制，包括記憶體快取、檔案快取和 Redis 快取。
 """
@@ -23,8 +23,8 @@ try:
 except ImportError:
     REDIS_AVAILABLE = False
 
-from jobspy.model import JobResponse, JobPost, Site
-from jobspy.enhanced_logging import get_enhanced_logger, LogCategory
+from jobseeker.model import JobResponse, JobPost, Site
+from jobseeker.enhanced_logging import get_enhanced_logger, LogCategory
 
 
 class CacheType(Enum):
@@ -510,7 +510,7 @@ class RedisCache(BaseCache):
     def __init__(self, host: str = 'localhost', port: int = 6379, 
                  db: int = 0, password: Optional[str] = None,
                  max_size: int = 10000, default_ttl: int = 3600,
-                 key_prefix: str = 'jobspy:'):
+                 key_prefix: str = 'jobseeker:'):
         if not REDIS_AVAILABLE:
             raise ImportError("Redis 不可用，請安裝 redis 套件")
         

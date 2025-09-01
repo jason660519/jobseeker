@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import logging
 import re
@@ -11,8 +11,8 @@ import urllib3
 from markdownify import markdownify as md
 from requests.adapters import HTTPAdapter, Retry
 
-from jobspy.model import CompensationInterval, JobType, Site
-from jobspy.enhanced_logging import (
+from jobseeker.model import CompensationInterval, JobType, Site
+from jobseeker.enhanced_logging import (
     EnhancedLogger, LogLevel, LogCategory, 
     get_enhanced_logger, create_site_logger,
     performance_logger, async_performance_logger
@@ -23,7 +23,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def create_logger(name: str):
     """創建傳統日誌記錄器（向後相容性）"""
-    logger = logging.getLogger(f"JobSpy:{name}")
+    logger = logging.getLogger(f"jobseeker:{name}")
     logger.propagate = False
     if not logger.handlers:
         logger.setLevel(logging.INFO)
@@ -162,11 +162,11 @@ def set_logger_level(verbose: int):
     if level is not None:
         # 設置傳統日誌記錄器
         for logger_name in logging.root.manager.loggerDict:
-            if logger_name.startswith("JobSpy:"):
+            if logger_name.startswith("jobseeker:"):
                 logging.getLogger(logger_name).setLevel(level)
         
         # 設置增強日誌記錄器
-        from jobspy.enhanced_logging import logger_manager
+        from jobseeker.enhanced_logging import logger_manager
         for enhanced_logger in logger_manager._loggers.values():
             enhanced_logger.logger.setLevel(level)
     else:
@@ -388,3 +388,4 @@ desired_order = [
     "vacancy_count",
     "work_from_home_type",
 ]
+

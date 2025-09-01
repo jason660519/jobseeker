@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 智能路由器能力分析工具
 分析路由器能識別的國家、城市數量以及首都支援情況
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2025-01-27
 """
 
@@ -12,7 +12,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from jobspy.intelligent_router import IntelligentRouter
+from jobseeker.intelligent_router import IntelligentRouter
 from collections import defaultdict
 import json
 

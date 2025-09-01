@@ -1,5 +1,5 @@
-
-# JobSpy 測試目錄結構說明
+﻿
+# jobseeker 測試目錄結構說明
 
 ## 📁 目錄結構概覽
 
@@ -91,3 +91,4 @@ python organize_test_directories.py --reorganize
 # 生成測試目錄統計報告
 python organize_test_directories.py --report
 ```
+

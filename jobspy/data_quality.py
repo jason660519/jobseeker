@@ -1,4 +1,4 @@
-"""資料品質改善系統
+﻿"""資料品質改善系統
 
 此模組提供職位資料的清理、標準化、重複檢測和品質驗證功能。
 """
@@ -15,8 +15,8 @@ from enum import Enum
 from urllib.parse import urlparse
 from difflib import SequenceMatcher
 
-from jobspy.model import JobPost, JobResponse, JobType, CompensationInterval, Location
-from jobspy.enhanced_logging import get_enhanced_logger, LogCategory
+from jobseeker.model import JobPost, JobResponse, JobType, CompensationInterval, Location
+from jobseeker.enhanced_logging import get_enhanced_logger, LogCategory
 
 
 class DataQualityIssue(Enum):

@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 澳洲 AI 工程師職位爬蟲測試
+jobseeker 澳洲 AI 工程師職位爬蟲測試
 
 這個腳本專門用於測試所有9個網站在澳洲地區的AI工程師職位爬取功能。
 每個網站至少爬取20筆資料，並保存原始資料和整理後的CSV檔案。
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2024
 """
 
@@ -26,11 +26,11 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(tests_dir))
 
 try:
-    from jobspy import scrape_jobs
-    from jobspy.model import Site, Country
+    from jobseeker import scrape_jobs
+    from jobseeker.model import Site, Country
 except ImportError as e:
     print(f"❌ 導入錯誤：{e}")
-    print("請確保 JobSpy 模組可以正常導入")
+    print("請確保 jobseeker 模組可以正常導入")
     sys.exit(1)
 
 class AustraliaAIEngineerTester:
@@ -371,7 +371,7 @@ def main():
     """
     主要執行函數
     """
-    print("🎯 JobSpy 澳洲 AI 工程師職位爬蟲測試")
+    print("🎯 jobseeker 澳洲 AI 工程師職位爬蟲測試")
     print("="*50)
     
     try:

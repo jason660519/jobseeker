@@ -1,4 +1,4 @@
-# JobSpy 專案 Makefile
+﻿# jobseeker 專案 Makefile
 # 提供便捷的開發和測試命令
 
 .PHONY: help install test test-unit test-integration test-performance test-network test-all test-quick test-smoke
@@ -7,7 +7,7 @@
 
 # 預設目標
 help:
-	@echo "JobSpy 專案可用命令:"
+	@echo "jobseeker 專案可用命令:"
 	@echo ""
 	@echo "安裝和設置:"
 	@echo "  make install        - 安裝專案依賴"
@@ -141,18 +141,18 @@ serve-docs:
 
 docker-build:
 	@echo "🐳 建置 Docker 映像..."
-	docker build -t jobspy:latest .
+	docker build -t jobseeker:latest .
 
 docker-test:
 	@echo "🐳 在 Docker 中執行測試..."
-	docker run --rm -v $(PWD):/app -w /app jobspy:latest python test_runner.py --all
+	docker run --rm -v $(PWD):/app -w /app jobseeker:latest python test_runner.py --all
 
 # ==================== 開發工具 ====================
 
 # 啟動開發伺服器（如果有的話）
 dev:
 	@echo "🚀 啟動開發環境..."
-	@echo "JobSpy 是一個爬蟲庫，沒有開發伺服器"
+	@echo "jobseeker 是一個爬蟲庫，沒有開發伺服器"
 	@echo "請使用 'make test' 來測試功能"
 
 # 執行範例
@@ -168,13 +168,13 @@ benchmark:
 # 安全檢查
 security:
 	@echo "🔒 執行安全檢查..."
-	bandit -r jobspy/ || echo "Bandit 未安裝，跳過安全檢查"
+	bandit -r jobseeker/ || echo "Bandit 未安裝，跳過安全檢查"
 	safety check || echo "Safety 未安裝，跳過依賴安全檢查"
 
 # 類型檢查
 type-check:
 	@echo "🔍 執行類型檢查..."
-	mypy jobspy/ || echo "MyPy 未安裝，跳過類型檢查"
+	mypy jobseeker/ || echo "MyPy 未安裝，跳過類型檢查"
 
 # 完整檢查（包含所有品質檢查）
 full-check: format lint type-check security
@@ -197,7 +197,7 @@ full: clean format lint test coverage
 # 清理快取
 clean-cache:
 	@echo "🧹 清理快取..."
-	rm -rf .jobspy_cache/ || true
+	rm -rf .jobseeker_cache/ || true
 	find . -name "*.cache" -delete 2>/dev/null || true
 
 # 重置測試資料
@@ -211,12 +211,12 @@ reset-test-data:
 # 程式碼複雜度分析
 complexity:
 	@echo "📊 分析程式碼複雜度..."
-	radon cc jobspy/ || echo "Radon 未安裝，跳過複雜度分析"
+	radon cc jobseeker/ || echo "Radon 未安裝，跳過複雜度分析"
 
 # 程式碼重複檢查
 duplication:
 	@echo "🔍 檢查程式碼重複..."
-	pylint --disable=all --enable=duplicate-code jobspy/ || echo "Pylint 未安裝，跳過重複檢查"
+	pylint --disable=all --enable=duplicate-code jobseeker/ || echo "Pylint 未安裝，跳過重複檢查"
 
 # 依賴分析
 deps:
@@ -226,7 +226,7 @@ deps:
 # 程式碼統計
 stats:
 	@echo "📊 程式碼統計..."
-	cloc jobspy/ tests/ || find jobspy/ tests/ -name "*.py" | wc -l
+	cloc jobseeker/ tests/ || find jobseeker/ tests/ -name "*.py" | wc -l
 
 # ==================== 特殊目標 ====================
 
@@ -271,15 +271,15 @@ test-windows:
 
 # 顯示專案資訊
 info:
-	@echo "JobSpy 專案資訊:"
+	@echo "jobseeker 專案資訊:"
 	@echo "================="
-	@echo "專案名稱: JobSpy"
+	@echo "專案名稱: jobseeker"
 	@echo "描述: 職位資訊爬蟲工具"
 	@echo "Python 版本: >= 3.8"
 	@echo "主要功能: 多網站職位爬取、非同步處理、智能快取"
 	@echo ""
 	@echo "目錄結構:"
-	@echo "  jobspy/          - 主要程式碼"
+	@echo "  jobseeker/          - 主要程式碼"
 	@echo "  tests/           - 測試程式碼"
 	@echo "  docs/            - 文檔"
 	@echo "  examples/        - 範例程式碼"

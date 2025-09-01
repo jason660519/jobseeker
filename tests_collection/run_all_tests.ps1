@@ -1,8 +1,8 @@
-#!/usr/bin/env pwsh
-# JobSpy 測試腳本批次執行器
+﻿#!/usr/bin/env pwsh
+# jobseeker 測試腳本批次執行器
 # 用於一次執行所有測試腳本並生成統合報告
 
-Write-Host "=== JobSpy 測試腳本批次執行器 ===" -ForegroundColor Green
+Write-Host "=== jobseeker 測試腳本批次執行器 ===" -ForegroundColor Green
 Write-Host "開始執行所有測試腳本..." -ForegroundColor Yellow
 
 # 記錄開始時間
@@ -99,7 +99,7 @@ Write-Host "成功率: $([math]::Round(($successfulTests/$totalTests)*100, 1))%"
 # 保存詳細報告
 $reportFile = Join-Path $batchResultDir "batch_test_report.txt"
 $report = @"
-JobSpy 批次測試報告
+jobseeker 批次測試報告
 ==================================================
 測試時間: $($startTime.ToString('yyyy-MM-dd HH:mm:ss')) - $($endTime.ToString('yyyy-MM-dd HH:mm:ss'))
 總執行時間: $($totalDuration.ToString('hh\:mm\:ss'))

@@ -1,4 +1,4 @@
-from jobspy.model import JobType
+﻿from jobseeker.model import JobType
 
 
 def add_params(scraper_input) -> dict[str, str | int]:
@@ -29,3 +29,4 @@ def get_job_type_enum(job_type_str: str) -> list[JobType] | None:
         if job_type_str in job_type.value:
             return [job_type]
     return None
+

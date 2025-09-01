@@ -1,4 +1,4 @@
-from jobspy.model import Compensation, CompensationInterval, Location, JobType
+﻿from jobseeker.model import Compensation, CompensationInterval, Location, JobType
 
 
 def parse_compensation(data: dict) -> Compensation | None:
@@ -40,3 +40,4 @@ def get_cursor_for_page(pagination_cursors, page_num):
     for cursor_data in pagination_cursors:
         if cursor_data["pageNumber"] == page_num:
             return cursor_data["cursor"]
+

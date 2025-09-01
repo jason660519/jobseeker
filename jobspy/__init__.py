@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Tuple, Dict, Any, Optional, Union, List
@@ -6,17 +6,17 @@ import asyncio
 
 import pandas as pd
 
-from jobspy.bayt import BaytScraper
-from jobspy.bdjobs import BDJobs
-from jobspy.glassdoor import Glassdoor
-from jobspy.google import Google
-from jobspy.indeed import Indeed
-from jobspy.linkedin import LinkedIn
-from jobspy.naukri import Naukri
-from jobspy.seek import SeekScraper
-from jobspy.model import JobType, Location, JobResponse, Country
-from jobspy.model import SalarySource, ScraperInput, Site
-from jobspy.util import (
+from jobseeker.bayt import BaytScraper
+from jobseeker.bdjobs import BDJobs
+from jobseeker.glassdoor import Glassdoor
+from jobseeker.google import Google
+from jobseeker.indeed import Indeed
+from jobseeker.linkedin import LinkedIn
+from jobseeker.naukri import Naukri
+from jobseeker.seek import SeekScraper
+from jobseeker.model import JobType, Location, JobResponse, Country
+from jobseeker.model import SalarySource, ScraperInput, Site
+from jobseeker.util import (
     set_logger_level,
     extract_salary,
     create_logger,
@@ -25,11 +25,11 @@ from jobspy.util import (
     convert_to_annual,
     desired_order,
 )
-from jobspy.ziprecruiter import ZipRecruiter
-from jobspy.enhanced_config import EnhancedScraperConfig
+from jobseeker.ziprecruiter import ZipRecruiter
+from jobseeker.enhanced_config import EnhancedScraperConfig
 
 # 導入非同步爬蟲功能
-from jobspy.async_scraping import (
+from jobseeker.async_scraping import (
     AsyncConfig, AsyncMode, AsyncScrapingManager,
     async_scrape_jobs as _async_scrape_jobs,
     get_global_async_manager, AsyncScrapingResult

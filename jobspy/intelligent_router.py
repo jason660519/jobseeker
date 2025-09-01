@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 智能路由系統
+jobseeker 智能路由系統
 根據用戶查詢自動選擇最適合的爬蟲代理
 
 功能:
@@ -10,7 +10,7 @@ JobSpy 智能路由系統
 3. 智能代理選擇
 4. 動態路由決策
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2025-01-27
 """
 
@@ -832,7 +832,7 @@ def demo_routing_system():
     ]
     
     print("=" * 60)
-    print("JobSpy 智能路由系統演示")
+    print("jobseeker 智能路由系統演示")
     print("=" * 60)
     
     for i, query in enumerate(test_queries, 1):

@@ -1,4 +1,4 @@
-# JobSpy Docker Compose 配置
+﻿# jobseeker Docker Compose 配置
 # 提供開發、測試和生產環境的容器化解決方案
 
 version: '3.8'
@@ -7,31 +7,31 @@ version: '3.8'
 services:
   
   # 開發環境
-  jobspy-dev:
+  jobseeker-dev:
     build:
       context: .
       target: development
       dockerfile: Dockerfile
-    container_name: jobspy-dev
+    container_name: jobseeker-dev
     volumes:
       # 掛載專案目錄以支援即時開發
       - .:/app
       # 掛載 pip 快取以加速安裝
       - pip-cache:/root/.cache/pip
       # 掛載 Jupyter 配置
-      - jupyter-config:/home/jobspy/.jupyter
+      - jupyter-config:/home/jobseeker/.jupyter
     ports:
       - "8888:8888"  # Jupyter Lab
       - "8000:8000"  # 開發伺服器
       - "5000:5000"  # Flask 除錯伺服器
     environment:
-      - JOBSPY_DEBUG=true
-      - JOBSPY_LOG_LEVEL=DEBUG
-      - JOBSPY_CACHE_ENABLED=true
-      - JOBSPY_MOCK_NETWORK=false
+      - jobseeker_DEBUG=true
+      - jobseeker_LOG_LEVEL=DEBUG
+      - jobseeker_CACHE_ENABLED=true
+      - jobseeker_MOCK_NETWORK=false
       - PYTHONPATH=/app
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - dev
     restart: unless-stopped
@@ -39,164 +39,164 @@ services:
     tty: true
     command: >
       bash -c "
-        echo '🚀 JobSpy 開發環境啟動中...' &&
+        echo '🚀 jobseeker 開發環境啟動中...' &&
         echo '📝 可用服務:' &&
         echo '  - Jupyter Lab: http://localhost:8888' &&
         echo '  - 開發伺服器: http://localhost:8000' &&
-        echo '💡 執行測試: docker-compose exec jobspy-dev python test_runner.py --quick' &&
-        echo '📊 執行範例: docker-compose exec jobspy-dev python complete_async_integration_example.py' &&
+        echo '💡 執行測試: docker-compose exec jobseeker-dev python test_runner.py --quick' &&
+        echo '📊 執行範例: docker-compose exec jobseeker-dev python complete_async_integration_example.py' &&
         tail -f /dev/null
       "
   
   # 測試環境
-  jobspy-test:
+  jobseeker-test:
     build:
       context: .
       target: testing
       dockerfile: Dockerfile
-    container_name: jobspy-test
+    container_name: jobseeker-test
     volumes:
       - .:/app
       - test-results:/app/test-results
     environment:
-      - JOBSPY_TEST_ENV=ci
-      - JOBSPY_CACHE_ENABLED=false
-      - JOBSPY_MOCK_NETWORK=true
-      - JOBSPY_VERBOSE=false
-      - JOBSPY_TIMEOUT=60
-      - JOBSPY_MAX_RETRIES=3
+      - jobseeker_TEST_ENV=ci
+      - jobseeker_CACHE_ENABLED=false
+      - jobseeker_MOCK_NETWORK=true
+      - jobseeker_VERBOSE=false
+      - jobseeker_TIMEOUT=60
+      - jobseeker_MAX_RETRIES=3
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - test
     command: >
       bash -c "
-        echo '🧪 JobSpy 測試環境啟動中...' &&
+        echo '🧪 jobseeker 測試環境啟動中...' &&
         python test_runner.py --all --coverage --report test-results/test-report.md --json test-results/test-results.json &&
         echo '✅ 測試完成，結果保存在 test-results/ 目錄'
       "
   
   # 單元測試服務
-  jobspy-unit-test:
+  jobseeker-unit-test:
     build:
       context: .
       target: testing
       dockerfile: Dockerfile
-    container_name: jobspy-unit-test
+    container_name: jobseeker-unit-test
     volumes:
       - .:/app
       - test-results:/app/test-results
     environment:
-      - JOBSPY_TEST_ENV=ci
-      - JOBSPY_CACHE_ENABLED=false
-      - JOBSPY_MOCK_NETWORK=true
+      - jobseeker_TEST_ENV=ci
+      - jobseeker_CACHE_ENABLED=false
+      - jobseeker_MOCK_NETWORK=true
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - test
     command: python test_runner.py --unit --coverage
   
   # 整合測試服務
-  jobspy-integration-test:
+  jobseeker-integration-test:
     build:
       context: .
       target: testing
       dockerfile: Dockerfile
-    container_name: jobspy-integration-test
+    container_name: jobseeker-integration-test
     volumes:
       - .:/app
       - test-results:/app/test-results
     environment:
-      - JOBSPY_TEST_ENV=integration
-      - JOBSPY_CACHE_ENABLED=true
-      - JOBSPY_MOCK_NETWORK=false
+      - jobseeker_TEST_ENV=integration
+      - jobseeker_CACHE_ENABLED=true
+      - jobseeker_MOCK_NETWORK=false
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - test
     command: python test_runner.py --integration
   
   # 效能測試服務
-  jobspy-performance-test:
+  jobseeker-performance-test:
     build:
       context: .
       target: testing
       dockerfile: Dockerfile
-    container_name: jobspy-performance-test
+    container_name: jobseeker-performance-test
     volumes:
       - .:/app
       - test-results:/app/test-results
     environment:
-      - JOBSPY_TEST_ENV=performance
-      - JOBSPY_CACHE_ENABLED=true
-      - JOBSPY_MOCK_NETWORK=false
+      - jobseeker_TEST_ENV=performance
+      - jobseeker_CACHE_ENABLED=true
+      - jobseeker_MOCK_NETWORK=false
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - test
       - performance
     command: python test_runner.py --performance --report test-results/performance-report.md
   
   # 生產環境
-  jobspy-prod:
+  jobseeker-prod:
     build:
       context: .
       target: production
       dockerfile: Dockerfile
-    container_name: jobspy-prod
+    container_name: jobseeker-prod
     environment:
-      - JOBSPY_ENV=production
-      - JOBSPY_LOG_LEVEL=INFO
-      - JOBSPY_CACHE_ENABLED=true
-      - JOBSPY_MOCK_NETWORK=false
+      - jobseeker_ENV=production
+      - jobseeker_LOG_LEVEL=INFO
+      - jobseeker_CACHE_ENABLED=true
+      - jobseeker_MOCK_NETWORK=false
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - prod
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import jobspy; print('健康檢查通過')"]
+      test: ["CMD", "python", "-c", "import jobseeker; print('健康檢查通過')"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
   
   # Alpine 輕量級生產環境
-  jobspy-alpine:
+  jobseeker-alpine:
     build:
       context: .
       target: production-alpine
       dockerfile: Dockerfile
-    container_name: jobspy-alpine
+    container_name: jobseeker-alpine
     environment:
-      - JOBSPY_ENV=production
-      - JOBSPY_LOG_LEVEL=INFO
-      - JOBSPY_CACHE_ENABLED=true
+      - jobseeker_ENV=production
+      - jobseeker_LOG_LEVEL=INFO
+      - jobseeker_CACHE_ENABLED=true
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - alpine
       - prod
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import jobspy"]
+      test: ["CMD", "python", "-c", "import jobseeker"]
       interval: 30s
       timeout: 10s
       retries: 3
   
   # 程式碼品質檢查服務
-  jobspy-lint:
+  jobseeker-lint:
     build:
       context: .
       target: development
       dockerfile: Dockerfile
-    container_name: jobspy-lint
+    container_name: jobseeker-lint
     volumes:
       - .:/app
     environment:
-      - JOBSPY_DEBUG=false
+      - jobseeker_DEBUG=false
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - lint
       - dev
@@ -208,21 +208,21 @@ services:
       "
   
   # 文檔生成服務
-  jobspy-docs:
+  jobseeker-docs:
     build:
       context: .
       target: development
       dockerfile: Dockerfile
-    container_name: jobspy-docs
+    container_name: jobseeker-docs
     volumes:
       - .:/app
       - docs-build:/app/docs/_build
     ports:
       - "8080:8000"
     environment:
-      - JOBSPY_DEBUG=false
+      - jobseeker_DEBUG=false
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - docs
     command: >
@@ -235,39 +235,39 @@ services:
       "
   
   # 資料庫服務（如果需要）
-  jobspy-db:
+  jobseeker-db:
     image: postgres:13-alpine
-    container_name: jobspy-db
+    container_name: jobseeker-db
     environment:
-      - POSTGRES_DB=jobspy
-      - POSTGRES_USER=jobspy
-      - POSTGRES_PASSWORD=jobspy_password
+      - POSTGRES_DB=jobseeker
+      - POSTGRES_USER=jobseeker
+      - POSTGRES_PASSWORD=jobseeker_password
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - db
       - full
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U jobspy"]
+      test: ["CMD-SHELL", "pg_isready -U jobseeker"]
       interval: 30s
       timeout: 10s
       retries: 5
   
   # Redis 快取服務（如果需要）
-  jobspy-redis:
+  jobseeker-redis:
     image: redis:7-alpine
-    container_name: jobspy-redis
+    container_name: jobseeker-redis
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - cache
       - full
@@ -280,16 +280,16 @@ services:
     command: redis-server --appendonly yes
   
   # 監控服務（Prometheus）
-  jobspy-prometheus:
+  jobseeker-prometheus:
     image: prom/prometheus:latest
-    container_name: jobspy-prometheus
+    container_name: jobseeker-prometheus
     ports:
       - "9090:9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - monitoring
       - full
@@ -302,9 +302,9 @@ services:
       - '--web.enable-lifecycle'
   
   # 監控儀表板（Grafana）
-  jobspy-grafana:
+  jobseeker-grafana:
     image: grafana/grafana:latest
-    container_name: jobspy-grafana
+    container_name: jobseeker-grafana
     ports:
       - "3000:3000"
     volumes:
@@ -313,47 +313,47 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     networks:
-      - jobspy-network
+      - jobseeker-network
     profiles:
       - monitoring
       - full
     restart: unless-stopped
     depends_on:
-      - jobspy-prometheus
+      - jobseeker-prometheus
 
 # ==================== 網路定義 ====================
 networks:
-  jobspy-network:
+  jobseeker-network:
     driver: bridge
-    name: jobspy-network
+    name: jobseeker-network
 
 # ==================== 卷定義 ====================
 volumes:
   # 開發相關
   pip-cache:
-    name: jobspy-pip-cache
+    name: jobseeker-pip-cache
   jupyter-config:
-    name: jobspy-jupyter-config
+    name: jobseeker-jupyter-config
   
   # 測試相關
   test-results:
-    name: jobspy-test-results
+    name: jobseeker-test-results
   
   # 文檔相關
   docs-build:
-    name: jobspy-docs-build
+    name: jobseeker-docs-build
   
   # 資料庫相關
   postgres-data:
-    name: jobspy-postgres-data
+    name: jobseeker-postgres-data
   redis-data:
-    name: jobspy-redis-data
+    name: jobseeker-redis-data
   
   # 監控相關
   prometheus-data:
-    name: jobspy-prometheus-data
+    name: jobseeker-prometheus-data
   grafana-data:
-    name: jobspy-grafana-data
+    name: jobseeker-grafana-data
 
 # ==================== 使用說明 ====================
 #
@@ -363,16 +363,16 @@ volumes:
 # docker-compose --profile dev up -d
 #
 # 執行所有測試：
-# docker-compose --profile test up jobspy-test
+# docker-compose --profile test up jobseeker-test
 #
 # 執行單元測試：
-# docker-compose --profile test up jobspy-unit-test
+# docker-compose --profile test up jobseeker-unit-test
 #
 # 執行整合測試：
-# docker-compose --profile test up jobspy-integration-test
+# docker-compose --profile test up jobseeker-integration-test
 #
 # 執行效能測試：
-# docker-compose --profile performance up jobspy-performance-test
+# docker-compose --profile performance up jobseeker-performance-test
 #
 # 啟動生產環境：
 # docker-compose --profile prod up -d
@@ -381,19 +381,19 @@ volumes:
 # docker-compose --profile alpine up -d
 #
 # 程式碼品質檢查：
-# docker-compose --profile lint up jobspy-lint
+# docker-compose --profile lint up jobseeker-lint
 #
 # 生成文檔：
-# docker-compose --profile docs up -d jobspy-docs
+# docker-compose --profile docs up -d jobseeker-docs
 #
 # 啟動完整環境（包含資料庫和監控）：
 # docker-compose --profile full up -d
 #
 # 進入開發容器：
-# docker-compose exec jobspy-dev bash
+# docker-compose exec jobseeker-dev bash
 #
 # 查看日誌：
-# docker-compose logs -f jobspy-dev
+# docker-compose logs -f jobseeker-dev
 #
 # 停止所有服務：
 # docker-compose down
@@ -407,24 +407,24 @@ volumes:
 #    docker-compose --profile dev up -d
 #
 # 2. 進入容器進行開發：
-#    docker-compose exec jobspy-dev bash
+#    docker-compose exec jobseeker-dev bash
 #
 # 3. 執行快速測試：
-#    docker-compose exec jobspy-dev python test_runner.py --quick
+#    docker-compose exec jobseeker-dev python test_runner.py --quick
 #
 # 4. 執行程式碼檢查：
-#    docker-compose --profile lint up jobspy-lint
+#    docker-compose --profile lint up jobseeker-lint
 #
 # 5. 執行完整測試：
-#    docker-compose --profile test up jobspy-test
+#    docker-compose --profile test up jobseeker-test
 #
 # 6. 查看測試結果：
-#    docker-compose exec jobspy-test cat test-results/test-report.md
+#    docker-compose exec jobseeker-test cat test-results/test-report.md
 #
 # ==================== 生產部署 ====================
 #
 # 1. 建置生產映像：
-#    docker-compose build jobspy-prod
+#    docker-compose build jobseeker-prod
 #
 # 2. 啟動生產環境：
 #    docker-compose --profile prod up -d
@@ -433,7 +433,7 @@ volumes:
 #    docker-compose ps
 #
 # 4. 查看日誌：
-#    docker-compose logs -f jobspy-prod
+#    docker-compose logs -f jobseeker-prod
 #
 # ==================== 監控和除錯 ====================
 #
@@ -458,8 +458,8 @@ volumes:
 # 可以創建 .env 檔案來覆蓋預設設定：
 #
 # # .env
-# JOBSPY_DEBUG=true
-# JOBSPY_LOG_LEVEL=DEBUG
+# jobseeker_DEBUG=true
+# jobseeker_LOG_LEVEL=DEBUG
 # POSTGRES_PASSWORD=your_secure_password
 # GRAFANA_ADMIN_PASSWORD=your_secure_password
 #
@@ -469,7 +469,7 @@ volumes:
 #
 # version: '3.8'
 # services:
-#   jobspy-dev:
+#   jobseeker-dev:
 #     volumes:
 #       - ./custom-config:/app/config
 #     environment:

@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 歐洲市場全面測試
 測試智能路由器對歐洲各國的支援能力並執行實際職位搜索
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2025-01-27
 """
 
@@ -14,11 +14,11 @@ from datetime import datetime
 import pandas as pd
 import time
 
-# 添加 jobspy 模組路徑
+# 添加 jobseeker 模組路徑
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from jobspy import scrape_jobs
-from jobspy.intelligent_router import IntelligentRouter
+from jobseeker import scrape_jobs
+from jobseeker.intelligent_router import IntelligentRouter
 
 def test_comprehensive_europe():
     """

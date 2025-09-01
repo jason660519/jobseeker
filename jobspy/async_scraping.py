@@ -1,4 +1,4 @@
-"""全面非同步化爬蟲架構
+﻿"""全面非同步化爬蟲架構
 
 提供統一的非同步爬蟲基礎類和適配器，將現有的同步爬蟲轉換為非同步模式。
 """
@@ -13,12 +13,12 @@ from enum import Enum
 import threading
 from functools import wraps
 
-from jobspy.model import JobResponse, ScraperInput, Site, Scraper
-from jobspy.enhanced_logging import get_enhanced_logger, LogCategory, async_performance_logger
-from jobspy.error_handling import ScrapingError, retry_with_backoff, async_retry_with_backoff
-from jobspy.performance_monitoring import ScrapingMetrics, async_performance_monitor
-from jobspy.cache_system import JobCache, CacheStrategy
-from jobspy.data_quality import DataQualityProcessor, improve_job_data_quality
+from jobseeker.model import JobResponse, ScraperInput, Site, Scraper
+from jobseeker.enhanced_logging import get_enhanced_logger, LogCategory, async_performance_logger
+from jobseeker.error_handling import ScrapingError, retry_with_backoff, async_retry_with_backoff
+from jobseeker.performance_monitoring import ScrapingMetrics, async_performance_monitor
+from jobseeker.cache_system import JobCache, CacheStrategy
+from jobseeker.data_quality import DataQualityProcessor, improve_job_data_quality
 
 
 class AsyncMode(Enum):

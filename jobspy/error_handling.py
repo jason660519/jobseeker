@@ -1,4 +1,4 @@
-"""統一錯誤處理模組
+﻿"""統一錯誤處理模組
 
 此模組提供統一的錯誤處理機制，包括重試裝飾器和自定義異常類別。
 """
@@ -13,7 +13,7 @@ from typing import Callable, Any, Type, Optional
 from enum import Enum
 
 import requests
-from jobspy.util import create_logger
+from jobseeker.util import create_logger
 
 
 class ErrorType(Enum):
@@ -285,7 +285,7 @@ class ErrorHandler:
 
 
 # 全域錯誤處理器實例
-global_error_handler = ErrorHandler("JobSpy.GlobalErrorHandler")
+global_error_handler = ErrorHandler("jobseeker.GlobalErrorHandler")
 
 
 # 常用的重試裝飾器預設配置

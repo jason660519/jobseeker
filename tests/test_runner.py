@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 測試執行器
+jobseeker 測試執行器
 
 這個腳本提供了便捷的測試執行介面，支援不同類型的測試執行、
 覆蓋率報告生成和測試結果分析。
@@ -14,7 +14,7 @@ JobSpy 測試執行器
     python test_runner.py --performance
     python test_runner.py --all --coverage
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -30,7 +30,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 # 設定專案根目錄
-project_root = Path(__file__).parent.parent  # 回到 JobSpy 根目錄
+project_root = Path(__file__).parent.parent  # 回到 jobseeker 根目錄
 tests_dir = Path(__file__).parent  # tests 資料夾
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(tests_dir))
@@ -287,7 +287,7 @@ class TestRunner:
         
         if coverage:
             args.extend([
-                "--cov=jobspy",
+                "--cov=jobseeker",
                 "--cov-report=term-missing",
                 "--cov-report=html:htmlcov"
             ])
@@ -302,7 +302,7 @@ class TestRunner:
         
         if coverage:
             args.extend([
-                "--cov=jobspy",
+                "--cov=jobseeker",
                 "--cov-append",
                 "--cov-report=term-missing"
             ])
@@ -422,7 +422,7 @@ class TestRunner:
         # MyPy 類型檢查
         try:
             result = subprocess.run(
-                [sys.executable, "-m", "mypy", "jobspy"],
+                [sys.executable, "-m", "mypy", "jobseeker"],
                 cwd=self.project_root,
                 capture_output=True,
                 timeout=120
@@ -444,7 +444,7 @@ class TestRunner:
             return "沒有測試結果可報告"
         
         report_lines = []
-        report_lines.append("# JobSpy 測試報告")
+        report_lines.append("# jobseeker 測試報告")
         report_lines.append(f"生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         report_lines.append("")
         
@@ -547,7 +547,7 @@ class TestRunner:
 def main():
     """主函數"""
     parser = argparse.ArgumentParser(
-        description="JobSpy 測試執行器",
+        description="jobseeker 測試執行器",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 範例:

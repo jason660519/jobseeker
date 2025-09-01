@@ -1,10 +1,10 @@
-# 🔍 JobSpy - 智能職位搜尋工具
+﻿# 🔍 jobseeker - 智能職位搜尋工具
 
 > **一個強大且易用的 Python 職位搜尋工具，讓找工作變得更簡單！**
 
-無論您是求職者、HR、還是數據分析師，JobSpy 都能幫您快速從全球主流求職網站搜集職位資訊。只需一行指令，就能搜尋數百個職位！
+無論您是求職者、HR、還是數據分析師，jobseeker 都能幫您快速從全球主流求職網站搜集職位資訊。只需一行指令，就能搜尋數百個職位！
 
-## ✨ 為什麼選擇 JobSpy？
+## ✨ 為什麼選擇 jobseeker？
 
 ### 🧠 **智能路由系統** - 自動選擇最佳搜尋策略
 - 根據您的查詢自動選擇最適合的求職網站
@@ -117,7 +117,7 @@ playwright install
 安裝完成後，執行以下命令測試是否成功：
 
 ```python
-python -c "from jobspy import scrape_jobs; print('JobSeeker 安裝成功！')"
+python -c "from jobseeker import scrape_jobs; print('JobSeeker 安裝成功！')"
 ```
 
 如果看到「JobSeeker 安裝成功！」訊息，表示安裝完成！
@@ -143,7 +143,7 @@ python smart_job_search.py "Find AI engineer jobs in Berlin" --output my_jobs.cs
 ### 🐍 **方法二：Python 程式搜尋**
 
 ```python
-from jobspy.route_manager import smart_scrape_jobs
+from jobseeker.route_manager import smart_scrape_jobs
 
 # 智能搜索 - 系統會自動選擇最適合的求職網站
 result = smart_scrape_jobs(
@@ -166,7 +166,7 @@ if result.combined_jobs_data is not None:
 
 ### 🎯 **搜尋結果檔案說明**
 
-當您執行搜尋後，JobSpy 會產生以下檔案：
+當您執行搜尋後，jobseeker 會產生以下檔案：
 
 ```
 📁 搜尋結果資料夾/
@@ -220,7 +220,7 @@ print(jobs['company'].value_counts().head(10))
 
 ### 📋 **什麼是代理報告？**
 
-JobSpy 的智能路由系統會為每次搜尋產生詳細的代理使用報告，幫您了解：
+jobseeker 的智能路由系統會為每次搜尋產生詳細的代理使用報告，幫您了解：
 - 🎯 **哪些求職網站被選中**（啟用的代理）
 - ❌ **哪些求職網站未被使用**（未啟用的代理）
 - 📊 **每個網站的搜尋效果**
@@ -229,7 +229,7 @@ JobSpy 的智能路由系統會為每次搜尋產生詳細的代理使用報告�
 ### 📊 **代理報告範例解讀**
 
 ```
-=== JobSpy 智能路由報告 ===
+=== jobseeker 智能路由報告 ===
 搜尋查詢: "歐洲地區 AI 工程師職位"
 執行時間: 2024-09-02 03:32:30
 
@@ -334,7 +334,7 @@ with open("搜尋報告_20240902_033230.txt", "r", encoding="utf-8") as f:
 ### 多平台搜尋
 
 ```python
-from jobspy import scrape_jobs
+from jobseeker import scrape_jobs
 
 # 同時搜尋多個平台
 platforms = ["indeed", "linkedin", "glassdoor"]
@@ -450,7 +450,7 @@ export USER_AGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 ### 自定義配置
 
 ```python
-from jobspy import scrape_jobs
+from jobseeker import scrape_jobs
 
 # 自定義請求頭
 custom_headers = {
@@ -470,7 +470,7 @@ jobs = scrape_jobs(
 
 ### 添加新平台
 
-1. 在 `jobspy/` 目錄下創建新的平台目錄
+1. 在 `jobseeker/` 目錄下創建新的平台目錄
 2. 實作 `__init__.py`、`constant.py` 和 `util.py`
 3. 在主要的 `__init__.py` 中註冊新平台
 
@@ -510,7 +510,7 @@ pytest tests/test_indeed.py
 ## ❓ 常見問題 FAQ
 
 ### Q: 為什麼某些求職網站沒有被使用？
-A: JobSpy 的智能路由系統會根據您的查詢自動選擇最適合的求職網站。例如，搜尋歐洲職位時不會使用 Seek（澳洲專用）或 Naukri（印度專用）。
+A: jobseeker 的智能路由系統會根據您的查詢自動選擇最適合的求職網站。例如，搜尋歐洲職位時不會使用 Seek（澳洲專用）或 Naukri（印度專用）。
 
 ### Q: 搜尋結果為什麼比預期少？
 A: 可能的原因：

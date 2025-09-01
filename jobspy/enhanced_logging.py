@@ -1,4 +1,4 @@
-"""增強的日誌記錄系統
+﻿"""增強的日誌記錄系統
 
 此模組提供結構化日誌記錄、效能監控和詳細的日誌功能。
 """
@@ -159,7 +159,7 @@ class EnhancedLogger:
             enable_json: 是否啟用 JSON 格式日誌
         """
         self.name = name
-        self.logger = logging.getLogger(f"JobSpy.Enhanced.{name}")
+        self.logger = logging.getLogger(f"jobseeker.Enhanced.{name}")
         self.logger.setLevel(logging.DEBUG)
         self.logger.propagate = False
         

@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 測試配置
+jobseeker 測試配置
 
-這個檔案包含了 JobSpy 測試的配置設定，包括測試環境變數、
+這個檔案包含了 jobseeker 測試的配置設定，包括測試環境變數、
 測試參數、Mock 配置和測試資料路徑等。
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -65,7 +65,7 @@ class TestConfig:
     # 網路配置
     network_tests_enabled: bool = False
     rate_limit_delay: float = 1.0
-    user_agent: str = "JobSpy-Test/1.0"
+    user_agent: str = "jobseeker-Test/1.0"
     
     # 資料配置
     test_data_dir: Optional[Path] = None
@@ -88,7 +88,7 @@ class TestConfig:
             self.test_data_dir = Path(__file__).parent / "fixtures"
         
         if self.temp_dir is None:
-            self.temp_dir = Path(tempfile.gettempdir()) / "jobspy_tests"
+            self.temp_dir = Path(tempfile.gettempdir()) / "jobseeker_tests"
         
         # 確保目錄存在
         self.test_data_dir.mkdir(exist_ok=True)
@@ -97,7 +97,7 @@ class TestConfig:
     @classmethod
     def from_environment(cls) -> 'TestConfig':
         """從環境變數創建配置"""
-        env_type = os.getenv('JOBSPY_TEST_ENV', 'local')
+        env_type = os.getenv('jobseeker_TEST_ENV', 'local')
         
         try:
             environment = TestEnvironment(env_type)
@@ -106,18 +106,18 @@ class TestConfig:
         
         return cls(
             environment=environment,
-            debug_mode=os.getenv('JOBSPY_DEBUG', 'false').lower() == 'true',
-            verbose_logging=os.getenv('JOBSPY_VERBOSE', 'false').lower() == 'true',
-            default_timeout=float(os.getenv('JOBSPY_TIMEOUT', '30.0')),
-            network_timeout=float(os.getenv('JOBSPY_NETWORK_TIMEOUT', '60.0')),
-            max_retries=int(os.getenv('JOBSPY_MAX_RETRIES', '3')),
-            max_concurrent_requests=int(os.getenv('JOBSPY_MAX_CONCURRENT', '5')),
-            cache_enabled=os.getenv('JOBSPY_CACHE_ENABLED', 'true').lower() == 'true',
-            network_tests_enabled=os.getenv('JOBSPY_NETWORK_TESTS', 'false').lower() == 'true',
-            mock_network_requests=os.getenv('JOBSPY_MOCK_NETWORK', 'true').lower() == 'true',
-            generate_html_report=os.getenv('JOBSPY_HTML_REPORT', 'false').lower() == 'true',
-            generate_junit_xml=os.getenv('JOBSPY_JUNIT_XML', 'false').lower() == 'true',
-            generate_coverage_report=os.getenv('JOBSPY_COVERAGE', 'false').lower() == 'true'
+            debug_mode=os.getenv('jobseeker_DEBUG', 'false').lower() == 'true',
+            verbose_logging=os.getenv('jobseeker_VERBOSE', 'false').lower() == 'true',
+            default_timeout=float(os.getenv('jobseeker_TIMEOUT', '30.0')),
+            network_timeout=float(os.getenv('jobseeker_NETWORK_TIMEOUT', '60.0')),
+            max_retries=int(os.getenv('jobseeker_MAX_RETRIES', '3')),
+            max_concurrent_requests=int(os.getenv('jobseeker_MAX_CONCURRENT', '5')),
+            cache_enabled=os.getenv('jobseeker_CACHE_ENABLED', 'true').lower() == 'true',
+            network_tests_enabled=os.getenv('jobseeker_NETWORK_TESTS', 'false').lower() == 'true',
+            mock_network_requests=os.getenv('jobseeker_MOCK_NETWORK', 'true').lower() == 'true',
+            generate_html_report=os.getenv('jobseeker_HTML_REPORT', 'false').lower() == 'true',
+            generate_junit_xml=os.getenv('jobseeker_JUNIT_XML', 'false').lower() == 'true',
+            generate_coverage_report=os.getenv('jobseeker_COVERAGE', 'false').lower() == 'true'
         )
     
     def to_dict(self) -> Dict[str, Any]:
@@ -394,10 +394,10 @@ def setup_test_environment(config: TestConfig = None) -> None:
         config = get_test_config()
     
     # 設置環境變數
-    os.environ['JOBSPY_TEST_MODE'] = 'true'
-    os.environ['JOBSPY_LOG_LEVEL'] = 'DEBUG' if config.debug_mode else 'INFO'
-    os.environ['JOBSPY_CACHE_ENABLED'] = str(config.cache_enabled).lower()
-    os.environ['JOBSPY_MOCK_NETWORK'] = str(config.mock_network_requests).lower()
+    os.environ['jobseeker_TEST_MODE'] = 'true'
+    os.environ['jobseeker_LOG_LEVEL'] = 'DEBUG' if config.debug_mode else 'INFO'
+    os.environ['jobseeker_CACHE_ENABLED'] = str(config.cache_enabled).lower()
+    os.environ['jobseeker_MOCK_NETWORK'] = str(config.mock_network_requests).lower()
     
     # 創建必要目錄
     config.test_data_dir.mkdir(exist_ok=True)
@@ -423,10 +423,10 @@ def cleanup_test_environment(config: TestConfig = None) -> None:
     
     # 清理環境變數
     test_env_vars = [
-        'JOBSPY_TEST_MODE',
-        'JOBSPY_LOG_LEVEL',
-        'JOBSPY_CACHE_ENABLED',
-        'JOBSPY_MOCK_NETWORK'
+        'jobseeker_TEST_MODE',
+        'jobseeker_LOG_LEVEL',
+        'jobseeker_CACHE_ENABLED',
+        'jobseeker_MOCK_NETWORK'
     ]
     
     for var in test_env_vars:

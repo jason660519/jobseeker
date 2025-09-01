@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 增強版爬蟲最終測試腳本
 測試 ZipRecruiter、Google Jobs 和 Bayt 的修復效果
@@ -27,21 +27,21 @@ def test_imports():
     logger.info("=== 測試模組導入 ===")
     
     try:
-        from jobspy.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
+        from jobseeker.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
         logger.info("✓ EnhancedZipRecruiter 導入成功")
     except Exception as e:
         logger.error(f"✗ EnhancedZipRecruiter 導入失敗: {e}")
         return False
     
     try:
-        from jobspy.google.enhanced_google import EnhancedGoogle
+        from jobseeker.google.enhanced_google import EnhancedGoogle
         logger.info("✓ EnhancedGoogle 導入成功")
     except Exception as e:
         logger.error(f"✗ EnhancedGoogle 導入失敗: {e}")
         return False
     
     try:
-        from jobspy.bayt.enhanced_bayt import EnhancedBaytScraper
+        from jobseeker.bayt.enhanced_bayt import EnhancedBaytScraper
         logger.info("✓ EnhancedBaytScraper 導入成功")
     except Exception as e:
         logger.error(f"✗ EnhancedBaytScraper 導入失敗: {e}")
@@ -54,7 +54,7 @@ def test_anti_detection_import():
     logger.info("=== 測試反檢測模組導入 ===")
     
     try:
-        from jobspy.anti_detection import AntiDetectionScraper
+        from jobseeker.anti_detection import AntiDetectionScraper
         logger.info("✓ AntiDetectionScraper 導入成功")
         return True
     except Exception as e:
@@ -66,8 +66,8 @@ def test_ziprecruiter():
     logger.info("=== 測試 ZipRecruiter 增強版爬蟲 ===")
     
     try:
-        from jobspy.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
-        from jobspy.model import ScraperInput, Site
+        from jobseeker.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
+        from jobseeker.model import ScraperInput, Site
         
         # 創建爬蟲實例
         scraper = EnhancedZipRecruiter()
@@ -101,8 +101,8 @@ def test_google_jobs():
     logger.info("=== 測試 Google Jobs 增強版爬蟲 ===")
     
     try:
-        from jobspy.google.enhanced_google import EnhancedGoogle
-        from jobspy.model import ScraperInput, Site
+        from jobseeker.google.enhanced_google import EnhancedGoogle
+        from jobseeker.model import ScraperInput, Site
         
         # 創建爬蟲實例
         scraper = EnhancedGoogle()
@@ -136,8 +136,8 @@ def test_bayt():
     logger.info("=== 測試 Bayt 增強版爬蟲 ===")
     
     try:
-        from jobspy.bayt.enhanced_bayt import EnhancedBaytScraper
-        from jobspy.model import ScraperInput, Site
+        from jobseeker.bayt.enhanced_bayt import EnhancedBaytScraper
+        from jobseeker.model import ScraperInput, Site
         
         # 創建爬蟲實例
         scraper = EnhancedBaytScraper()

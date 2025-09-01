@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 快速測試腳本
+jobseeker 快速測試腳本
 
-這個腳本提供最簡單的方式來測試 JobSpy 的所有9個網站功能。
+這個腳本提供最簡單的方式來測試 jobseeker 的所有9個網站功能。
 支援的網站：LinkedIn, Indeed, ZipRecruiter, Glassdoor, Google, Bayt, Naukri, BDJobs, Seek
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2024
 """
 
@@ -24,7 +24,7 @@ def main():
     """
     主要測試執行函數
     """
-    print("🚀 JobSpy 快速測試開始...")
+    print("🚀 jobseeker 快速測試開始...")
     print("📍 支援的網站：LinkedIn, Indeed, ZipRecruiter, Glassdoor, Google, Bayt, Naukri, BDJobs, Seek")
     print("="*60)
     
@@ -86,7 +86,7 @@ def main():
         print(f"📊 測試總結：{passed_tests}/{total_tests} 測試通過")
         
         if passed_tests == total_tests:
-            print("🎉 所有測試都通過了！JobSpy 可以正常工作。")
+            print("🎉 所有測試都通過了！jobseeker 可以正常工作。")
             return 0
         else:
             print("⚠️  部分測試失敗，請檢查上面的錯誤訊息。")
@@ -105,7 +105,7 @@ def show_help():
     顯示幫助資訊
     """
     help_text = """
-🔧 JobSpy 快速測試工具
+🔧 jobseeker 快速測試工具
 
 這個腳本會執行以下測試：
 1. 基本功能測試 - 驗證核心功能

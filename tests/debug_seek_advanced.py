@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Seek 爬蟲高級調試腳本
@@ -14,7 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from playwright.async_api import async_playwright
-from jobspy.seek.constant import USER_AGENTS, DEFAULT_HEADERS
+from jobseeker.seek.constant import USER_AGENTS, DEFAULT_HEADERS
 
 async def debug_seek_with_stealth():
     """使用隱身配置調試 Seek 網站"""

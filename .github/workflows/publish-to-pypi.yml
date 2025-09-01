@@ -1,4 +1,4 @@
-name: Publish JobSpy to PyPi
+﻿name: Publish jobseeker to PyPi
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-n-publish:
-    name: Build and publish JobSpy to PyPi
+    name: Build and publish jobseeker to PyPi
     runs-on: ubuntu-latest
 
     steps:

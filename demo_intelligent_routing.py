@@ -1,14 +1,14 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 智能路由系統演示腳本
+jobseeker 智能路由系統演示腳本
 
-這個腳本展示了 JobSpy 智能路由系統的核心功能：
+這個腳本展示了 jobseeker 智能路由系統的核心功能：
 - 根據用戶查詢自動選擇最合適的爬蟲代理
 - 支持地理位置、行業、距離和語言的智能識別
 - 提供詳細的路由決策分析和解釋
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2025-01-02
 """
 
@@ -19,11 +19,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 try:
-    from jobspy.intelligent_router import IntelligentRouter
-    from jobspy.route_manager import RouteManager
+    from jobseeker.intelligent_router import IntelligentRouter
+    from jobseeker.route_manager import RouteManager
 except ImportError as e:
     print(f"導入錯誤: {e}")
-    print("請確保 JobSpy 已正確安裝")
+    print("請確保 jobseeker 已正確安裝")
     sys.exit(1)
 
 def demo_routing_analysis():
@@ -143,7 +143,7 @@ def main():
     """
     主演示函數
     """
-    print("🚀 JobSpy 智能路由系統演示")
+    print("🚀 jobseeker 智能路由系統演示")
     print("這個演示展示了智能路由系統如何根據用戶查詢自動選擇最合適的爬蟲代理")
     
     try:

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 最終驗證測試 - 確認所有修正都有效
@@ -7,8 +7,8 @@
 import os
 import time
 from datetime import datetime
-from jobspy import scrape_jobs
-from jobspy.model import Site
+from jobseeker import scrape_jobs
+from jobseeker.model import Site
 import pandas as pd
 
 def create_output_directory():

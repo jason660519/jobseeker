@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 測試執行腳本
+jobseeker 測試執行腳本
 
 這個腳本提供便捷的測試執行命令，支援不同類型的測試執行、覆蓋率報告生成和測試結果分析。
 支援所有9個求職網站的測試：LinkedIn, Indeed, ZipRecruiter, Glassdoor, Google, Bayt, Naukri, BDJobs, Seek
@@ -18,7 +18,7 @@ JobSpy 測試執行腳本
     python run_tests.py --parallel                # 並行執行測試
     python run_tests.py --report                  # 生成測試報告
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -33,7 +33,7 @@ import json
 from datetime import datetime
 
 # 設定專案根目錄
-project_root = Path(__file__).parent.parent  # 回到 JobSpy 根目錄
+project_root = Path(__file__).parent.parent  # 回到 jobseeker 根目錄
 tests_dir = Path(__file__).parent  # tests 資料夾
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(tests_dir))
@@ -131,7 +131,7 @@ class TestRunner:
         
         if options.get("coverage", False):
             command.extend([
-                "--cov=jobspy",
+                "--cov=jobseeker",
                 "--cov-report=html:test_reports/coverage/html",
                 "--cov-report=xml:test_reports/coverage/coverage.xml",
                 "--cov-report=term-missing"
@@ -191,7 +191,7 @@ class TestRunner:
         # Flake8 檢查
         print("\n執行 Flake8 檢查...")
         flake8_result = self.run_command([
-            "python", "-m", "flake8", "jobspy", "tests",
+            "python", "-m", "flake8", "jobseeker", "tests",
             "--max-line-length=88",
             "--extend-ignore=E203,W503",
             "--output-file=test_reports/flake8.txt"
@@ -201,21 +201,21 @@ class TestRunner:
         # Black 格式檢查
         print("執行 Black 格式檢查...")
         black_result = self.run_command([
-            "python", "-m", "black", "--check", "--diff", "jobspy", "tests"
+            "python", "-m", "black", "--check", "--diff", "jobseeker", "tests"
         ], capture_output=True)
         results['black'] = black_result
         
         # isort 導入排序檢查
         print("執行 isort 導入排序檢查...")
         isort_result = self.run_command([
-            "python", "-m", "isort", "--check-only", "--diff", "jobspy", "tests"
+            "python", "-m", "isort", "--check-only", "--diff", "jobseeker", "tests"
         ], capture_output=True)
         results['isort'] = isort_result
         
         # mypy 類型檢查
         print("執行 mypy 類型檢查...")
         mypy_result = self.run_command([
-            "python", "-m", "mypy", "jobspy",
+            "python", "-m", "mypy", "jobseeker",
             "--ignore-missing-imports",
             "--no-strict-optional"
         ], capture_output=True)
@@ -246,7 +246,7 @@ class TestRunner:
         # Bandit 安全檢查
         print("\n執行 Bandit 安全檢查...")
         bandit_result = self.run_command([
-            "python", "-m", "bandit", "-r", "jobspy",
+            "python", "-m", "bandit", "-r", "jobseeker",
             "-f", "json",
             "-o", "test_reports/bandit.json"
         ], capture_output=True)
@@ -364,7 +364,7 @@ class TestRunner:
 def main():
     """主函數"""
     parser = argparse.ArgumentParser(
-        description="JobSpy 測試執行腳本",
+        description="jobseeker 測試執行腳本",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 範例:

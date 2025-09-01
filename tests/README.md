@@ -1,6 +1,6 @@
-# JobSpy 測試套件
+﻿# jobseeker 測試套件
 
-這個資料夾包含了 JobSpy 專案的完整測試基礎設施，支援所有9個求職網站的測試。
+這個資料夾包含了 jobseeker 專案的完整測試基礎設施，支援所有9個求職網站的測試。
 
 ## 📁 資料夾結構
 
@@ -28,7 +28,7 @@ tests/
 
 ## 🌐 支援的網站
 
-JobSpy 測試套件支援以下9個求職網站：
+jobseeker 測試套件支援以下9個求職網站：
 
 1. **LinkedIn** - 專業社交網路平台
 2. **Indeed** - 全球最大求職網站
@@ -166,16 +166,16 @@ python test_runner.py --json test-results.json
 cd ..
 
 # 執行所有測試
-docker-compose --profile test up jobspy-test
+docker-compose --profile test up jobseeker-test
 
 # 執行單元測試
-docker-compose --profile test up jobspy-unit-test
+docker-compose --profile test up jobseeker-unit-test
 
 # 執行整合測試
-docker-compose --profile test up jobspy-integration-test
+docker-compose --profile test up jobseeker-integration-test
 
 # 執行效能測試
-docker-compose --profile performance up jobspy-performance-test
+docker-compose --profile performance up jobseeker-performance-test
 ```
 
 ### 進入測試容器
@@ -185,7 +185,7 @@ docker-compose --profile performance up jobspy-performance-test
 docker-compose --profile dev up -d
 
 # 進入容器
-docker-compose exec jobspy-dev bash
+docker-compose exec jobseeker-dev bash
 
 # 在容器內執行測試
 cd tests
@@ -198,10 +198,10 @@ python test_runner.py --quick
 
 ```bash
 # 測試環境設定
-export JOBSPY_TEST_ENV=local
-export JOBSPY_MOCK_NETWORK=true
-export JOBSPY_CACHE_ENABLED=false
-export JOBSPY_VERBOSE=true
+export jobseeker_TEST_ENV=local
+export jobseeker_MOCK_NETWORK=true
+export jobseeker_CACHE_ENABLED=false
+export jobseeker_VERBOSE=true
 ```
 
 ### pytest.ini 配置
@@ -224,8 +224,8 @@ export JOBSPY_VERBOSE=true
 
 ```python
 import pytest
-from jobspy import scrape_jobs
-from jobspy.model import Site
+from jobseeker import scrape_jobs
+from jobseeker.model import Site
 
 @pytest.mark.unit
 def test_my_custom_feature():
@@ -273,14 +273,14 @@ pytest test_all_sites.py::TestAsyncAllSites::test_async_scraping_performance_com
 2. **網路連接問題**
    ```bash
    # 使用 Mock 模式
-   export JOBSPY_MOCK_NETWORK=true
+   export jobseeker_MOCK_NETWORK=true
    pytest -m "not network" -v
    ```
 
 3. **記憶體不足**
    ```bash
    # 減少並發數
-   export JOBSPY_TEST_CONCURRENCY=2
+   export jobseeker_TEST_CONCURRENCY=2
    ```
 
 ### 除錯技巧
@@ -338,7 +338,7 @@ pytest test_all_sites.py::TestAllSitesIntegration::test_individual_site_scraping
 
 1. 查看本文檔的故障排除部分
 2. 檢查測試日誌和錯誤訊息
-3. 查看 [GitHub Issues](https://github.com/your-repo/jobspy/issues)
+3. 查看 [GitHub Issues](https://github.com/your-repo/jobseeker/issues)
 4. 聯繫維護團隊
 
 ---

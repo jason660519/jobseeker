@@ -1,4 +1,4 @@
-headers = {
+﻿headers = {
     "authority": "www.glassdoor.com",
     "accept": "*/*",
     "accept-language": "en-US,en;q=0.9",
@@ -182,3 +182,4 @@ query_template = """
         }
 """
 fallback_token = "Ft6oHEWlRZrxDww95Cpazw:0pGUrkb2y3TyOpAIqF2vbPmUXoXVkD3oEGDVkvfeCerceQ5-n8mBg3BovySUIjmCPHCaW0H2nQVdqzbtsYqf4Q:wcqRqeegRUa9MVLJGyujVXB7vWFPjdaS1CtrrzJq-ok"
+

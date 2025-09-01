@@ -1,4 +1,4 @@
-# JobSpy Dockerfile
+﻿# jobseeker Dockerfile
 # 多階段建置，支援開發、測試和生產環境
 
 # ==================== 基礎映像 ====================
@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 創建應用用戶
-RUN groupadd -r jobspy && useradd -r -g jobspy jobspy
+RUN groupadd -r jobseeker && useradd -r -g jobseeker jobseeker
 
 # 設置工作目錄
 WORKDIR /app
@@ -51,16 +51,16 @@ RUN pip install \
 COPY . .
 
 # 設置權限
-RUN chown -R jobspy:jobspy /app
+RUN chown -R jobseeker:jobseeker /app
 
 # 切換到應用用戶
-USER jobspy
+USER jobseeker
 
 # 暴露端口（用於 Jupyter 等）
 EXPOSE 8888 8000
 
 # 預設命令
-CMD ["python", "-c", "print('JobSpy 開發環境已準備就緒！'); import jobspy; print(f'JobSpy 版本: {jobspy.__version__ if hasattr(jobspy, \"__version__\") else \"開發版\"}')"]
+CMD ["python", "-c", "print('jobseeker 開發環境已準備就緒！'); import jobseeker; print(f'jobseeker 版本: {jobseeker.__version__ if hasattr(jobseeker, \"__version__\") else \"開發版\"}')"]
 
 # ==================== 測試環境 ====================
 FROM base as testing
@@ -73,20 +73,20 @@ RUN pip install -r requirements-test.txt
 COPY . .
 
 # 設置測試環境變數
-ENV JOBSPY_TEST_ENV=ci \
-    JOBSPY_CACHE_ENABLED=false \
-    JOBSPY_MOCK_NETWORK=true \
-    JOBSPY_VERBOSE=false
+ENV jobseeker_TEST_ENV=ci \
+    jobseeker_CACHE_ENABLED=false \
+    jobseeker_MOCK_NETWORK=true \
+    jobseeker_VERBOSE=false
 
 # 設置權限
-RUN chown -R jobspy:jobspy /app
+RUN chown -R jobseeker:jobseeker /app
 
 # 切換到應用用戶
-USER jobspy
+USER jobseeker
 
 # 健康檢查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import jobspy; print('JobSpy 可正常導入')" || exit 1
+    CMD python -c "import jobseeker; print('jobseeker 可正常導入')" || exit 1
 
 # 預設執行測試
 CMD ["python", "test_runner.py", "--all"]
@@ -95,24 +95,24 @@ CMD ["python", "test_runner.py", "--all"]
 FROM base as production
 
 # 只複製必要的檔案
-COPY jobspy/ ./jobspy/
+COPY jobseeker/ ./jobseeker/
 COPY setup.py README.md LICENSE ./
 
 # 安裝套件
 RUN pip install .
 
 # 設置權限
-RUN chown -R jobspy:jobspy /app
+RUN chown -R jobseeker:jobseeker /app
 
 # 切換到應用用戶
-USER jobspy
+USER jobseeker
 
 # 健康檢查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import jobspy; print('JobSpy 運行正常')" || exit 1
+    CMD python -c "import jobseeker; print('jobseeker 運行正常')" || exit 1
 
 # 預設命令
-CMD ["python", "-c", "import jobspy; print('JobSpy 生產環境已準備就緒！')"]
+CMD ["python", "-c", "import jobseeker; print('jobseeker 生產環境已準備就緒！')"]
 
 # ==================== 輕量級生產環境 ====================
 FROM python:3.9-alpine as production-alpine
@@ -131,8 +131,8 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
 # 創建應用用戶
-RUN addgroup -g 1000 jobspy && \
-    adduser -D -s /bin/sh -u 1000 -G jobspy jobspy
+RUN addgroup -g 1000 jobseeker && \
+    adduser -D -s /bin/sh -u 1000 -G jobseeker jobseeker
 
 # 設置工作目錄
 WORKDIR /app
@@ -143,62 +143,62 @@ RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
 # 複製應用程式碼
-COPY jobspy/ ./jobspy/
+COPY jobseeker/ ./jobseeker/
 COPY setup.py README.md ./
 
 # 安裝套件
 RUN pip install .
 
 # 設置權限
-RUN chown -R jobspy:jobspy /app
+RUN chown -R jobseeker:jobseeker /app
 
 # 切換到應用用戶
-USER jobspy
+USER jobseeker
 
 # 健康檢查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import jobspy" || exit 1
+    CMD python -c "import jobseeker" || exit 1
 
 # 預設命令
-CMD ["python", "-c", "import jobspy; print('JobSpy Alpine 版本運行正常！')"]
+CMD ["python", "-c", "import jobseeker; print('jobseeker Alpine 版本運行正常！')"]
 
 # ==================== 多架構支援 ====================
 # 使用 buildx 建置多架構映像：
-# docker buildx build --platform linux/amd64,linux/arm64 -t jobspy:latest .
+# docker buildx build --platform linux/amd64,linux/arm64 -t jobseeker:latest .
 
 # ==================== 建置說明 ====================
 # 
 # 建置開發環境：
-# docker build --target development -t jobspy:dev .
+# docker build --target development -t jobseeker:dev .
 # 
 # 建置測試環境：
-# docker build --target testing -t jobspy:test .
+# docker build --target testing -t jobseeker:test .
 # 
 # 建置生產環境：
-# docker build --target production -t jobspy:prod .
+# docker build --target production -t jobseeker:prod .
 # 
 # 建置 Alpine 版本：
-# docker build --target production-alpine -t jobspy:alpine .
+# docker build --target production-alpine -t jobseeker:alpine .
 # 
 # 執行範例：
 # 
 # 開發環境：
-# docker run -it --rm -v $(pwd):/app -p 8888:8888 jobspy:dev bash
+# docker run -it --rm -v $(pwd):/app -p 8888:8888 jobseeker:dev bash
 # 
 # 測試環境：
-# docker run --rm jobspy:test
+# docker run --rm jobseeker:test
 # 
 # 生產環境：
-# docker run --rm jobspy:prod
+# docker run --rm jobseeker:prod
 # 
 # 互動式 Python：
-# docker run -it --rm jobspy:prod python
+# docker run -it --rm jobseeker:prod python
 # 
 # 執行特定腳本：
-# docker run --rm -v $(pwd)/examples:/examples jobspy:prod python /examples/basic_usage.py
+# docker run --rm -v $(pwd)/examples:/examples jobseeker:prod python /examples/basic_usage.py
 # 
 # Jupyter Notebook（開發環境）：
-# docker run -it --rm -p 8888:8888 -v $(pwd):/app jobspy:dev jupyter lab --ip=0.0.0.0 --allow-root
+# docker run -it --rm -p 8888:8888 -v $(pwd):/app jobseeker:dev jupyter lab --ip=0.0.0.0 --allow-root
 # 
 # ==================== Docker Compose 支援 ====================
 # 
@@ -206,7 +206,7 @@ CMD ["python", "-c", "import jobspy; print('JobSpy Alpine 版本運行正常！'
 # 
 # version: '3.8'
 # services:
-#   jobspy-dev:
+#   jobseeker-dev:
 #     build:
 #       context: .
 #       target: development
@@ -216,16 +216,16 @@ CMD ["python", "-c", "import jobspy; print('JobSpy Alpine 版本運行正常！'
 #       - "8888:8888"
 #       - "8000:8000"
 #     environment:
-#       - JOBSPY_DEBUG=true
+#       - jobseeker_DEBUG=true
 #   
-#   jobspy-test:
+#   jobseeker-test:
 #     build:
 #       context: .
 #       target: testing
 #     environment:
-#       - JOBSPY_TEST_ENV=ci
+#       - jobseeker_TEST_ENV=ci
 #   
-#   jobspy-prod:
+#   jobseeker-prod:
 #     build:
 #       context: .
 #       target: production
@@ -236,7 +236,7 @@ CMD ["python", "-c", "import jobspy; print('JobSpy Alpine 版本運行正常！'
 # 1. 使用非 root 用戶運行
 # 2. 最小化映像大小
 # 3. 定期更新基礎映像
-# 4. 掃描安全漏洞：docker scan jobspy:latest
+# 4. 掃描安全漏洞：docker scan jobseeker:latest
 # 5. 使用 .dockerignore 排除敏感檔案
 # 
 # ==================== 效能優化 ====================
@@ -264,21 +264,21 @@ CMD ["python", "-c", "import jobspy; print('JobSpy Alpine 版本運行正常！'
 # ==================== 標籤建議 ====================
 # 
 # 版本標籤：
-# jobspy:1.0.0
-# jobspy:1.0
-# jobspy:latest
+# jobseeker:1.0.0
+# jobseeker:1.0
+# jobseeker:latest
 # 
 # 環境標籤：
-# jobspy:dev
-# jobspy:test
-# jobspy:prod
-# jobspy:alpine
+# jobseeker:dev
+# jobseeker:test
+# jobseeker:prod
+# jobseeker:alpine
 # 
 # 架構標籤：
-# jobspy:amd64
-# jobspy:arm64
+# jobseeker:amd64
+# jobseeker:arm64
 # 
 # 日期標籤：
-# jobspy:2024-01-15
-# jobspy:20240115
+# jobseeker:2024-01-15
+# jobseeker:20240115
 #

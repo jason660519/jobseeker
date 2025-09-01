@@ -1,4 +1,4 @@
-"""Seek.com.au 工具函數
+﻿"""Seek.com.au 工具函數
 
 此模塊包含 Seek 爬蟲所需的輔助函數。
 """
@@ -7,8 +7,8 @@ import re
 from typing import Optional, Tuple, List
 from datetime import datetime
 
-from jobspy.model import JobType, CompensationInterval
-from jobspy.seek.constant import STATE_MAPPING, SALARY_INTERVAL_MAPPING
+from jobseeker.model import JobType, CompensationInterval
+from jobseeker.seek.constant import STATE_MAPPING, SALARY_INTERVAL_MAPPING
 
 
 def parse_location(location_str: str) -> Tuple[Optional[str], Optional[str]]:

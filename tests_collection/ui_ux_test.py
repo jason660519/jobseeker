@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 UI/UX 職位測試腳本
@@ -13,13 +13,13 @@ import pandas as pd
 from datetime import datetime
 from pathlib import Path
 
-# 添加 jobspy 模組路徑
+# 添加 jobseeker 模組路徑
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from jobspy import scrape_jobs
+    from jobseeker import scrape_jobs
 except ImportError as e:
-    print(f"導入 jobspy 失敗: {e}")
+    print(f"導入 jobseeker 失敗: {e}")
     sys.exit(1)
 
 def create_output_directory():

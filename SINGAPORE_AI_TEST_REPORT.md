@@ -1,4 +1,4 @@
-# 新加坡AI工程師職位搜索測試報告
+﻿# 新加坡AI工程師職位搜索測試報告
 
 ## 測試概述
 
@@ -142,5 +142,5 @@
 ---
 
 **測試完成時間**: 2025年1月22日  
-**系統版本**: JobSpy with Intelligent Routing v2.0  
+**系統版本**: jobseeker with Intelligent Routing v2.0  
 **測試工程師**: AI Assistant

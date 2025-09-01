@@ -1,11 +1,11 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 測試 BDJobs 修正是否有效
 """
 
-from jobspy import scrape_jobs
-from jobspy.model import Site
+from jobseeker import scrape_jobs
+from jobseeker.model import Site
 
 def test_bdjobs():
     """測試 BDJobs 是否能正常工作"""

@@ -1,4 +1,4 @@
-"""jobspy.jobboard.exceptions
+﻿"""jobseeker.jobboard.exceptions
 ~~~~~~~~~~~~~~~~~~~
 
 This module contains the set of Scrapers' exceptions.
@@ -6,7 +6,7 @@ This module contains the set of Scrapers' exceptions.
 """
 
 # 導入統一錯誤處理機制
-from jobspy.error_handling import (
+from jobseeker.error_handling import (
     ScrapingError, NetworkError, RateLimitError, ParsingError, 
     AuthenticationError, TimeoutError, ErrorType
 )

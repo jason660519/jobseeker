@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 測試目錄整合工具
+jobseeker 測試目錄整合工具
 用於整理和統一管理所有測試相關的目錄和文件
 """
 
@@ -140,7 +140,7 @@ def create_directory_guide():
     創建目錄結構說明文件
     """
     guide_content = """
-# JobSpy 測試目錄結構說明
+# jobseeker 測試目錄結構說明
 
 ## 📁 目錄結構概覽
 
@@ -249,7 +249,7 @@ def generate_analysis_report(analysis):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     report = f"""
-JobSpy 測試目錄分析報告
+jobseeker 測試目錄分析報告
 生成時間: {timestamp}
 {'=' * 50}
 
@@ -322,7 +322,7 @@ def main():
     """
     主函數 - 執行測試目錄整合
     """
-    print("🔍 JobSpy 測試目錄整合工具")
+    print("🔍 jobseeker 測試目錄整合工具")
     print("=" * 40)
     
     # 分析現有目錄結構

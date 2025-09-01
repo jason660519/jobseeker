@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 測試配置檔案
+jobseeker 測試配置檔案
 
 這個檔案包含了所有測試的共用配置、fixtures 和設定。
 它會被 pytest 自動載入，為所有測試提供共用的測試環境。
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -20,17 +20,17 @@ from typing import Generator, Dict, Any
 from unittest.mock import Mock, patch
 
 # 設定專案根目錄
-project_root = Path(__file__).parent.parent  # 回到 JobSpy 根目錄
+project_root = Path(__file__).parent.parent  # 回到 jobseeker 根目錄
 tests_dir = Path(__file__).parent  # tests 資料夾
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(tests_dir))
 
-# JobSpy 模組導入
+# jobseeker 模組導入
 try:
-    from jobspy.model import ScraperInput, Site, JobPost
-    from jobspy.cache_system import get_global_cache
-    from jobspy.performance_monitoring import get_global_metrics
-    from jobspy.async_scraping import AsyncConfig, AsyncMode
+    from jobseeker.model import ScraperInput, Site, JobPost
+    from jobseeker.cache_system import get_global_cache
+    from jobseeker.performance_monitoring import get_global_metrics
+    from jobseeker.async_scraping import AsyncConfig, AsyncMode
 except ImportError:
     # 如果模組尚未實現，創建 Mock 物件
     ScraperInput = Mock
@@ -289,7 +289,7 @@ def mock_cache():
     mock_cache_obj.clear.side_effect = mock_clear
     mock_cache_obj.get_stats.side_effect = mock_get_stats
     
-    with patch('jobspy.cache_system.get_global_cache', return_value=mock_cache_obj):
+    with patch('jobseeker.cache_system.get_global_cache', return_value=mock_cache_obj):
         yield mock_cache_obj
 
 
@@ -333,7 +333,7 @@ def mock_metrics():
     mock_metrics_obj.get_stats.side_effect = mock_get_stats
     mock_metrics_obj.reset.side_effect = mock_reset
     
-    with patch('jobspy.performance_monitoring.get_global_metrics', return_value=mock_metrics_obj):
+    with patch('jobseeker.performance_monitoring.get_global_metrics', return_value=mock_metrics_obj):
         yield mock_metrics_obj
 
 

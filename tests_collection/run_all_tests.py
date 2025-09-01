@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 測試腳本批次執行器 (Python 版本)
+jobseeker 測試腳本批次執行器 (Python 版本)
 用於一次執行所有測試腳本並生成統合報告
 """
 
@@ -18,7 +18,7 @@ def print_header():
     顯示程式標題
     """
     print("=" * 60)
-    print("🚀 JobSpy 測試腳本批次執行器")
+    print("🚀 jobseeker 測試腳本批次執行器")
     print("=" * 60)
     print("開始執行所有測試腳本...\n")
 
@@ -188,7 +188,7 @@ def generate_report(test_results, batch_dir, total_duration):
     # 生成文字報告
     report_file = os.path.join(batch_dir, "batch_test_report.txt")
     with open(report_file, 'w', encoding='utf-8') as f:
-        f.write("JobSpy 批次測試報告\n")
+        f.write("jobseeker 批次測試報告\n")
         f.write("=" * 50 + "\n")
         f.write(f"測試時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write(f"總執行時間: {total_duration:.1f} 秒\n")

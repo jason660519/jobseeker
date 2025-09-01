@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 簡化的增強版爬蟲測試腳本
@@ -6,16 +6,16 @@
 
 import sys
 import traceback
-from jobspy.model import ScraperInput, Site
+from jobseeker.model import ScraperInput, Site
 
 def test_imports():
     """測試模組導入"""
     print("Testing imports...")
     try:
-        from jobspy.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
-        from jobspy.google.enhanced_google import EnhancedGoogle
-        from jobspy.bayt.enhanced_bayt import EnhancedBaytScraper
-        from jobspy.anti_detection import AntiDetectionScraper
+        from jobseeker.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
+        from jobseeker.google.enhanced_google import EnhancedGoogle
+        from jobseeker.bayt.enhanced_bayt import EnhancedBaytScraper
+        from jobseeker.anti_detection import AntiDetectionScraper
         print("✓ All imports successful")
         return True
     except Exception as e:
@@ -26,7 +26,7 @@ def test_anti_detection():
     """測試反檢測模組"""
     print("Testing anti-detection module...")
     try:
-        from jobspy.anti_detection import AntiDetectionScraper
+        from jobseeker.anti_detection import AntiDetectionScraper
         scraper = AntiDetectionScraper()
         headers = scraper.get_random_headers()
         if headers and 'User-Agent' in headers:
@@ -43,7 +43,7 @@ def test_ziprecruiter():
     """測試 ZipRecruiter 爬蟲"""
     print("Testing ZipRecruiter scraper...")
     try:
-        from jobspy.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
+        from jobseeker.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
         scraper = EnhancedZipRecruiter()
         scraper_input = ScraperInput(
             site_type=[Site.ZIP_RECRUITER],
@@ -69,7 +69,7 @@ def test_google():
     """測試 Google Jobs 爬蟲"""
     print("Testing Google Jobs scraper...")
     try:
-        from jobspy.google.enhanced_google import EnhancedGoogle
+        from jobseeker.google.enhanced_google import EnhancedGoogle
         scraper = EnhancedGoogle()
         scraper_input = ScraperInput(
             site_type=[Site.GOOGLE],
@@ -95,7 +95,7 @@ def test_bayt():
     """測試 Bayt 爬蟲"""
     print("Testing Bayt scraper...")
     try:
-        from jobspy.bayt.enhanced_bayt import EnhancedBaytScraper
+        from jobseeker.bayt.enhanced_bayt import EnhancedBaytScraper
         scraper = EnhancedBaytScraper()
         scraper_input = ScraperInput(
             site_type=[Site.BAYT],

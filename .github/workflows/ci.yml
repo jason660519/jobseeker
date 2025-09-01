@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+﻿name: CI/CD Pipeline
 
 # 觸發條件
 on:
@@ -25,12 +25,12 @@ on:
 # 環境變數
 env:
   PYTHON_VERSION: '3.9'
-  JOBSPY_TEST_ENV: 'ci'
-  JOBSPY_CACHE_ENABLED: 'false'
-  JOBSPY_MOCK_NETWORK: 'true'
-  JOBSPY_VERBOSE: 'false'
-  JOBSPY_TIMEOUT: '60'
-  JOBSPY_MAX_RETRIES: '3'
+  jobseeker_TEST_ENV: 'ci'
+  jobseeker_CACHE_ENABLED: 'false'
+  jobseeker_MOCK_NETWORK: 'true'
+  jobseeker_VERBOSE: 'false'
+  jobseeker_TIMEOUT: '60'
+  jobseeker_MAX_RETRIES: '3'
 
 # 並發控制
 concurrency:
@@ -72,11 +72,11 @@ jobs:
       run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
     
     - name: MyPy 類型檢查
-      run: mypy jobspy/ --ignore-missing-imports
+      run: mypy jobseeker/ --ignore-missing-imports
       continue-on-error: true
     
     - name: Bandit 安全檢查
-      run: bandit -r jobspy/ -f json -o bandit-report.json
+      run: bandit -r jobseeker/ -f json -o bandit-report.json
       continue-on-error: true
     
     - name: Safety 依賴安全檢查
@@ -212,7 +212,7 @@ jobs:
     
     - name: 執行效能測試
       env:
-        JOBSPY_TEST_ENV: 'performance'
+        jobseeker_TEST_ENV: 'performance'
       run: |
         python test_runner.py --performance --json performance-test-results.json --report performance-report.md
     
@@ -252,9 +252,9 @@ jobs:
     
     - name: 執行網路測試
       env:
-        JOBSPY_TEST_ENV: 'network'
-        JOBSPY_MOCK_NETWORK: 'false'
-        JOBSPY_NETWORK_TESTS: 'true'
+        jobseeker_TEST_ENV: 'network'
+        jobseeker_MOCK_NETWORK: 'false'
+        jobseeker_NETWORK_TESTS: 'true'
       run: |
         python test_runner.py --network --json network-test-results.json
     
@@ -323,13 +323,13 @@ jobs:
       with:
         context: .
         push: false
-        tags: jobspy:test
+        tags: jobseeker:test
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
     - name: 在 Docker 中執行測試
       run: |
-        docker run --rm -v ${{ github.workspace }}:/app -w /app jobspy:test python test_runner.py --quick
+        docker run --rm -v ${{ github.workspace }}:/app -w /app jobseeker:test python test_runner.py --quick
 
   # ==================== 相容性測試 ====================
   compatibility-test:
@@ -407,7 +407,7 @@ jobs:
         
         # 生成 Markdown 報告
         with open('test-summary.md', 'w') as f:
-            f.write('# JobSpy 測試報告\n\n')
+            f.write('# jobseeker 測試報告\n\n')
             f.write(f'**提交**: {os.getenv(\"GITHUB_SHA\", \"unknown\")}\n')
             f.write(f'**分支**: {os.getenv(\"GITHUB_REF_NAME\", \"unknown\")}\n')
             f.write(f'**工作流程**: {os.getenv(\"GITHUB_RUN_ID\", \"unknown\")}\n\n')
@@ -506,7 +506,7 @@ jobs:
         <!DOCTYPE html>
         <html>
         <head>
-            <title>JobSpy 文檔</title>
+            <title>jobseeker 文檔</title>
             <meta charset="utf-8">
             <style>
                 body { font-family: Arial, sans-serif; margin: 40px; }
@@ -516,13 +516,13 @@ jobs:
             </style>
         </head>
         <body>
-            <h1>JobSpy 專案文檔</h1>
+            <h1>jobseeker 專案文檔</h1>
             <div class="nav">
                 <a href="test-report.md">測試報告</a>
-                <a href="https://github.com/your-username/jobspy">GitHub 倉庫</a>
+                <a href="https://github.com/your-username/jobseeker">GitHub 倉庫</a>
             </div>
             <h2>專案簡介</h2>
-            <p>JobSpy 是一個強大的職位資訊爬蟲工具，支援多網站爬取、非同步處理和智能快取。</p>
+            <p>jobseeker 是一個強大的職位資訊爬蟲工具，支援多網站爬取、非同步處理和智能快取。</p>
             
             <h2>主要功能</h2>
             <ul>
@@ -535,9 +535,9 @@ jobs:
             </ul>
             
             <h2>快速開始</h2>
-            <pre><code>pip install jobspy
+            <pre><code>pip install jobseeker
         
-        from jobspy import scrape_jobs
+        from jobseeker import scrape_jobs
         
         jobs = scrape_jobs(
             site_name="indeed",

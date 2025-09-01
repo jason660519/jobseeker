@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import math
 import random
@@ -11,16 +11,16 @@ import regex as re
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
-from jobspy.exception import LinkedInException
-from jobspy.linkedin.constant import headers
-from jobspy.linkedin.util import (
+from jobseeker.exception import LinkedInException
+from jobseeker.linkedin.constant import headers
+from jobseeker.linkedin.util import (
     is_job_remote,
     job_type_code,
     parse_job_type,
     parse_job_level,
     parse_company_industry
 )
-from jobspy.model import (
+from jobseeker.model import (
     JobPost,
     Location,
     JobResponse,
@@ -31,7 +31,7 @@ from jobspy.model import (
     ScraperInput,
     Site,
 )
-from jobspy.util import (
+from jobseeker.util import (
     extract_emails_from_text,
     currency_parser,
     markdown_converter,
@@ -339,3 +339,4 @@ class LinkedIn(Scraper):
                 job_url_direct = unquote(job_url_direct_match.group())
 
         return job_url_direct
+

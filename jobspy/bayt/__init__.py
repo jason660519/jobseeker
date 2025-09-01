@@ -1,11 +1,11 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import random
 import time
 
 from bs4 import BeautifulSoup
 
-from jobspy.model import (
+from jobseeker.model import (
     Scraper,
     ScraperInput,
     Site,
@@ -14,7 +14,7 @@ from jobspy.model import (
     Location,
     Country,
 )
-from jobspy.util import create_logger, create_session
+from jobseeker.util import create_logger, create_session
 from .enhanced_bayt import EnhancedBaytScraper
 
 log = create_logger("Bayt")
@@ -147,3 +147,4 @@ class OriginalBaytScraper(Scraper):
         a_tag = job_general_information.find("a")
         if a_tag and a_tag.has_attr("href"):
             return self.base_url + a_tag["href"].strip()
+

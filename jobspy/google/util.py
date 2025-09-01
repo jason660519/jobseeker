@@ -1,6 +1,6 @@
-import re
+﻿import re
 
-from jobspy.util import create_logger
+from jobseeker.util import create_logger
 
 log = create_logger("Google")
 
@@ -39,3 +39,4 @@ def find_job_info_initial_page(html_text: str):
             log.error(f"Failed to parse match: {str(e)}")
             results.append({"raw_match": match.group(0), "error": str(e)})
     return results
+

@@ -1,4 +1,4 @@
-"""Seek.com.au 職位爬蟲模塊
+﻿"""Seek.com.au 職位爬蟲模塊
 
 此模塊提供從 Seek.com.au 爬取職位信息的功能。
 """
@@ -14,7 +14,7 @@ from urllib.parse import urlencode, urlparse, parse_qs
 from playwright.async_api import async_playwright, Page, Browser
 from bs4 import BeautifulSoup
 
-from jobspy.model import (
+from jobseeker.model import (
     JobPost, JobResponse, JobType, Location, 
     Compensation, CompensationInterval, Site, Country,
     Scraper, ScraperInput
@@ -29,8 +29,8 @@ from .util import (
     is_remote_job, clean_text, format_date, 
     generate_job_id, validate_url
 )
-from jobspy.util import create_logger, get_scraper_logger
-from jobspy.enhanced_logging import LogCategory, performance_logger, async_performance_logger
+from jobseeker.util import create_logger, get_scraper_logger
+from jobseeker.enhanced_logging import LogCategory, performance_logger, async_performance_logger
 
 
 class SeekScraper(Scraper):

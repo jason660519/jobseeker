@@ -1,21 +1,21 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 智能路由系統使用示例
+jobseeker 智能路由系統使用示例
 展示如何使用智能路由功能進行工作搜索
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2025-01-27
 """
 
 import sys
 from pathlib import Path
 
-# 添加 jobspy 到路徑
+# 添加 jobseeker 到路徑
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from jobspy.route_manager import RouteManager, smart_scrape_jobs
-from jobspy.intelligent_router import IntelligentRouter
+from jobseeker.route_manager import RouteManager, smart_scrape_jobs
+from jobseeker.intelligent_router import IntelligentRouter
 
 def example_1_australia_construction():
     """
@@ -245,7 +245,7 @@ def run_all_examples():
     """
     運行所有示例
     """
-    print("JobSpy 智能路由系統示例集")
+    print("jobseeker 智能路由系統示例集")
     print("=" * 60)
     
     examples = [
@@ -273,7 +273,7 @@ def interactive_demo():
     互動式演示
     """
     print("\n" + "=" * 60)
-    print("JobSpy 智能路由系統 - 互動式演示")
+    print("jobseeker 智能路由系統 - 互動式演示")
     print("=" * 60)
     print("輸入您的工作搜索查詢，系統將智能選擇最適合的代理")
     print("輸入 'quit' 退出")
@@ -285,7 +285,7 @@ def interactive_demo():
             query = input("\n請輸入您的查詢: ").strip()
             
             if query.lower() in ['quit', 'exit', '退出', 'q']:
-                print("感謝使用 JobSpy 智能路由系統！")
+                print("感謝使用 jobseeker 智能路由系統！")
                 break
             
             if not query:
@@ -318,7 +318,7 @@ def interactive_demo():
                         print(f"  {i+1}. {job.get('title', 'N/A')} - {job.get('company', 'N/A')}")
             
         except KeyboardInterrupt:
-            print("\n\n感謝使用 JobSpy 智能路由系統！")
+            print("\n\n感謝使用 jobseeker 智能路由系統！")
             break
         except Exception as e:
             print(f"\n錯誤: {e}")
@@ -326,7 +326,7 @@ def interactive_demo():
 if __name__ == "__main__":
     import argparse
     
-    parser = argparse.ArgumentParser(description="JobSpy 智能路由系統示例")
+    parser = argparse.ArgumentParser(description="jobseeker 智能路由系統示例")
     parser.add_argument(
         "--interactive", "-i", 
         action="store_true", 

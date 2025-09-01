@@ -1,8 +1,8 @@
-# JobSpy 智能路由系統使用指南
+﻿# jobseeker 智能路由系統使用指南
 
 ## 概述
 
-JobSpy 智能路由系統是一個革命性的功能，能夠根據用戶的查詢自動選擇最適合的爬蟲代理（agents），從而提高搜索效率並減少不必要的失敗。
+jobseeker 智能路由系統是一個革命性的功能，能夠根據用戶的查詢自動選擇最適合的爬蟲代理（agents），從而提高搜索效率並減少不必要的失敗。
 
 ## 🚀 主要特性
 
@@ -31,7 +31,7 @@ JobSpy 智能路由系統是一個革命性的功能，能夠根據用戶的查�
 ### 1. 基本使用
 
 ```python
-from jobspy.route_manager import smart_scrape_jobs
+from jobseeker.route_manager import smart_scrape_jobs
 
 # 簡單搜索
 result = smart_scrape_jobs(
@@ -46,7 +46,7 @@ print(f"使用的代理: {[a.value for a in result.successful_agents]}")
 ### 2. 高級使用
 
 ```python
-from jobspy.route_manager import RouteManager
+from jobseeker.route_manager import RouteManager
 
 # 創建路由管理器
 manager = RouteManager(max_workers=3)
@@ -147,7 +147,7 @@ python smart_job_search.py "尋找台北的資料科學家工作" --dry-run --ex
 ### 2. 代理優先級調整
 
 ```python
-from jobspy.route_manager import RouteManager
+from jobseeker.route_manager import RouteManager
 
 # 使用自定義配置
 manager = RouteManager(config_path="config/intelligent_routing_config.json")
@@ -158,7 +158,7 @@ manager = RouteManager(config_path="config/intelligent_routing_config.json")
 ### 1. 僅分析路由（不執行搜索）
 
 ```python
-from jobspy.intelligent_router import IntelligentRouter
+from jobseeker.intelligent_router import IntelligentRouter
 
 router = IntelligentRouter()
 decision = router.analyze_query("你的查詢")
@@ -345,4 +345,4 @@ result = smart_scrape_jobs(
 
 ---
 
-**JobSpy 智能路由系統** - 讓工作搜索更智能、更高效！
+**jobseeker 智能路由系統** - 讓工作搜索更智能、更高效！

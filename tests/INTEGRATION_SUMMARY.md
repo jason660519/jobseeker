@@ -1,4 +1,4 @@
-# JobSpy 測試系統整合總結
+﻿# jobseeker 測試系統整合總結
 
 ## 📋 整合完成狀態
 
@@ -169,12 +169,12 @@ pytest test_all_sites.py::TestAsyncAllSites::test_async_memory_usage -v
 cd ..
 
 # 執行所有測試
-docker-compose --profile test up jobspy-test
+docker-compose --profile test up jobseeker-test
 
 # 執行特定測試類型
-docker-compose --profile test up jobspy-unit-test
-docker-compose --profile test up jobspy-integration-test
-docker-compose --profile performance up jobspy-performance-test
+docker-compose --profile test up jobseeker-unit-test
+docker-compose --profile test up jobseeker-integration-test
+docker-compose --profile performance up jobseeker-performance-test
 ```
 
 ## ⚙️ 配置選項
@@ -183,16 +183,16 @@ docker-compose --profile performance up jobspy-performance-test
 
 ```bash
 # 使用 Mock 模式（推薦開發時使用）
-export JOBSPY_MOCK_NETWORK=true
+export jobseeker_MOCK_NETWORK=true
 
 # 設定測試環境
-export JOBSPY_TEST_ENV=local
+export jobseeker_TEST_ENV=local
 
 # 啟用詳細輸出
-export JOBSPY_VERBOSE=true
+export jobseeker_VERBOSE=true
 
 # 設定並發數量
-export JOBSPY_TEST_CONCURRENCY=4
+export jobseeker_TEST_CONCURRENCY=4
 ```
 
 ## 🎯 測試策略
@@ -227,7 +227,7 @@ export JOBSPY_TEST_CONCURRENCY=4
 2. **網路連接問題**
    ```bash
    # 使用 Mock 模式
-   export JOBSPY_MOCK_NETWORK=true
+   export jobseeker_MOCK_NETWORK=true
    pytest -m "not network" -v
    ```
 
@@ -296,4 +296,4 @@ pytest --pdb
 
 ✅ **完整文檔**：提供詳細的使用說明和故障排除指南
 
-**現在您可以輕鬆地測試 JobSpy 的所有功能！** 🚀
+**現在您可以輕鬆地測試 jobseeker 的所有功能！** 🚀

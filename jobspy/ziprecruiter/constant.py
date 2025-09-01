@@ -1,4 +1,4 @@
-headers = {
+﻿headers = {
     "Host": "api.ziprecruiter.com",
     "accept": "*/*",
     "x-zr-zva-override": "100000000;vid:ZT1huzm_EQlDTVEc",
@@ -27,3 +27,4 @@ get_cookie_data = [
     ("property", "device_model:iPhone 14 Pro"),
     ("property", "brand:Apple"),
 ]
+

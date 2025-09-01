@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 智能工作搜索 CLI 工具
+jobseeker 智能工作搜索 CLI 工具
 使用智能路由系統進行工作搜索
 
 使用方法:
@@ -9,7 +9,7 @@ JobSpy 智能工作搜索 CLI 工具
     python smart_job_search.py "Looking for software engineer jobs in San Francisco" --results 20
     python smart_job_search.py "Find marketing jobs in Mumbai" --location "Mumbai, India" --hours 24
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2025-01-27
 """
 
@@ -20,15 +20,15 @@ import time
 from pathlib import Path
 from typing import Optional
 
-# 添加 jobspy 到路徑
+# 添加 jobseeker 到路徑
 sys.path.insert(0, str(Path(__file__).parent))
 
 try:
-    from jobspy.route_manager import RouteManager, smart_scrape_jobs
-    from jobspy.intelligent_router import IntelligentRouter
+    from jobseeker.route_manager import RouteManager, smart_scrape_jobs
+    from jobseeker.intelligent_router import IntelligentRouter
 except ImportError as e:
     print(f"導入錯誤: {e}")
-    print("請確保 JobSpy 已正確安裝")
+    print("請確保 jobseeker 已正確安裝")
     sys.exit(1)
 
 def parse_arguments():
@@ -39,7 +39,7 @@ def parse_arguments():
         解析後的參數
     """
     parser = argparse.ArgumentParser(
-        description="JobSpy 智能工作搜索工具",
+        description="jobseeker 智能工作搜索工具",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
@@ -240,7 +240,7 @@ def main():
     # 設置日誌
     setup_logging(args.verbose)
     
-    print("JobSpy 智能工作搜索工具")
+    print("jobseeker 智能工作搜索工具")
     print("=" * 40)
     
     try:

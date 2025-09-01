@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 全網站測試套件
+jobseeker 全網站測試套件
 
 這個模組包含針對所有支援網站的綜合測試，確保每個網站的爬蟲功能正常運作。
 支援的網站包括：LinkedIn, Indeed, ZipRecruiter, Glassdoor, Google, Bayt, Naukri, BDJobs, Seek
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2024
 """
 
@@ -17,9 +17,9 @@ from typing import List, Dict, Any
 from unittest.mock import patch, MagicMock
 
 import pandas as pd
-from jobspy import scrape_jobs
-from jobspy.model import Site, JobType, Country
-from jobspy.async_scraping import async_scrape_jobs, AsyncConfig, AsyncMode
+from jobseeker import scrape_jobs
+from jobseeker.model import Site, JobType, Country
+from jobseeker.async_scraping import async_scrape_jobs, AsyncConfig, AsyncMode
 from tests.fixtures.test_utils import (
     MockHTTPResponse, MockScraper, create_mock_job_data,
     measure_execution_time, NetworkDelaySimulator
@@ -610,7 +610,7 @@ pytest_marks = {
 
 if __name__ == "__main__":
     # 執行測試的範例
-    print("JobSpy 全網站測試套件")
+    print("jobseeker 全網站測試套件")
     print("支援的網站：")
     for site in TestAllSitesIntegration.ALL_SITES:
         print(f"  - {site.value}")

@@ -1,7 +1,7 @@
-from bs4 import BeautifulSoup
+﻿from bs4 import BeautifulSoup
 
-from jobspy.model import JobType, Location
-from jobspy.util import get_enum_from_job_type
+from jobseeker.model import JobType, Location
+from jobseeker.util import get_enum_from_job_type
 
 
 def job_type_code(job_type_enum: JobType) -> str:
@@ -94,3 +94,4 @@ def is_job_remote(title: dict, description: str, location: Location) -> bool:
     full_string = f'{title} {description} {location}'.lower()
     is_remote = any(keyword in full_string for keyword in remote_keywords)
     return is_remote
+

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import os
 from typing import Dict, Type
@@ -43,21 +43,21 @@ class EnhancedScraperConfig:
         # 動態導入增強版爬蟲
         if cls.is_enhanced_enabled('ziprecruiter'):
             try:
-                from jobspy.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
+                from jobseeker.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
                 enhanced_mapping['ziprecruiter'] = EnhancedZipRecruiter
             except ImportError:
                 pass
         
         if cls.is_enhanced_enabled('google'):
             try:
-                from jobspy.google.enhanced_google import EnhancedGoogle
+                from jobseeker.google.enhanced_google import EnhancedGoogle
                 enhanced_mapping['google'] = EnhancedGoogle
             except ImportError:
                 pass
         
         if cls.is_enhanced_enabled('bayt'):
             try:
-                from jobspy.bayt.enhanced_bayt import EnhancedBaytScraper
+                from jobseeker.bayt.enhanced_bayt import EnhancedBaytScraper
                 enhanced_mapping['bayt'] = EnhancedBaytScraper
             except ImportError:
                 pass
@@ -69,7 +69,7 @@ class EnhancedScraperConfig:
         """
         記錄增強版爬蟲的啟用狀態
         """
-        from jobspy.util import create_logger
+        from jobseeker.util import create_logger
         log = create_logger("EnhancedConfig")
         
         if not cls.ENABLE_ALL_ENHANCED:

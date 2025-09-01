@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 路由管理器
-整合智能路由系統到 JobSpy 主架構
+jobseeker 路由管理器
+整合智能路由系統到 jobseeker 主架構
 
 功能:
 1. 路由決策執行
@@ -10,7 +10,7 @@ JobSpy 路由管理器
 3. 結果聚合
 4. 錯誤處理和重試
 
-Author: JobSpy Team
+Author: jobseeker Team
 Date: 2025-01-27
 """
 
@@ -22,7 +22,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 from pathlib import Path
 
-# JobSpy 核心導入
+# jobseeker 核心導入
 try:
     from .intelligent_router import IntelligentRouter, RoutingDecision, AgentType
     from .model import Site
@@ -507,7 +507,7 @@ def demo_route_manager():
     test_query = "請你幫我找Australia NSW Gledswood Hill 50公里內有關建築行業的工作"
     
     print("=" * 60)
-    print("JobSpy 路由管理器演示")
+    print("jobseeker 路由管理器演示")
     print("=" * 60)
     print(f"測試查詢: {test_query}")
     print()

@@ -1,8 +1,8 @@
-# AI智能路由系統測試報告
+﻿# AI智能路由系統測試報告
 
 ## 測試概述
 
-本報告記錄了JobSpy AI智能路由系統的測試結果，驗證系統能否正確識別用戶查詢中的關鍵詞並選擇合適的人力網站代理。
+本報告記錄了jobseeker AI智能路由系統的測試結果，驗證系統能否正確識別用戶查詢中的關鍵詞並選擇合適的人力網站代理。
 
 ## 測試案例
 
@@ -124,4 +124,4 @@
 
 **測試日期**: 2024年1月
 **測試環境**: Windows 10, Python 3.x
-**系統版本**: JobSpy with AI Intelligent Router v1.0
+**系統版本**: jobseeker with AI Intelligent Router v1.0

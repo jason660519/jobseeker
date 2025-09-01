@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 整合測試
+jobseeker 整合測試
 
-這個檔案包含了 JobSpy 的整合測試，用於測試不同模組之間的協作，
+這個檔案包含了 jobseeker 的整合測試，用於測試不同模組之間的協作，
 以及端到端的功能驗證。
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -17,11 +17,11 @@ from unittest.mock import patch, MagicMock
 import time
 from pathlib import Path
 
-# JobSpy 模組導入
-from jobspy import scrape_jobs
+# jobseeker 模組導入
+from jobseeker import scrape_jobs
 try:
-    from jobspy import scrape_jobs_async, create_async_config
-    from jobspy.async_scraping import AsyncConfig, AsyncMode, ConcurrencyLevel
+    from jobseeker import scrape_jobs_async, create_async_config
+    from jobseeker.async_scraping import AsyncConfig, AsyncMode, ConcurrencyLevel
 except ImportError:
     scrape_jobs_async = None
     create_async_config = None
@@ -30,12 +30,12 @@ except ImportError:
     ConcurrencyLevel = None
 
 try:
-    from jobspy.cache_system import JobCache
+    from jobseeker.cache_system import JobCache
 except ImportError:
     JobCache = None
 
 try:
-    from jobspy.performance_monitoring import ScrapingMetrics
+    from jobseeker.performance_monitoring import ScrapingMetrics
 except ImportError:
     ScrapingMetrics = None
 

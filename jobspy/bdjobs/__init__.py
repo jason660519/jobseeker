@@ -1,4 +1,4 @@
-# __init__.py
+﻿# __init__.py
 from __future__ import annotations
 
 import random
@@ -10,15 +10,15 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
-from jobspy.exception import BDJobsException
-from jobspy.bdjobs.constant import headers, search_params
-from jobspy.bdjobs.util import (
+from jobseeker.exception import BDJobsException
+from jobseeker.bdjobs.constant import headers, search_params
+from jobseeker.bdjobs.util import (
     parse_location,
     parse_date,
     find_job_listings,
     is_job_remote,
 )
-from jobspy.model import (
+from jobseeker.model import (
     JobPost,
     Location,
     JobResponse,
@@ -28,7 +28,7 @@ from jobspy.model import (
     Site,
     DescriptionFormat,
 )
-from jobspy.util import (
+from jobseeker.util import (
     extract_emails_from_text,
     create_session,
     create_logger,
@@ -351,3 +351,4 @@ class BDJobs(Scraper):
         except Exception as e:
             log.error(f"Error getting job details: {str(e)}")
             return {}
+

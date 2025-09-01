@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 增強版爬蟲測試腳本
@@ -15,8 +15,8 @@ from typing import Dict, Any, List
 # 添加項目根目錄到 Python 路徑
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from jobspy import scrape_jobs
-from jobspy.model import Site
+from jobseeker import scrape_jobs
+from jobseeker.model import Site
 
 
 def setup_enhanced_environment():

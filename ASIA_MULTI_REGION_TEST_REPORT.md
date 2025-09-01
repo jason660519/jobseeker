@@ -1,4 +1,4 @@
-# 亞洲多地區 AI Engineer 職位搜索測試報告
+﻿# 亞洲多地區 AI Engineer 職位搜索測試報告
 
 ## 測試概述
 - **測試時間**: 2025年1月22日
@@ -160,4 +160,4 @@
 ---
 *測試完成時間: 2025年1月22日*  
 *測試範圍: 新加坡、台灣、日本多地區 AI Engineer 職位搜索*  
-*系統版本: JobSpy v2.0 with Enhanced Asian Region Support*
+*系統版本: jobseeker v2.0 with Enhanced Asian Region Support*

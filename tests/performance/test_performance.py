@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 效能測試
+jobseeker 效能測試
 
-這個檔案包含了 JobSpy 的效能測試，用於測試系統在不同負載下的表現，
+這個檔案包含了 jobseeker 的效能測試，用於測試系統在不同負載下的表現，
 包括響應時間、吞吐量、記憶體使用等指標。
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -22,11 +22,11 @@ import gc
 import sys
 from pathlib import Path
 
-# JobSpy 模組導入
-from jobspy import scrape_jobs
+# jobseeker 模組導入
+from jobseeker import scrape_jobs
 try:
-    from jobspy import scrape_jobs_async, create_async_config
-    from jobspy.async_scraping import AsyncConfig, AsyncMode, ConcurrencyLevel
+    from jobseeker import scrape_jobs_async, create_async_config
+    from jobseeker.async_scraping import AsyncConfig, AsyncMode, ConcurrencyLevel
 except ImportError:
     scrape_jobs_async = None
     create_async_config = None
@@ -35,12 +35,12 @@ except ImportError:
     ConcurrencyLevel = None
 
 try:
-    from jobspy.cache_system import JobCache
+    from jobseeker.cache_system import JobCache
 except ImportError:
     JobCache = None
 
 try:
-    from jobspy.performance_monitoring import ScrapingMetrics
+    from jobseeker.performance_monitoring import ScrapingMetrics
 except ImportError:
     ScrapingMetrics = None
 
@@ -670,7 +670,7 @@ class TestMemoryPerformance:
 @pytest.mark.benchmark
 def test_performance_baseline():
     """效能基準測試"""
-    print("\n=== JobSpy 效能基準測試 ===")
+    print("\n=== jobseeker 效能基準測試 ===")
     
     # 系統資訊
     print(f"Python 版本: {sys.version}")
@@ -738,7 +738,7 @@ def test_performance_baseline():
 @pytest.mark.stress
 def test_stress_test():
     """壓力測試"""
-    print("\n=== JobSpy 壓力測試 ===")
+    print("\n=== jobseeker 壓力測試 ===")
     
     monitor = PerformanceMonitor()
     monitor.start()

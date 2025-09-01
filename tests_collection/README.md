@@ -1,6 +1,6 @@
-# JobSpy 測試腳本集合
+﻿# jobseeker 測試腳本集合
 
-這個目錄包含了 JobSpy 專案的所有測試腳本，方便統一管理和執行。
+這個目錄包含了 jobseeker 專案的所有測試腳本，方便統一管理和執行。
 
 ## 📁 目錄結構
 
@@ -86,4 +86,4 @@ Get-ChildItem *.py | ForEach-Object { python $_.Name }
 ---
 
 **最後更新**：2025-09-02  
-**維護者**：JobSpy 開發團隊
+**維護者**：jobseeker 開發團隊

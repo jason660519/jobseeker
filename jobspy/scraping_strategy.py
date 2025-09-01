@@ -1,4 +1,4 @@
-"""統一爬蟲策略介面
+﻿"""統一爬蟲策略介面
 
 此模組提供統一的爬蟲策略介面，允許不同的爬蟲實現使用一致的策略模式。
 """
@@ -14,10 +14,10 @@ from enum import Enum
 from typing import Dict, List, Optional, Any, Union, Callable, Type
 from urllib.parse import urljoin, urlparse
 
-from jobspy.model import JobPost, JobResponse, ScraperInput, Site
-from jobspy.enhanced_logging import get_enhanced_logger, LogCategory, performance_logger
-from jobspy.error_handling import ScrapingError, NetworkError, RateLimitError, retry_with_backoff
-from jobspy.cache_system import JobCache, CacheStrategy
+from jobseeker.model import JobPost, JobResponse, ScraperInput, Site
+from jobseeker.enhanced_logging import get_enhanced_logger, LogCategory, performance_logger
+from jobseeker.error_handling import ScrapingError, NetworkError, RateLimitError, retry_with_backoff
+from jobseeker.cache_system import JobCache, CacheStrategy
 
 
 class ScrapingMethod(Enum):
@@ -417,7 +417,7 @@ class APIStrategy(BaseScrapingStrategy):
         timeout = aiohttp.ClientTimeout(total=self.config.timeout)
         
         headers = {
-            'User-Agent': self.config.user_agent or 'JobSpy/1.0',
+            'User-Agent': self.config.user_agent or 'jobseeker/1.0',
             **self.config.headers
         }
         

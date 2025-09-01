@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 基本功能單元測試
+jobseeker 基本功能單元測試
 
-這個檔案包含了 JobSpy 核心功能的基本單元測試，
+這個檔案包含了 jobseeker 核心功能的基本單元測試，
 用於驗證主要功能的正確性。
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -14,10 +14,10 @@ import pytest
 import pandas as pd
 from unittest.mock import Mock, patch, MagicMock
 
-# JobSpy 模組導入
-from jobspy import scrape_jobs
+# jobseeker 模組導入
+from jobseeker import scrape_jobs
 try:
-    from jobspy import scrape_jobs_async
+    from jobseeker import scrape_jobs_async
 except ImportError:
     scrape_jobs_async = None
 
@@ -143,7 +143,7 @@ class TestAsyncScraping:
             pytest.skip("非同步功能尚未實現")
         
         try:
-            from jobspy.async_scraping import AsyncConfig, AsyncMode
+            from jobseeker.async_scraping import AsyncConfig, AsyncMode
             
             config = AsyncConfig(
                 mode=AsyncMode.THREADED,

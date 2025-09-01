@@ -1,8 +1,8 @@
-# JobSpy 增強版爬蟲實現報告
+﻿# jobseeker 增強版爬蟲實現報告
 
 ## 項目概述
 
-本報告總結了 JobSpy 增強版爬蟲的實現情況，包括反檢測機制、Playwright 集成以及三個主要求職網站（ZipRecruiter、Google Jobs、Bayt）的增強版爬蟲實現。
+本報告總結了 jobseeker 增強版爬蟲的實現情況，包括反檢測機制、Playwright 集成以及三個主要求職網站（ZipRecruiter、Google Jobs、Bayt）的增強版爬蟲實現。
 
 ## 實現的功能
 
@@ -75,7 +75,7 @@
 
 ### 集成方式
 - 所有增強版爬蟲都繼承自原有的爬蟲基類
-- 保持與現有 JobSpy API 的兼容性
+- 保持與現有 jobseeker API 的兼容性
 - 支援同步和異步操作模式
 
 ## 測試結果
@@ -99,7 +99,7 @@
 ## 文件結構
 
 ```
-jobspy/
+jobseeker/
 ├── anti_detection.py          # 反檢測核心模組
 ├── ziprecruiter/
 │   └── enhanced_ziprecruiter.py  # 增強版 ZipRecruiter 爬蟲
@@ -113,8 +113,8 @@ jobspy/
 
 ### 基本使用
 ```python
-from jobspy.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
-from jobspy.model import ScraperInput, Site
+from jobseeker.ziprecruiter.enhanced_ziprecruiter import EnhancedZipRecruiter
+from jobseeker.model import ScraperInput, Site
 
 # 創建爬蟲實例
 scraper = EnhancedZipRecruiter()
@@ -133,7 +133,7 @@ result = scraper.scrape(scraper_input)
 
 ### 反檢測模組使用
 ```python
-from jobspy.anti_detection import AntiDetectionScraper
+from jobseeker.anti_detection import AntiDetectionScraper
 
 # 創建反檢測爬蟲
 anti_detection = AntiDetectionScraper()
@@ -169,7 +169,7 @@ config = anti_detection.get_browser_config(region="us")
 
 ## 結論
 
-增強版爬蟲系統已成功實現並集成到 JobSpy 中。雖然在某些網站上仍面臨反爬蟲挑戰，但整體架構穩固，為未來的改進奠定了良好基礎。反檢測模組的實現為所有爬蟲提供了統一的反檢測能力，大大提升了系統的可維護性和擴展性。
+增強版爬蟲系統已成功實現並集成到 jobseeker 中。雖然在某些網站上仍面臨反爬蟲挑戰，但整體架構穩固，為未來的改進奠定了良好基礎。反檢測模組的實現為所有爬蟲提供了統一的反檢測能力，大大提升了系統的可維護性和擴展性。
 
 ---
 

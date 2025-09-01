@@ -1,4 +1,4 @@
-# JobSpy Docker 忽略檔案
+﻿# jobseeker Docker 忽略檔案
 # 用於優化 Docker 建置效能和減少映像大小
 
 # ==================== Git 相關 ====================
@@ -262,8 +262,8 @@ site/
 tmp/
 temp/
 
-# JobSpy 特定快取
-.jobspy_cache/
+# jobseeker 特定快取
+.jobseeker_cache/
 *.cache
 
 # 下載檔案
@@ -378,7 +378,7 @@ demo/
 # docs/
 
 # ==================== 特定專案檔案 ====================
-# JobSpy 特定的忽略項目
+# jobseeker 特定的忽略項目
 
 # 測試資料
 test_data/
@@ -412,11 +412,11 @@ monitoring/
 # 4. 考慮不同環境的需求（開發、測試、生產）
 #
 # 檢查建置上下文：
-# docker build --no-cache -t jobspy:test .
+# docker build --no-cache -t jobseeker:test .
 #
 # 查看映像大小：
-# docker images jobspy:test
+# docker images jobseeker:test
 #
 # 檢查映像內容：
-# docker run --rm -it jobspy:test ls -la
+# docker run --rm -it jobseeker:test ls -la
 #

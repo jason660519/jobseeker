@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 反檢測核心模組 - 高級反反爬蟲解決方案
 提供 User-Agent 池、代理管理、瀏覽器指紋偽裝等功能

@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 測試工具
+jobseeker 測試工具
 
-這個檔案包含了 JobSpy 測試所需的工具函數、Mock 類別和測試輔助工具，
+這個檔案包含了 jobseeker 測試所需的工具函數、Mock 類別和測試輔助工具，
 用於簡化測試編寫和提高測試效率。
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -242,7 +242,7 @@ class MockMetrics:
 
 def create_temp_directory() -> str:
     """創建臨時目錄"""
-    return tempfile.mkdtemp(prefix="jobspy_test_")
+    return tempfile.mkdtemp(prefix="jobseeker_test_")
 
 
 def cleanup_temp_directory(temp_dir: str) -> None:

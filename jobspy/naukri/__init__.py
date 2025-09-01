@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import math
 import random
@@ -9,14 +9,14 @@ from typing import Optional
 import regex as re
 import requests
 
-from jobspy.exception import NaukriException
-from jobspy.naukri.constant import headers as naukri_headers
-from jobspy.naukri.util import (
+from jobseeker.exception import NaukriException
+from jobseeker.naukri.constant import headers as naukri_headers
+from jobseeker.naukri.util import (
     is_job_remote,
     parse_job_type,
     parse_company_industry,
 )
-from jobspy.model import (
+from jobseeker.model import (
     JobPost,
     Location,
     JobResponse,
@@ -27,7 +27,7 @@ from jobspy.model import (
     ScraperInput,
     Site,
 )
-from jobspy.util import (
+from jobseeker.util import (
     extract_emails_from_text,
     currency_parser,
     markdown_converter,

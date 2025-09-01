@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-JobSpy 測試固定資料
+jobseeker 測試固定資料
 
-這個檔案包含了 JobSpy 測試所需的固定資料和模擬資料，
+這個檔案包含了 jobseeker 測試所需的固定資料和模擬資料，
 用於提供一致的測試環境和可重複的測試結果。
 
-作者: JobSpy Team
+作者: jobseeker Team
 日期: 2024
 """
 
@@ -288,19 +288,19 @@ TEST_CONFIGURATIONS = {
         "timeout": 30,
         "retries": 3,
         "delay": 1.0,
-        "user_agent": "JobSpy-Test/1.0"
+        "user_agent": "jobseeker-Test/1.0"
     },
     "aggressive": {
         "timeout": 10,
         "retries": 1,
         "delay": 0.5,
-        "user_agent": "JobSpy-Aggressive/1.0"
+        "user_agent": "jobseeker-Aggressive/1.0"
     },
     "conservative": {
         "timeout": 60,
         "retries": 5,
         "delay": 3.0,
-        "user_agent": "JobSpy-Conservative/1.0"
+        "user_agent": "jobseeker-Conservative/1.0"
     }
 }
 

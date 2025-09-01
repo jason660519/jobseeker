@@ -1,4 +1,4 @@
-# Seek.com.au Job Scraper
+﻿# Seek.com.au Job Scraper
 
 A comprehensive Python scraper for extracting job postings from Seek.com.au, Australia's leading job board.
 
@@ -13,7 +13,7 @@ A comprehensive Python scraper for extracting job postings from Seek.com.au, Aus
 
 ## Installation
 
-This scraper is part of the JobSpy package. Make sure you have the required dependencies:
+This scraper is part of the jobseeker package. Make sure you have the required dependencies:
 
 ```bash
 pip install requests beautifulsoup4 lxml
@@ -41,7 +41,7 @@ python main.py --search "marketing" --location "Brisbane" --job-type "part-time"
 
 ```python
 from seek import SeekScraper
-from jobspy.model import JobType
+from jobseeker.model import JobType
 
 # Initialize scraper
 scraper = SeekScraper()
@@ -166,16 +166,16 @@ The scraper includes comprehensive error handling:
 
 All errors are logged with detailed information for debugging.
 
-## Integration with JobSpy
+## Integration with jobseeker
 
-This Seek scraper is designed to integrate seamlessly with the JobSpy framework:
+This Seek scraper is designed to integrate seamlessly with the jobseeker framework:
 
 ```python
-from jobspy import scrape_jobs
+from jobseeker import scrape_jobs
 
-# Use Seek through JobSpy
+# Use Seek through jobseeker
 jobs_df = scrape_jobs(
-    site_name="seek",  # When SEEK is added to JobSpy
+    site_name="seek",  # When SEEK is added to jobseeker
     search_term="python developer",
     location="Sydney",
     results_wanted=50
@@ -224,7 +224,7 @@ Contributions are welcome! Please:
 
 ## License
 
-This project is part of the JobSpy package. Please refer to the main project license.
+This project is part of the jobseeker package. Please refer to the main project license.
 
 ## Support
 
