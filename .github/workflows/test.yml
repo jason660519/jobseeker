@@ -1,0 +1,453 @@
+name: JobSpy Tests
+
+# 觸發條件
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # 每天 UTC 02:00 執行（台灣時間 10:00）
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    # 允許手動觸發
+
+# 環境變數
+env:
+  PYTHON_VERSION: '3.9'
+  CACHE_VERSION: v1
+
+jobs:
+  # 程式碼品質檢查
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-${{ hashFiles('requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 black isort mypy bandit safety
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+    
+    - name: Run Black (code formatting)
+      run: black --check --diff jobspy tests
+    
+    - name: Run isort (import sorting)
+      run: isort --check-only --diff jobspy tests
+    
+    - name: Run Flake8 (linting)
+      run: |
+        flake8 jobspy tests \
+          --max-line-length=88 \
+          --extend-ignore=E203,W503 \
+          --statistics \
+          --count
+    
+    - name: Run mypy (type checking)
+      run: |
+        mypy jobspy \
+          --ignore-missing-imports \
+          --no-strict-optional \
+          --show-error-codes
+      continue-on-error: true  # mypy 錯誤不會導致 CI 失敗
+    
+    - name: Run Bandit (security check)
+      run: |
+        bandit -r jobspy \
+          -f json \
+          -o bandit-report.json
+      continue-on-error: true
+    
+    - name: Run Safety (dependency security check)
+      run: |
+        safety check \
+          --json \
+          --output safety-report.json
+      continue-on-error: true
+    
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+
+  # 單元測試
+  unit-tests:
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+        exclude:
+          # 排除一些組合以節省 CI 時間
+          - os: macos-latest
+            python-version: '3.8'
+          - os: windows-latest
+            python-version: '3.8'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/pip
+          ~/AppData/Local/pip/Cache
+          ~/Library/Caches/pip
+        key: ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-${{ matrix.python-version }}-${{ hashFiles('requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-${{ matrix.python-version }}-
+          ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-asyncio pytest-cov pytest-xdist pytest-timeout pytest-mock
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+      shell: bash
+    
+    - name: Run unit tests
+      run: |
+        python -m pytest tests/unit \
+          -v \
+          --tb=short \
+          --strict-markers \
+          --disable-warnings \
+          --cov=jobspy \
+          --cov-report=xml \
+          --cov-report=term-missing \
+          --junit-xml=junit-unit.xml \
+          --timeout=300
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: unit-test-results-${{ matrix.os }}-${{ matrix.python-version }}
+        path: |
+          junit-unit.xml
+          coverage.xml
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  # 整合測試
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-${{ hashFiles('requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-asyncio pytest-cov pytest-xdist pytest-timeout
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+    
+    - name: Run integration tests
+      run: |
+        python -m pytest tests/integration \
+          -v \
+          --tb=short \
+          --strict-markers \
+          --disable-warnings \
+          -m "integration" \
+          --junit-xml=junit-integration.xml \
+          --timeout=600
+      env:
+        # 設置測試環境變數
+        JOBSPY_TEST_MODE: "integration"
+        JOBSPY_CACHE_ENABLED: "true"
+        JOBSPY_LOG_LEVEL: "INFO"
+    
+    - name: Upload integration test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: integration-test-results
+        path: junit-integration.xml
+
+  # 效能測試
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-${{ hashFiles('requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-asyncio pytest-benchmark psutil
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+    
+    - name: Run performance tests
+      run: |
+        python -m pytest tests/performance \
+          -v \
+          --tb=short \
+          --strict-markers \
+          --disable-warnings \
+          -m "performance" \
+          --benchmark-json=benchmark.json \
+          --junit-xml=junit-performance.xml \
+          --timeout=1200
+      env:
+        JOBSPY_TEST_MODE: "performance"
+        JOBSPY_PERFORMANCE_BASELINE: "true"
+    
+    - name: Upload performance test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-test-results
+        path: |
+          junit-performance.xml
+          benchmark.json
+
+  # 網路測試（可選）
+  network-tests:
+    name: Network Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-${{ hashFiles('requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-${{ env.CACHE_VERSION }}-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-asyncio pytest-timeout
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+    
+    - name: Run network tests
+      run: |
+        python -m pytest tests \
+          -v \
+          --tb=short \
+          --strict-markers \
+          --disable-warnings \
+          -m "requires_network" \
+          --junit-xml=junit-network.xml \
+          --timeout=900
+      env:
+        JOBSPY_TEST_MODE: "network"
+        JOBSPY_NETWORK_TIMEOUT: "30"
+    
+    - name: Upload network test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: network-test-results
+        path: junit-network.xml
+
+  # 測試報告彙總
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [code-quality, unit-tests, integration-tests, performance-tests]
+    if: always()
+    
+    steps:
+    - name: Download all test artifacts
+      uses: actions/download-artifact@v3
+    
+    - name: Display test summary
+      run: |
+        echo "## 測試執行摘要" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # 檢查各個測試階段的結果
+        if [ "${{ needs.code-quality.result }}" == "success" ]; then
+          echo "✅ 程式碼品質檢查: 通過" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ 程式碼品質檢查: 失敗" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ needs.unit-tests.result }}" == "success" ]; then
+          echo "✅ 單元測試: 通過" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ 單元測試: 失敗" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ needs.integration-tests.result }}" == "success" ]; then
+          echo "✅ 整合測試: 通過" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ 整合測試: 失敗" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ needs.performance-tests.result }}" == "success" ]; then
+          echo "✅ 效能測試: 通過" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ 效能測試: 失敗" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 測試覆蓋率" >> $GITHUB_STEP_SUMMARY
+        echo "詳細的覆蓋率報告請查看 Codecov。" >> $GITHUB_STEP_SUMMARY
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 測試檔案" >> $GITHUB_STEP_SUMMARY
+        echo "所有測試結果檔案已上傳為 artifacts，可在 Actions 頁面下載。" >> $GITHUB_STEP_SUMMARY
+    
+    - name: Comment PR with test results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { owner, repo, number } = context.issue;
+          
+          const codeQuality = '${{ needs.code-quality.result }}' === 'success' ? '✅' : '❌';
+          const unitTests = '${{ needs.unit-tests.result }}' === 'success' ? '✅' : '❌';
+          const integrationTests = '${{ needs.integration-tests.result }}' === 'success' ? '✅' : '❌';
+          const performanceTests = '${{ needs.performance-tests.result }}' === 'success' ? '✅' : '❌';
+          
+          const body = `## 🧪 測試結果摘要
+          
+          | 測試類型 | 結果 |
+          |---------|------|
+          | 程式碼品質檢查 | ${codeQuality} |
+          | 單元測試 | ${unitTests} |
+          | 整合測試 | ${integrationTests} |
+          | 效能測試 | ${performanceTests} |
+          
+          詳細結果請查看 [Actions 頁面](https://github.com/${owner}/${repo}/actions/runs/${{ github.run_id }})。
+          `;
+          
+          github.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number: number,
+            body
+          });
+
+  # 部署測試報告（僅在主分支）
+  deploy-reports:
+    name: Deploy Test Reports
+    runs-on: ubuntu-latest
+    needs: [test-summary]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Download test artifacts
+      uses: actions/download-artifact@v3
+    
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+    
+    - name: Build test report site
+      run: |
+        mkdir -p public
+        echo "<h1>JobSpy 測試報告</h1>" > public/index.html
+        echo "<p>最後更新: $(date)</p>" >> public/index.html
+        
+        # 複製測試報告檔案
+        find . -name "*.xml" -o -name "*.json" -o -name "*.html" | while read file; do
+          cp "$file" public/ 2>/dev/null || true
+        done
+    
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: public
+    
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v2
+      id: deployment
+
+# 權限設定
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+  checks: write

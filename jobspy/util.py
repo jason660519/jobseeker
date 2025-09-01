@@ -12,11 +12,17 @@ from markdownify import markdownify as md
 from requests.adapters import HTTPAdapter, Retry
 
 from jobspy.model import CompensationInterval, JobType, Site
+from jobspy.enhanced_logging import (
+    EnhancedLogger, LogLevel, LogCategory, 
+    get_enhanced_logger, create_site_logger,
+    performance_logger, async_performance_logger
+)
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def create_logger(name: str):
+    """創建傳統日誌記錄器（向後相容性）"""
     logger = logging.getLogger(f"JobSpy:{name}")
     logger.propagate = False
     if not logger.handlers:
@@ -27,6 +33,16 @@ def create_logger(name: str):
         console_handler.setFormatter(formatter)
         logger.addHandler(console_handler)
     return logger
+
+
+def create_enhanced_logger(name: str, log_file: str = None, enable_json: bool = False) -> EnhancedLogger:
+    """創建增強日誌記錄器"""
+    return get_enhanced_logger(
+        name, 
+        log_file=log_file, 
+        enable_console=True, 
+        enable_json=enable_json
+    )
 
 
 class RotatingProxySession:
@@ -144,11 +160,22 @@ def set_logger_level(verbose: int):
     level_name = {2: "INFO", 1: "WARNING", 0: "ERROR"}.get(verbose, "INFO")
     level = getattr(logging, level_name.upper(), None)
     if level is not None:
+        # 設置傳統日誌記錄器
         for logger_name in logging.root.manager.loggerDict:
             if logger_name.startswith("JobSpy:"):
                 logging.getLogger(logger_name).setLevel(level)
+        
+        # 設置增強日誌記錄器
+        from jobspy.enhanced_logging import logger_manager
+        for enhanced_logger in logger_manager._loggers.values():
+            enhanced_logger.logger.setLevel(level)
     else:
         raise ValueError(f"Invalid log level: {level_name}")
+
+
+def get_scraper_logger(site_name: str, log_dir: str = "logs") -> EnhancedLogger:
+    """為爬蟲獲取專用的增強日誌記錄器"""
+    return create_site_logger(site_name.lower(), log_dir)
 
 
 def markdown_converter(description_html: str):

@@ -1,0 +1,588 @@
+name: CI/CD Pipeline
+
+# 觸發條件
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # 每天 UTC 02:00 執行（台灣時間 10:00）
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      run_performance_tests:
+        description: '執行效能測試'
+        required: false
+        default: 'false'
+        type: boolean
+      run_network_tests:
+        description: '執行網路測試'
+        required: false
+        default: 'false'
+        type: boolean
+
+# 環境變數
+env:
+  PYTHON_VERSION: '3.9'
+  JOBSPY_TEST_ENV: 'ci'
+  JOBSPY_CACHE_ENABLED: 'false'
+  JOBSPY_MOCK_NETWORK: 'true'
+  JOBSPY_VERBOSE: 'false'
+  JOBSPY_TIMEOUT: '60'
+  JOBSPY_MAX_RETRIES: '3'
+
+# 並發控制
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==================== 程式碼品質檢查 ====================
+  code-quality:
+    name: 程式碼品質檢查
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: 設置 Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: 安裝依賴
+      run: |
+        python -m pip install --upgrade pip
+        pip install black isort flake8 mypy bandit safety
+        pip install -r requirements.txt
+    
+    - name: Black 格式檢查
+      run: black --check --diff .
+    
+    - name: isort 導入排序檢查
+      run: isort --check-only --diff .
+    
+    - name: Flake8 程式碼風格檢查
+      run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+    
+    - name: MyPy 類型檢查
+      run: mypy jobspy/ --ignore-missing-imports
+      continue-on-error: true
+    
+    - name: Bandit 安全檢查
+      run: bandit -r jobspy/ -f json -o bandit-report.json
+      continue-on-error: true
+    
+    - name: Safety 依賴安全檢查
+      run: safety check --json --output safety-report.json
+      continue-on-error: true
+    
+    - name: 上傳安全報告
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+        retention-days: 30
+
+  # ==================== 單元測試 ====================
+  unit-tests:
+    name: 單元測試
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    needs: code-quality
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+        exclude:
+          # 減少 macOS 測試以節省資源
+          - os: macos-latest
+            python-version: '3.8'
+          - os: macos-latest
+            python-version: '3.10'
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設置 Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: 安裝依賴
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-test.txt
+        pip install -r requirements.txt
+    
+    - name: 執行單元測試
+      run: |
+        python test_runner.py --unit --coverage --json unit-test-results.json
+    
+    - name: 上傳測試結果
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: unit-test-results-${{ matrix.os }}-${{ matrix.python-version }}
+        path: |
+          unit-test-results.json
+          htmlcov/
+        retention-days: 30
+    
+    - name: 上傳覆蓋率到 Codecov
+      uses: codecov/codecov-action@v3
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  # ==================== 整合測試 ====================
+  integration-tests:
+    name: 整合測試
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: unit-tests
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設置 Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: 安裝依賴
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-test.txt
+        pip install -r requirements.txt
+    
+    - name: 執行整合測試
+      run: |
+        python test_runner.py --integration --json integration-test-results.json
+    
+    - name: 上傳測試結果
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: integration-test-results
+        path: integration-test-results.json
+        retention-days: 30
+
+  # ==================== 效能測試 ====================
+  performance-tests:
+    name: 效能測試
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: unit-tests
+    if: github.event_name == 'schedule' || github.event.inputs.run_performance_tests == 'true'
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設置 Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: 安裝依賴
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-test.txt
+        pip install -r requirements.txt
+    
+    - name: 執行效能測試
+      env:
+        JOBSPY_TEST_ENV: 'performance'
+      run: |
+        python test_runner.py --performance --json performance-test-results.json --report performance-report.md
+    
+    - name: 上傳效能報告
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-reports
+        path: |
+          performance-test-results.json
+          performance-report.md
+        retention-days: 90
+
+  # ==================== 網路測試 ====================
+  network-tests:
+    name: 網路測試
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: unit-tests
+    if: github.event_name == 'schedule' || github.event.inputs.run_network_tests == 'true'
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設置 Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: 安裝依賴
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-test.txt
+        pip install -r requirements.txt
+    
+    - name: 執行網路測試
+      env:
+        JOBSPY_TEST_ENV: 'network'
+        JOBSPY_MOCK_NETWORK: 'false'
+        JOBSPY_NETWORK_TESTS: 'true'
+      run: |
+        python test_runner.py --network --json network-test-results.json
+    
+    - name: 上傳測試結果
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: network-test-results
+        path: network-test-results.json
+        retention-days: 30
+
+  # ==================== 建置測試 ====================
+  build-test:
+    name: 建置測試
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: code-quality
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設置 Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: 安裝建置工具
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+        pip install -r requirements.txt
+    
+    - name: 建置套件
+      run: |
+        python -m build
+    
+    - name: 檢查套件
+      run: |
+        twine check dist/*
+    
+    - name: 上傳建置產物
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifacts
+        path: dist/
+        retention-days: 30
+
+  # ==================== Docker 測試 ====================
+  docker-test:
+    name: Docker 測試
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: code-quality
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設置 Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: 建置 Docker 映像
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: false
+        tags: jobspy:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: 在 Docker 中執行測試
+      run: |
+        docker run --rm -v ${{ github.workspace }}:/app -w /app jobspy:test python test_runner.py --quick
+
+  # ==================== 相容性測試 ====================
+  compatibility-test:
+    name: 相容性測試
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: unit-tests
+    if: github.event_name == 'schedule'
+    
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.12-dev']
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設置 Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        allow-prereleases: true
+    
+    - name: 安裝依賴
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-test.txt
+        pip install -r requirements.txt
+      continue-on-error: true
+    
+    - name: 執行相容性測試
+      run: |
+        python test_runner.py --quick
+      continue-on-error: true
+
+  # ==================== 測試報告彙總 ====================
+  test-summary:
+    name: 測試報告彙總
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [unit-tests, integration-tests]
+    if: always()
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 下載所有測試結果
+      uses: actions/download-artifact@v3
+      with:
+        path: test-results/
+    
+    - name: 設置 Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: 生成測試報告
+      run: |
+        python -c "
+        import json
+        import os
+        from pathlib import Path
+        
+        results_dir = Path('test-results')
+        all_results = []
+        
+        for json_file in results_dir.rglob('*.json'):
+            try:
+                with open(json_file) as f:
+                    data = json.load(f)
+                    all_results.append(data)
+            except:
+                pass
+        
+        # 生成 Markdown 報告
+        with open('test-summary.md', 'w') as f:
+            f.write('# JobSpy 測試報告\n\n')
+            f.write(f'**提交**: {os.getenv(\"GITHUB_SHA\", \"unknown\")}\n')
+            f.write(f'**分支**: {os.getenv(\"GITHUB_REF_NAME\", \"unknown\")}\n')
+            f.write(f'**工作流程**: {os.getenv(\"GITHUB_RUN_ID\", \"unknown\")}\n\n')
+            
+            total_passed = sum(r.get('summary', {}).get('total_passed', 0) for r in all_results)
+            total_failed = sum(r.get('summary', {}).get('total_failed', 0) for r in all_results)
+            total_skipped = sum(r.get('summary', {}).get('total_skipped', 0) for r in all_results)
+            
+            f.write('## 測試總覽\n\n')
+            f.write(f'- ✅ 通過: {total_passed}\n')
+            f.write(f'- ❌ 失敗: {total_failed}\n')
+            f.write(f'- ⏭️ 跳過: {total_skipped}\n')
+            
+            if total_passed + total_failed > 0:
+                success_rate = (total_passed / (total_passed + total_failed)) * 100
+                f.write(f'- 📊 成功率: {success_rate:.1f}%\n')
+            
+            f.write('\n## 詳細結果\n\n')
+            for result in all_results:
+                for test_result in result.get('results', []):
+                    test_type = test_result.get('test_type', 'unknown')
+                    passed = test_result.get('passed', 0)
+                    failed = test_result.get('failed', 0)
+                    duration = test_result.get('duration', 0)
+                    
+                    status = '✅' if failed == 0 else '❌'
+                    f.write(f'{status} **{test_type}**: {passed} 通過, {failed} 失敗 ({duration:.2f}s)\n')
+        "
+    
+    - name: 上傳測試報告
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-summary
+        path: test-summary.md
+        retention-days: 90
+    
+    - name: 評論 PR（如果是 PR）
+      uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      with:
+        script: |
+          const fs = require('fs');
+          const summary = fs.readFileSync('test-summary.md', 'utf8');
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: summary
+          });
+
+  # ==================== 部署到 GitHub Pages ====================
+  deploy-docs:
+    name: 部署文檔
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [unit-tests, integration-tests]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設置 Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: 安裝文檔依賴
+      run: |
+        python -m pip install --upgrade pip
+        pip install sphinx sphinx-rtd-theme
+        pip install -r requirements.txt
+    
+    - name: 下載測試報告
+      uses: actions/download-artifact@v3
+      with:
+        name: test-summary
+        path: docs/
+    
+    - name: 生成文檔
+      run: |
+        # 創建簡單的文檔結構
+        mkdir -p docs/_build/html
+        
+        # 複製測試報告
+        cp test-summary.md docs/_build/html/test-report.md || true
+        
+        # 創建首頁
+        cat > docs/_build/html/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>JobSpy 文檔</title>
+            <meta charset="utf-8">
+            <style>
+                body { font-family: Arial, sans-serif; margin: 40px; }
+                h1 { color: #333; }
+                .nav { margin: 20px 0; }
+                .nav a { margin-right: 20px; text-decoration: none; color: #0066cc; }
+            </style>
+        </head>
+        <body>
+            <h1>JobSpy 專案文檔</h1>
+            <div class="nav">
+                <a href="test-report.md">測試報告</a>
+                <a href="https://github.com/your-username/jobspy">GitHub 倉庫</a>
+            </div>
+            <h2>專案簡介</h2>
+            <p>JobSpy 是一個強大的職位資訊爬蟲工具，支援多網站爬取、非同步處理和智能快取。</p>
+            
+            <h2>主要功能</h2>
+            <ul>
+                <li>多網站職位爬取</li>
+                <li>非同步處理支援</li>
+                <li>智能快取機制</li>
+                <li>統一錯誤處理</li>
+                <li>效能監控</li>
+                <li>資料品質改善</li>
+            </ul>
+            
+            <h2>快速開始</h2>
+            <pre><code>pip install jobspy
+        
+        from jobspy import scrape_jobs
+        
+        jobs = scrape_jobs(
+            site_name="indeed",
+            search_term="python developer",
+            location="Sydney, NSW",
+            results_wanted=50
+        )
+        
+        print(f"找到 {len(jobs)} 個職位")
+            </code></pre>
+        </body>
+        </html>
+        EOF
+    
+    - name: 設置 Pages
+      uses: actions/configure-pages@v3
+    
+    - name: 上傳到 Pages
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: docs/_build/html
+    
+    - name: 部署到 Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
+
+  # ==================== 通知 ====================
+  notify:
+    name: 通知
+    runs-on: ubuntu-latest
+    needs: [test-summary]
+    if: always() && (github.event_name == 'schedule' || github.ref == 'refs/heads/main')
+    
+    steps:
+    - name: 通知結果
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const needs = ${{ toJSON(needs) }};
+          const failed_jobs = Object.entries(needs)
+            .filter(([name, job]) => job.result === 'failure')
+            .map(([name]) => name);
+          
+          if (failed_jobs.length > 0) {
+            console.log(`❌ 失敗的工作: ${failed_jobs.join(', ')}`);
+          } else {
+            console.log('✅ 所有工作都成功完成');
+          }

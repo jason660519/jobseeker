@@ -29,7 +29,8 @@ from .util import (
     is_remote_job, clean_text, format_date, 
     generate_job_id, validate_url
 )
-from jobspy.util import create_logger
+from jobspy.util import create_logger, get_scraper_logger
+from jobspy.enhanced_logging import LogCategory, performance_logger, async_performance_logger
 
 
 class SeekScraper(Scraper):
@@ -42,7 +43,10 @@ class SeekScraper(Scraper):
     def __init__(self, proxies: list[str] | str | None = None, ca_cert: str | None = None, user_agent: str | None = None):
         """初始化爬蟲"""
         super().__init__(Site.SEEK, proxies=proxies, ca_cert=ca_cert, user_agent=user_agent)
+        # 保持向後相容性的傳統日誌
         self.logger = create_logger("Seek")
+        # 新的增強日誌系統
+        self.enhanced_logger = get_scraper_logger("seek")
         self.browser: Optional[Browser] = None
         self.page: Optional[Page] = None
         self.scraper_input: Optional[ScraperInput] = None
@@ -177,42 +181,162 @@ class SeekScraper(Scraper):
         await asyncio.sleep(random.uniform(1, 3))
     
     async def _extract_job_data(self, job_element) -> Optional[Dict[str, Any]]:
-        """從職位元素中提取數據"""
+        """從職位元素中提取數據 - 改進版本，支援多重選擇器和更好的錯誤處理"""
         try:
-            # 提取職位標題和 URL
-            title_element = await job_element.query_selector(SELECTORS['title'])
-            if not title_element:
+            # 提取職位標題和 URL - 使用多重選擇器策略
+            title = ""
+            job_url = ""
+            
+            # 嘗試多個標題選擇器
+            title_selectors = SELECTORS['title'].split(', ')
+            for selector in title_selectors:
+                try:
+                    title_element = await job_element.query_selector(selector.strip())
+                    if title_element:
+                        title = await title_element.inner_text()
+                        if title.strip():
+                            # 嘗試獲取 URL
+                            if selector.strip().endswith('a'):
+                                job_url = await title_element.get_attribute('href')
+                            break
+                except Exception:
+                    continue
+            
+            # 如果沒有找到標題，嘗試任何 a 標籤
+            if not title.strip():
+                try:
+                    link_elements = await job_element.query_selector_all('a')
+                    for link in link_elements:
+                        link_text = await link.inner_text()
+                        if link_text and len(link_text.strip()) > 10:  # 假設職位標題至少10個字符
+                            title = link_text
+                            job_url = await link.get_attribute('href')
+                            break
+                except Exception:
+                    pass
+            
+            # 如果仍然沒有標題，跳過這個職位
+            if not title.strip():
                 return None
                 
-            title = await title_element.inner_text()
-            job_url = await title_element.get_attribute('href')
-            
+            # 處理相對 URL
             if job_url and not job_url.startswith('http'):
                 job_url = f"https://www.seek.com.au{job_url}"
                 
-            # 提取公司名稱
-            company_element = await job_element.query_selector(SELECTORS['company'])
-            company = await company_element.inner_text() if company_element else ""
+            # 提取公司名稱 - 使用多重選擇器
+            company = ""
+            company_selectors = SELECTORS['company'].split(', ')
+            for selector in company_selectors:
+                try:
+                    company_element = await job_element.query_selector(selector.strip())
+                    if company_element:
+                        company = await company_element.inner_text()
+                        if company.strip():
+                            break
+                except Exception:
+                    continue
             
-            # 提取地點
-            location_element = await job_element.query_selector(SELECTORS['location'])
-            location = await location_element.inner_text() if location_element else ""
+            # 提取地點 - 使用多重選擇器
+            location = ""
+            location_selectors = SELECTORS['location'].split(', ')
+            for selector in location_selectors:
+                try:
+                    location_element = await job_element.query_selector(selector.strip())
+                    if location_element:
+                        location = await location_element.inner_text()
+                        if location.strip():
+                            break
+                except Exception:
+                    continue
+            
+            # 如果沒有找到地點，嘗試查找包含澳洲州名的文本
+            if not location.strip():
+                try:
+                    all_text = await job_element.inner_text()
+                    aus_states = ['VIC', 'NSW', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT', 
+                                 'Victoria', 'New South Wales', 'Queensland', 'Western Australia',
+                                 'South Australia', 'Tasmania', 'Australian Capital Territory',
+                                 'Northern Territory', 'Melbourne', 'Sydney', 'Brisbane', 'Perth',
+                                 'Adelaide', 'Hobart', 'Canberra', 'Darwin']
+                    for state in aus_states:
+                        if state in all_text:
+                            # 嘗試提取包含州名的行
+                            lines = all_text.split('\n')
+                            for line in lines:
+                                if state in line and len(line.strip()) < 50:  # 假設地點行不會太長
+                                    location = line.strip()
+                                    break
+                            if location:
+                                break
+                except Exception:
+                    pass
             
             # 提取薪資
-            salary_element = await job_element.query_selector(SELECTORS['salary'])
-            salary = await salary_element.inner_text() if salary_element else ""
+            salary = ""
+            salary_selectors = SELECTORS['salary'].split(', ')
+            for selector in salary_selectors:
+                try:
+                    salary_element = await job_element.query_selector(selector.strip())
+                    if salary_element:
+                        salary = await salary_element.inner_text()
+                        if salary.strip():
+                            break
+                except Exception:
+                    continue
             
             # 提取工作類型
-            job_type_element = await job_element.query_selector(SELECTORS['job_type'])
-            job_type = await job_type_element.inner_text() if job_type_element else ""
+            job_type = ""
+            job_type_selectors = SELECTORS['job_type'].split(', ')
+            for selector in job_type_selectors:
+                try:
+                    job_type_element = await job_element.query_selector(selector.strip())
+                    if job_type_element:
+                        job_type = await job_type_element.inner_text()
+                        if job_type.strip():
+                            break
+                except Exception:
+                    continue
             
             # 提取發布日期
-            date_element = await job_element.query_selector(SELECTORS['date_posted'])
-            date_posted = await date_element.inner_text() if date_element else ""
+            date_posted = ""
+            try:
+                date_element = await job_element.query_selector(SELECTORS['date_posted'])
+                if date_element:
+                    date_posted = await date_element.inner_text()
+            except Exception:
+                pass
             
             # 提取職位描述（簡短版本）
-            desc_element = await job_element.query_selector(SELECTORS['description'])
-            description = await desc_element.inner_text() if desc_element else ""
+            description = ""
+            desc_selectors = SELECTORS['description'].split(', ')
+            for selector in desc_selectors:
+                try:
+                    desc_element = await job_element.query_selector(selector.strip())
+                    if desc_element:
+                        description = await desc_element.inner_text()
+                        if description.strip():
+                            break
+                except Exception:
+                    continue
+            
+            # 如果沒有找到描述，嘗試獲取整個元素的文本並提取相關部分
+            if not description.strip():
+                try:
+                    full_text = await job_element.inner_text()
+                    lines = full_text.split('\n')
+                    # 查找可能是描述的行（通常比較長且不是標題、公司名等）
+                    for line in lines:
+                        line = line.strip()
+                        if (len(line) > 30 and 
+                            line != title and 
+                            line != company and 
+                            line != location and 
+                            not line.startswith('$') and
+                            'ago' not in line.lower()):
+                            description = line
+                            break
+                except Exception:
+                    pass
             
             return {
                 'title': clean_text(title),
@@ -393,7 +517,15 @@ class SeekScraper(Scraper):
             # 從 scraper_input 獲取參數
             search_term = self.scraper_input.search_term or ""
             location = self.scraper_input.location or ""
-            job_type = self.scraper_input.job_type.value if self.scraper_input.job_type else ""
+            # 處理 job_type - 如果是枚舉，取第一個值（字串形式）
+            job_type = ""
+            if self.scraper_input.job_type:
+                if hasattr(self.scraper_input.job_type, 'value') and isinstance(self.scraper_input.job_type.value, tuple):
+                    job_type = self.scraper_input.job_type.value[0]  # 取 tuple 的第一個元素
+                elif hasattr(self.scraper_input.job_type, 'value'):
+                    job_type = str(self.scraper_input.job_type.value)
+                else:
+                    job_type = str(self.scraper_input.job_type)
             distance = self.scraper_input.distance or 0
             
             # 計算需要爬取的頁數

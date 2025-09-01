@@ -101,31 +101,31 @@ TIMEOUT_CONFIG = {
 JOBS_PER_PAGE = 20
 MAX_PAGES = 50
 
-# CSS 選擇器 - 基於 Playwright 最佳實踐的穩定選擇器
+# CSS 選擇器 - 基於實際網站結構的更新選擇器
 SELECTORS = {
     # 主要容器選擇器
-    'job_list': 'main, [data-testid="jobs-list"], .jobs-list',
+    'job_list': 'main, [data-automation="searchResults"], .jobs-list',
     
-    # 職位卡片選擇器 - 多重備選確保穩定性
-    'job_item': 'article[data-testid="job-card"], [data-testid="job-card"], .job-card, article[data-automation="normalJob"]',
+    # 職位卡片選擇器 - 基於實際調試結果
+    'job_item': 'article[data-automation="normalJob"], article[data-testid="job-card"], article',
     
-    # 職位標題選擇器 - 優先使用 data-automation 屬性
-    'title': '[data-automation="jobTitle"] a, [data-automation="jobTitle"], h3 a, .job-title a, a[data-automation="jobTitle"]',
+    # 職位標題選擇器 - 多重備選
+    'title': 'h3 a, [data-automation="jobTitle"] a, [data-automation="jobTitle"], .job-title a, a[title]',
     
-    # 公司名稱選擇器
-    'company': '[data-automation="jobCompany"] a, [data-automation="jobCompany"], .company-name, [data-testid="job-company"]',
+    # 公司名稱選擇器 - 更廣泛的選擇器
+    'company': '[data-automation="jobCompany"] a, [data-automation="jobCompany"], .company-name, [data-testid="job-company"], span[title]',
     
     # 地點選擇器
-    'location': '[data-automation="jobLocation"], .job-location, [data-testid="job-location"]',
+    'location': '[data-automation="jobLocation"], .job-location, [data-testid="job-location"], span:contains("VIC"), span:contains("NSW"), span:contains("QLD")',
     
     # 薪資選擇器
-    'salary': '[data-automation="jobSalary"], .salary, [data-testid="job-salary"], .job-salary',
+    'salary': '[data-automation="jobSalary"], .salary, [data-testid="job-salary"], .job-salary, span:contains("$")',
     
     # 工作類型選擇器
-    'job_type': '[data-automation="jobWorkType"], .work-type, [data-testid="job-work-type"]',
+    'job_type': '[data-automation="jobWorkType"], .work-type, [data-testid="job-work-type"], span:contains("Full time"), span:contains("Part time")',
     
     # 職位描述選擇器
-    'description': '[data-automation="jobShortDescription"], .job-description, [data-testid="job-description"]',
+    'description': '[data-automation="jobShortDescription"], .job-description, [data-testid="job-description"], p',
     
     # 發布日期選擇器
     'date_posted': '[data-automation="jobListingDate"], .date-posted, [data-testid="job-date"]',

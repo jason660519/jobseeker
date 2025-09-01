@@ -1,0 +1,943 @@
+﻿id,site,job_url,job_url_direct,title,company,location,date_posted,job_type,salary_source,interval,min_amount,max_amount,currency,is_remote,job_level,job_function,listing_type,emails,description,company_industry,company_url,company_logo,company_url_direct,company_addresses,company_num_employees,company_revenue,company_description,skills,experience_range,company_rating,company_reviews_count,vacancy_count,work_from_home_type
+gd-1009861036036,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009861036036,,Security Architect,Chandler Macleod,Docklands,2025-09-01,,direct_data,yearly,150000.0,200000.0,AUD,False,,,sponsored,,"Are you a seasoned Security Architect with a passion for designing secure, scalable, and compliant enterprise solutions? Our client AGL is seeking a dynamic professional to lead and shape cybersecurity architecture across cloud, network, and application domains for a major transformation initiative. This is a contract job opportunity in Melbourne CBD for six months, in a hybrid working environment.
+  
+  
+Key Responsibilities
+  
+  
+Security Architecture & Design
+  
+
+* Develop enterprise-wide security architectures aligned with business goals and regulatory frameworks.
+* Define security standards and best practices for cloud-native applications and services.
+* Develop Security patterns
+* Design secure Salesforce implementations, integrations, and customizations.
+* Conduct architecture reviews for web, mobile, and API platforms.
+* Guide development teams on secure coding and threat modelling.
+* ️ Cloud Security Leadership
+* Lead Azure cloud security initiatives including identity, network, and data protection.
+* Establish security controls for Infrastructure as Code (IaC) and DevSecOps pipelines.
+* Implement container and serverless security (Docker, Kubernetes, etc.).
+
+Network Security & Infrastructure
+  
+
+* Design secure network architectures including microsegmentation and Zero Trust Network Access (ZTNA).
+* Define security controls for hybrid and multi-cloud environments.
+* Architect secure integration patterns across complex systems.
+* Ensure end-to-end security for digital transformation programs.
+
+✨ Nice to Have
+  
+
+* Experience architecting secure AI/ML pipelines with robust data protection controls.
+
+What We’re Looking For
+  
+
+* Proven experience in enterprise security architecture across cloud and SaaS platforms.
+* Strong understanding of Azure, Salesforce, DevSecOps, and modern security frameworks.
+* Excellent stakeholder engagement and communication skills.
+* Certifications such as CISSP, CCSP, or Azure Security Engineer are highly desirable.
+
+Ready to make an impact? Apply now to be part of a forward-thinking team driving secure innovation.
+  
+  
+At Chandler Macleod, we are committed to fostering a diverse workforce where everyone is welcome. We encourage applications from Aboriginal and Torres Strait Islander peoples, women, neurodiverse, people living with a disability and the LGBTIQA+ community.
+  
+  
+You can read more about our commitment to diversity and inclusion at https://www.chandlermacleod.com/diversity-and-inclusion.",,https://www.glassdoor.com.au/Overview/W-EI_IE305502.htm,https://media.glassdoor.com/sql/305502/chandler-macleod-squareLogo-1708401890222.png,,,,,,,,,,,
+gd-1009859405917,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009859405917,,Staff Engineer,Movember,Richmond,2025-08-30,,direct_data,yearly,98750.0,158811.0,AUD,False,,,organic,,"### **We are see****king a Staff Engineer to join our Melbourne team.**
+
+### **The Opportunity: Where Technical Excellence Meets Life-****Changing Impact**
+
+Imagine leading a team that builds technology used by millions of people across 19 countries, processing over $90M in donations annually - all in service of changing the face of men's health. This isn't just another tech lead role; it's a chance to shape how Movember transforms from a campaign powerhouse into a year-round force for good in men's health.
+
+You'll be joining us at an inflection point. We're modernising from a battle-tested monolith to a composable, domain-driven architecture using AWS Lambda and Node.js. We're pioneering AI-augmented development with tools like Claude Code and Windsurf. And we’re doing it all to create a world-class fundraising & community platform.
+
+### **Why This Role Matters**
+
+Every line of code you and your team write, every architectural decision you support, and every developer you mentor directly impacts our ability to fund life-saving health programs. When your team optimises our payment processing by milliseconds,more donations flow to suicide prevention. When your team builds resilient systems, researchers get reliable data for prostate cancer breakthroughs.
+
+This is engineering with purpose.
+
+### **What Makes This Role Unique**
+
+**You're Not Just a Tech Lead** - You're a force multiplier who empowers developers to deliver their best work. You'll balance deep technical expertise with genuine people mentorship, turning good developers into great ones through pair programming, thoughtful code reviews, and creating psychological safety for innovation.
+
+**Campaign Season is Your Team's AFL Grand Final** - Every October through December, our platform experiences massive scale challenges that matches the traffic of large global organisations. Think Black Friday meets social movement. While we've solved the basics, there’re endless opportunities for optimisation and innovation. You'll lead your team through these high-stakes periods with grace, ensuring our global community can fundraise without friction.
+
+**AI is Your Co****-Pilot,** **Not Your Replacement** - We're at the beginning of an exciting AI transformation journey. You'll help shape how we integrate AI into our development processes, from advanced context engineering to MCP servers, making our small team punch well above our weight.
+
+**You Think in Horizons,** **Not Sprints** - While your team delivers value quarterly, you're always thinking 6-12 months ahead. You understand that today's quick fix is tomorrow's technical debt, and you make decisions that balance immediate needs with long-term sustainability.
+
+**Every Day is Different** - One moment you're pair programming with a junior developer, turning bug fixes into teaching moments about distributed systems. The next, you're collaborating with Product and Marketing to translate their vision for personalised donor experiences into technical reality. You'll help architect solutions for payment processing that handle 100x traffic spikes across 19 regulatory environments, then shift to one-on-ones where you help team members navigate the journey from monolithic to business services thinking. In our hybrid work environment, office days buzz with collaborative energy while remote days offer deep focus time.
+
+### **The Technical Playground**
+
+**Core Stack**: Node.js, React, JavaScript, TypeScript, AWS services including Lambda, PHP
+
+**External Integration**: Platform integrated with a wide variety of services from Healthcare API’s to Payment providers
+
+**Architecture Journey**: Actively migrating from monolith to business services, giving you the rare opportunity to help shape architecture
+
+**Scale Challenges**: Handle everything from steady-state operations to 100x traffic spikes
+
+**AI Integration**: Implement AI-powered personalisation, chat bots, process and development automation
+
+**Glo****bal Reach**: Build systems that work across 19 countries with different languages, currencies, and regulations
+
+### **For this role you'll need:**
+
+* 8+ years software development experience with 3+ years in senior/lead roles
+* 5+ years' experience developing across the full stack including NodeJS / React / JavaScript / TypeScript
+
+* Proven experience with high-traffic web platforms and large-scale, high-availability systemsStrong background in AWS cloud platform and infrastructure as code (CloudFormation or serverless architecture)
+* Experience with microservices architecture and distributed systems using AWS Lambda
+* Deep understanding of monitoring, observability, and incident response for production systems
+* Strong understanding of automated pipelines, CI/CD, AWS CodePipeline
+* Knowledge of payment processing systems and PCI DSS compliance
+* Experience with DevOps practices and tooling
+* Strong understanding of CSS / frameworks like bootstrap / SASS / LESS
+* HTTP and REST or GraphQL
+* Strong understanding of testing frameworks
+* Experience working with agile development processes
+* Excellent communication skills and ability to translate business needs into technical language
+* Track record of leading teams through critical incidents and high-pressure situations
+
+### **Desirable:**
+
+* Advanced prompt engineering for code generation, RAG system design & AI system architecture
+* Experience with AI/ML implementation and architectural principles
+* Experience with AI-powered personalisation and content generation
+* Experience with headless CMS
+* Knowledge of front end framework alternatives to React (eg Angular, Vue)
+* Experience establishing and maintaining UI component libraries
+* Knowledge of CDN strategies for global reach
+* Experience with security architecture and threat modelling
+* Knowledge of zero-trust security principles
+* Health care domain experience (bonus points if you've saved lives with code before)
+* Experience working in newly established teams helping to build shared outcomes
+* Exposure to Quantum-resistant cryptography
+* Experience with technical ROI assessment
+* Experience working with off-shore development teams
+
+**GOOD CAUSE:**  
+Working for **Movember**, you’ll help raise millions for men’s health (not for a CEO’s bonus). And all those dollars do a whole lotta good. We’ve funded cancer research. Created lifesaving medicines. And helped make cancer treatments less “one-size-fits-all”, and more specific to each patient’s needs.
+
+We’re even calling for governments worldwide to get it together on men’s health. By meeting directly with policymakers so they change the systems that change men’s health.
+
+**GOOD VIBES:**  
+The vibes aren’t just for Fridays – even though we start weekends early nine months of the year. Here, it always feels like something big’s about to happen. Be it an office-wide surprise birthday party (with cake!) or an impromptu all-staff boogie.
+
+Come the hairy season, the energy gets silly. We’re talking celebrity visits. Live stunts on-site for TV and radio. And when we hit a fundraising milestone, the office gong might even go off. And that means one thing: it’s conga time.
+
+**GOOD CREW:**  
+Let’s just get this out of the way: big egos need not apply. We’re all about straight-up solid human beings out to do meaningful work. People who’ll help you reach career-best moments. And give you the freedom to get there the best way you see fit.
+
+Hybrid remote working is the norm. And in the office, you can sit where you please. Who knows? On any given day you could even end up desk buddies with the man who started this all.
+
+* Flexible hybrid working from home and our modern Richmond office
+* Finish work at 2pm on Fridays (Dec-Aug)
+* NFP salary packaging (pay less tax)
+* 13 weeks paid parental leave and 5 weeks annual leave
+* Fun & collaborative culture with employee social events
+* Free Headspace subscription and other wellbeing initiative
+* Relaxed dress code
+
+**Boy, do we know the feeling of being judged.** (Over how we look, and other things that shouldn’t matter.) Being different is how we started. And it’s also helped us raise $1 billion for men’s health. So, we know the power of diverse experiences, skills and perspectives.
+
+And another impressive number is our WGEA gender pay gap: it sits at a big, fat, round 0%. If you’ve got the relevant skills and the right attitude, let nothing stand in your way of firing off your application.
+
+**Do you want to DO GOOD?**  
+If so, we’d love to hear from you.",,https://www.glassdoor.com.au/Overview/W-EI_IE438051.htm,https://media.glassdoor.com/sql/438051/the-movember-foundation-squareLogo-1660521383260.png,,,,,,,,,,,
+gd-1009858403945,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009858403945,,Developer Programmer,Tech Mahindra,North Sydney,2025-08-29,,direct_data,yearly,125000.0,135000.0,AUD,False,,,sponsored,,"**Role**: Database Programmer\_261312- Developer Programmer  
+**Location**: Sydney  
+**Role type**: Hybrid  
+**Working Hours**: 9 AM - 5 PM (Mon- Fri)
+
+**Role description/Main duties:**
+
+Will be responsible for developing and integrating Operations Support Systems within Telecom practice. This will involve development, testing, documentation and support services for Telstra. Will be involved in to deliver tailored financial solutions and exceptional service, programming and database skills. May also be required to use other administrative skills to complete tasks for the project.
+
+**Responsibilities**:
+
+· Involve in designing, architecting, coding, testing, and implementing scalable Big Data solutions to handle large volumes of data and built a migration framework using the Big Data stack and Azure Cloud.
+
+· Built and optimized data ingestion, transformation, and loading pipelines using Azure Data Factory, Spark, and Delta Lake.
+
+· Design and implement real-time streaming solutions using Kafka and batch processing with Data bricks and Azure Synapse.
+
+· Write Spark scripts for data cleaning, analyzing large datasets, and storing them as Delta tables in Parquet format.
+
+· Design and developed ML models for prediction and classification using Tensor Flow and Scikit-learn.
+
+· Implement MLOps pipelines using MLflow for model versioning, monitoring, and automated retraining.
+
+· Optimize ML models through distributed training, hypeparameter tuning, and feature engineering.
+
+· Optimize Spark jobs by improving data partitioning, indexing, and caching for better performance and cost efficiency.
+
+· Deploy ML models as scalable APIs using FastAPI, Flask, and Azure ML Endpoints.
+
+· Implement security measures, including RBAC, encryption, and data masking, to ensure compliance with GDPR and HIPAA.
+
+· Collaborate with cross-functional teams, including data scientists, data engineers, and business analysts, to deliver data-driven solutions.
+
+· Led code reviews, design discussions, and the resolution of project issues for developers.
+
+· Implement CI/CD pipelines using Jenkins, GitHub Actions, and Azure DevOps to automate build, test, and deployment processes.
+
+· Mentor junior developers and provided guidance on best practices in Big Data and machine learning.
+
+· Execute projects using agile methodologies to ensure efficient development and timely delivery.
+
+· Participated in Agile ceremonies such as sprint planning, daily stand-ups, and Retrospective
+
+· Implemented the project in agile model.
+
+**Essential Skills required to perform the above job role**:
+
+BIGDATA Framework (Map Reduce, HIVE, PIG, HDFS, HBASE, SQOOP)
+
+Data bricks, Solution Design, Cloud (Azure, AWS)
+
+KAFKA, SPARK (SQL, STREAMING),
+
+SCALA and CASSANDRA
+
+**Special Skills required to perform the job role:**
+
+Machine Learning Algorithms
+
+AZURE STACK (ADF, ADL, DATABRICKS, Synapse, Event Hub),
+
+AWS Stack (S3, Redshift, Glue, Lambda, Hadoop/EMR, Hive, Kinesis), R, Python, Java
+
+**Trade/Professional qualification/Training (including on-the job training) if any:**
+
+Qualification: Bachelor of Technology on Computer Science
+
+Trainings: Generative AI, AZURE Stack, AWS Components.
+
+Years of experience required : 7+ years
+
+”*Tech Mahindra is an Equal Employment Opportunity employer. We promote and support a diverse workforce at all levels of the company. All qualified applicants will receive consideration for employment without regard to race, religion, color, sex, age, national origin or disability. All applicants will be evaluated solely on the basis of their ability, competence, and performance of the essential functions of their positions.*
+
+*We are also committed to make reasonable adjustments to support candidates, so they can perform at their best throughout the recruitment process.”*
+
+Job Type: Full-time
+
+Pay: $125,000.00 – $135,000.00 per year
+
+Work Location: Hybrid remote in North Sydney NSW 2060",,https://www.glassdoor.com.au/Overview/W-EI_IE135932.htm,https://media.glassdoor.com/sql/135932/tech-mahindra-squareLogo-1737122053884.png,,,,,,,,,,,
+gd-1009858636027,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009858636027,,"Senior Software Engineer, Geo, Urban Mobility",Google,Sydney,2025-08-29,,direct_data,yearly,120000.0,199750.0,AUD,False,,,organic,,"At Google, we have a vision of empowerment and equitable opportunity for all Aboriginal and Torres Strait Islander peoples and commit to building reconciliation through Google’s technology, platforms and people and we welcome Indigenous applicants. Please see our Reconciliation Action Plan for more information.
+
+### **Minimum qualifications:**
+
+* Bachelor’s degree or equivalent practical experience.
+* 5 years of experience with software development in one or more programming languages.
+* 3 years of experience in testing, maintaining, or launching software products, and 1 year of experience with software design and architecture.
+* 3 years of experience with applied data science and statistical methods, machine learning (ML) algorithms and tools, or applied ML (e.g., deep learning, natural language processing, Large Language Model).
+
+  
+
+### **Preferred qualifications:**
+
+* PhD in Computer Science, Mathematics, Statistics or other related fields.
+* 5 years of experience with data structures/algorithms.
+* 1 year of experience in a technical leadership role.
+* Experience in routing algorithms.
+* Knowledge of mathematics and statistical methods.
+
+**About the job**
+-----------------
+
+Google's software engineers develop the next-generation technologies that change how billions of users connect, explore, and interact with information and one another. Our products need to handle information at massive scale, and extend well beyond web search. We're looking for engineers who bring fresh ideas from all areas, including information retrieval, distributed computing, large-scale system design, networking and data storage, security, artificial intelligence, natural language processing, UI design and mobile; the list goes on and is growing every day. As a software engineer, you will work on a specific project critical to Google’s needs with opportunities to switch teams and projects as you and our fast-paced business grow and evolve. We need our engineers to be versatile, display leadership qualities and be enthusiastic to take on new problems across the full-stack as we continue to push technology forward.
+
+The Geo team is focused on building the most accurate, comprehensive, and useful maps for our users, through products like Maps, Earth, Street View, Google Maps Platform, and more. Every month, more than a billion people rely on Maps services to explore the world and navigate their daily lives.  
+  
+The Geo team also enables developers to use the power of Google Maps platforms to enhance their apps and websites. As they plot a course for the future of mapping, they are solving complex computer science problems, designing beautiful and intuitive product experiences, and improving our understanding of the real world.
+
+**Responsibilities**
+--------------------
+
+* Write and test product or system development code.
+* Participate in, or lead design reviews with peers and stakeholders to decide amongst available technologies.
+* Review code developed by other developers and provide feedback to ensure best practices (e.g., style guidelines, checking code in, accuracy, testability, and efficiency).
+* Contribute to existing documentation or educational content and adapt content based on product/program updates and user feedback.
+* Triage product or system issues and debug/track/resolve by analyzing the sources of issues and the impact on hardware, network, or service operations and quality.
+
+Google is proud to be an equal opportunity workplace and is an affirmative action employer. We are committed to equal employment opportunity regardless of race, color, ancestry, religion, sex, national origin, sexual orientation, age, citizenship, marital status, disability, gender identity or Veteran status. We also consider qualified applicants regardless of criminal histories, consistent with legal requirements. See also Google's EEO Policy and EEO is the Law. If you have a disability or special need that requires accommodation, please let us know by completing our Accommodations for Applicants form.",,https://www.glassdoor.com.au/Overview/W-EI_IE9079.htm,https://media.glassdoor.com/sql/9079/google-squarelogo-1441130773284.png,,,,,,,,,,,
+gd-1009857303656,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009857303656,,Senior AI Engineer,Insignia Financial Ltd,Docklands,2025-08-29,,direct_data,yearly,113800.0,156000.0,AUD,False,,,organic,,"Senior AI Engineer
+
+**Location:**MELBOURNE, VIC, AU, 3008SYDNEY, NSW, AU, 2000HOBART, TAS, AU, 7000
+
+**Employment Type:** Permanent Full Time
+
+* Shape the future – Build and scale AI solutions that transform how advice and operations run on our Wrap platform
+* Shape the AI capability of one of Australia’s leading financial services businesses.
+* Make an impact – Build AI capabilities into Wrap and deliver tangible value for clients, advisers, and the business
+
+  
+
+**The opportunity to join our team**  
+At Insignia Financial, we’re serious about becoming an AI-enabled business. With Wrap having over $100 billion under management and being one of the fastest-growing superannuation and retirement platforms in Australia, we’re investing heavily in AI to drive efficiencies for advisers, clients, and our own operations – which will result in a brighter future for Australians.
+
+That’s where you come in.
+
+  
+
+As a Senior AI Engineer, you’ll play a key role in embedding advanced AI capabilities into our Wrap platform – shaping how we scale, integrate, and deploy AI across the Wrap business. You’ll design and deliver high-performance AI applications, work with leading-edge tech, and help us transform the experience of advisers and clients.
+
+  
+
+This isn’t AI for the sake of AI – it’s meaningful work with scale, impact, and visibility. You’ll collaborate closely with our central AI team, product owners, engineers, and stakeholders, while mentoring other engineers and guiding best practices in AI engineering.
+
+  
+
+**What you’ll do**
+
+* Model Development & Deployment: Build, deploy, and maintain AI-enabled apps and microservices, leveraging enterprise AI platforms, tools, and models.
+* Research & Prototyping: Deliver labs, pilots, and proofs of concept to test and scale new ideas.
+* Solution Architecture: Shape AI/ML system design and technical decisions for the Wrap platform.
+* Collaboration & Leadership: Partner with engineers, product managers, and data scientists while mentoring junior team members.
+* Data Handling: Work across relational, NoSQL, vector, and cloud-based databases to enable retrieval, search, and processing in AI-powered solutions.
+* Performance & Ethics: Ensure models are scalable, reliable, explainable, secure, and ethically deployed.
+
+  
+
+**What You Bring to This Role**
+
+* Bachelor’s or Master’s in Computer Science, AI, Data Science, or related field.
+* 3-5+ years’ hands-on experience delivering production-ready AI applications at scale.
+* Strong experience as a Senior Developer leading delivery and mentoring others.
+* Deep technical expertise across:
+
+* AI/ML model development, deployment, RAG, vector databases, Hugging Face/open source libraries
+* Languages: Java (incl. Kotlin), Python, JavaScript
+* Cloud: AWS, GCP, Azure; containerisation: Docker, Kubernetes, CI/CD pipelines
+* Databases: relational (Postgres/MySQL), NoSQL (MongoDB, Cassandra), vector (ElasticSearch, VectorPG)
+
+* Strong engineering best practices – version control, clean code, testing, peer reviews.
+* A collaborative mindset, problem-solving skills, and the ability to mentor others.
+
+  
+
+**Why join us?**
+
+This is more than just an engineering role – it’s an opportunity to **shape the AI capability of one of Australia’s leading financial services businesses.**
+
+* Scale & impact – Your work will power efficiencies for advisers, back office, and clients across a $100bn platform.
+* Enterprise AI vision – Be part of a business with a clear, governance-first AI strategy, backed by leadership and investment.
+* High visibility – influencing how AI is adopted and scaled across the Wrap business.
+* Growth & learning – Stay at the forefront of AI/ML engineering, delivering pilots, POCs, and production solutions.
+* Ambition & innovation – Join a company moving fast! We’re ambitious, we’re scaling, and we want AI engineers who thrive in that environment.
+
+  
+
+**Find the better way**
+
+What gets us excited about working here? Helping people feel good about their money as one of Australia’s leading financial wellbeing organisations. From those starting out to those retiring. As your team, we’ll show up for you and together we will create financial wellbeing for every Australian. Because we know people who are confident about their financial future live better lives.
+
+If this sounds like your kind of career, you sound like our kind of person. With us, you’ll do work that builds your technical know-how and challenges our entire industry to move forward. Along the way, you’ll be free to explore new ideas and technology, solve problems in a team, and independently to get great things done. Around here, we like to call it “putting our fingerprints on the future”.
+
+**People-inspired tech**
+
+Deep expertise combined with creativity can take on the trickiest of problems. Join our team of brilliant minds and mentors as we explore our way to innovation and apply technology in more human ways than ever.
+
+**\_\_**
+
+  
+
+**To Apply**
+
+  
+
+*Applicants will be required to provide evidence of their eligibility to work in Australia, and at a minimum be required to undertake police and basic credit checks as a condition of employment.*
+
+  
+
+*Please note that applications from agencies will not be considered at this time.*
+
+  
+
+*We acknowledge and celebrate the richness that individual differences bring to our team. If you need assistance or an adjustment during the application process, please reach out and let us know.*",,https://www.glassdoor.com.au/Overview/W-EI_IE7439810.htm,https://media.glassdoor.com/sql/7439810/insignia-financial-squarelogo-1658215016769.png,,,,,,,,,,,
+gd-1009858387927,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009858387927,,Systems Architect - Digital Engineering,KBR,Australia,2025-08-29,,,,,,,False,,,organic,,"**Title:**
+
+Systems Architect - Digital Engineering
+
+**About KBR:**
+
+**At KBR – We do things that matter.**
+
+We deliver science, technology and engineering solutions to governments and companies around the world. KBR employs approximately 38,000 people worldwide with customers in more than 80 countries and operations in over 29 countries.
+
+KBR is proud to work with its customers across the globe to provide technology, value-added services, and long-term operations and maintenance services to ensure consistent delivery with predictable results. At KBR, We Deliver.
+
+***Think.KBR.com***
+
+**KBR in Australia**
+
+With over 65 years working on some of Australia’s largest and most complex projects, KBR has unmatched experience supporting the nation’s critical infrastructure, energy transition and national security priorities. KBR has around 2,000 employees throughout Australia, who are focused on delivering innovative technology and engineering solutions for a safer, more secure and sustainable future.
+
+**Belong, Connect and Grow at KBR**
+
+At KBR, we are passionate about our people and our Zero Harm culture. These inform all that we do and are at the heart of our commitment to, and ongoing journey toward being a People First company. That commitment is central to our team of team’s philosophy and fosters an environment where everyone can Belong, Connect and Grow. We Deliver – Together.
+
+**The Opportunity**
+
+**KBR is driving a Digital Engineering strategy to manage complexity, harness our technical capability, and deliver speed to capability for Defence.** This strategy enables advanced digital environments and facilities to support Defence programs, including the development, hosting, and integration of systems as models, architectures, and digital twins.
+
+As a **Systems Architect**, you will play a pivotal role in both execution and enablement. You’ll work with domain specialists and stakeholders to capture and model concepts, requirements, and designs for major Defence programs such as **C4ISREW, MILSATCOM, Space** and other critical capabilities. Responsibilities include developing and sustaining MBSE architectures using tools like **CATIA Cameo, Enterprise Architect, or ANSYS**, undertaking mission engineering through mission threads and scenarios, and applying modelling and simulation across the lifecycle to ensure traceability from requirements through to verification.
+
+You will also help grow KBR’s Digital Engineering Infrastructure, including the **Systems Integration Laboratory** and collaborative virtual network environments. This involves engaging with clients and stakeholders to mature facilities and capability. Strong technical knowledge of Defence platforms, applications, and systems will be highly valued, alongside an understanding of emerging technologies such as **AI/ML, digital twins, and cloud platforms**.
+
+This role requires collaboration, innovation, and technical leadership to drive growth and capability across KBR’s Australian Defence and Security Solutions business.
+
+**Responsibilities**
+
+The key responsibilities of the role will include, but are not limited to:
+
+* Develop and integrate Mission Engineering Models and Simulations using Model-based Systems Engineering (MBSE) digital modelling and simulation tools in execution of the KBR Digital Engineering Strategy. These activities will be undertaken both during the capture and execution phases.
+* Define End to End Architecture solutions aligned to technology standards and roadmaps and strategies in response to business requirements.
+* Grow capability enablement maturity through collaboration with the team of the KBR Digital Engineering Project. This may involve input to design of environments, development of models, guidance or reports.
+* Analyse and evaluate and if necessary, validate externally sourced models and integrated them into the System or Enterprise framework.
+* Enhance KBR Digital Engineering Knowledge Base for execution through delivery of model or environment artefacts, configuration scripts and enhancements to support reuse or adoption.
+* Undertake stakeholder engagement and collaboration with defence clients, project teams, and industry partners to define system architecture strategies and technical roadmaps.
+* Manage the configuration and databases appropriate for the digital engineering toolchains, including Requirements Management, Windchill PLM, MBSE, simulation, and data analytics platforms.
+* Ensure architectural solutions comply with appropriate defence standards (e.g., ASDEFCON, MIL-STD-881, ISO/IEC 15288) and cybersecurity protocols.
+* Gather and evaluate user feedback and recommend and execute improvements to models and support changes to environments.
+* Analyse interfaces and integrate supplier and customer models into overall system or enterprise frameworks.
+* Create technical documentation and deliver reporting on the status and capability of the modelling activity.
+* Support the enhancement and deployment of Digital Engineering environment, including infrastructure, applications and services.
+
+**Qualifications, Skills and Experience**
+
+**Essential:**
+
+* BSc/BA in Systems Engineering, Computer Science, or a related field and commensurate certifications with relevant professional body.
+* Professional Engineer with 8y+ of experience in digital systems including significant experience of below-the-line digital design and integration.
+* Proven experience in development of systems architecture within defence industry , aerospace, or other regulated environments.
+* A deep understanding of systems engineering lifecycle and digital engineering concepts.
+* Demonstrable experience of *creation* and refinement of a range of digital models and simulation.
+* Experience in capturing operational concepts as models and collaborating with stakeholders to obtain inputs and subsequently deliver a high value of information from those models.
+* Good understanding of configuration management and baselines in context of managing engineering change.
+* Excellent communication skills in presentation and demonstration of digital systems to non-technical stakeholders.
+* Experience in mentoring engineering teams in digital engineering systems thinking, model governance , configuration and deployment.
+* Knowledge of System Software lifecycle process including phased and a scaled Agile approach.
+* Strong proficiency in MBSE methodologies and tools (SysML, UML).
+* Proficiency in working with DoDAF, MODAF, or NATO Architecture Framework (NAF).
+* Eligibility for Australian Government Security Clearance (NV1 or higher).
+
+**Desirable:**
+
+* A Masters degree in a relevant subject will be valued.
+* Professional recognition as CPEng, ACS Member or registered Professional Engineer.
+* Experience of leading innovation and managing in uncertainty.
+* Experience of maturing new capabilities through People, Process and Tools dimensions.
+* Experience is DevOps Agile and/or SAFe frameworks is beneficial, as well as familiarity with popular coding languages (eg. Python, Javascript).
+* Ability to work within a complex dynamic technology environment and be comfortable with iterative approaches and challenges of emergent capability.
+* Experience with Software and Hardware Integration such as data bus interfaces, real-time processing, and sensor fusion.
+* Good understanding of secure, resilient, and interoperable communication systems.
+* Knowledge of cyber resilience, threat modeling, and secure systems design is an advantage.
+* Experience of Modular Open Systems Approach (MOSA) is an advantage.
+
+**Benefits of KBR**
+
+* A workplace culture certified as a Great Place To Work (Aus, India, UK & US)
+* Flexible working conditions
+* Competitive salary (including annual reviews)
+* Paid Parental leave
+* Paid Reservist leave
+* Income protection
+* Corporate rewards
+* Salary packaging/Novated leasing
+* Discounted employee stock purchase plans
+* Flu shots, skin checks and private health insurance discounts
+* Career development: Online learning, mentorship and career pathways
+
+**If you’re ready to shape tomorrow, let’s get started. Apply Now!**
+
+*KBR acknowledges the Traditional Custodians of Country throughout Australia and their continuing connections to land, sea, community and culture. We pay our respects to Elders past and present.*
+
+*As a Major Service Provider of the Australian Defence Force, an AGSVA security clearance will be required and compliance to International Traffic in Arms Regulations (ITAR). As such, our hiring decisions are based on the key requirements of each role and candidates are selected based on their unique strengths and experiences.*
+
+#LI-JAW1",,https://www.glassdoor.com.au/Overview/W-EI_IE18604.htm,https://media.glassdoor.com/sql/18604/kbr-squareLogo-1656346954661.png,,,,,,,,,,,
+gd-1009857172951,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009857172951,,Senior Machine Learning Engineer,"Block, Inc.",Melbourne,2025-08-28,,direct_data,yearly,128000.0,160000.0,AUD,False,,,organic,privacy@block.xyz,"Block is one company built from many blocks, all united by the same purpose of economic empowerment. The blocks that form our foundational teams — People, Finance, Counsel, Hardware, Information Security, Platform Infrastructure Engineering, and more — provide support and guidance at the corporate level. They work across business groups and around the globe, spanning time zones and disciplines to develop inclusive People policies, forecast finances, give legal counsel, safeguard systems, nurture new initiatives, and more. Every challenge creates possibilities, and we need different perspectives to see them all. Bring yours to Block.
+
+### **The Role**
+
+We are looking for a Senior Machine Learning Engineer to join the Machine Learning Features team within Block's Machine Learning Platform. This team is responsible for developing and maintaining the systems that compute and serve millions of ML features every day, powering Machine Learning models across Block.
+
+As a senior engineer, you will help scale our high-demand ML feature pipelines and services to meet the needs of teams across Cash App, Square, Afterpay, and more. You will also contribute to the design and development of a groundbreaking new ML feature system, aimed at redefining how Machine Learning features are computed and delivered at scale.
+
+### **You Will**
+
+* Own and maintain mission-critical ML feature computation and serving systems that support millions of daily feature requests
+* Design and build the next-generation ML feature platform to enable faster iteration and higher-quality ML models across Block
+* Partner closely with Data Scientists, ML Modelers and Software Engineers to deliver reliable, performant, and scalable systems
+* Drive architectural decisions, system reliability improvements, and infrastructure automation
+* Mentor and guide other engineers on best practices in large-scale distributed systems, feature engineering, and ML infrastructure
+* Champion engineering excellence through code reviews, technical documentation, and continuous improvement
+
+### **You Have**
+
+* 5+ years of experience in software engineering, with at least 3+ in large-scale data or ML infrastructure
+* Strong proficiency in programming languages such as Java, Python, Kotlin or Go
+* Experience building and operating distributed data systems at scale (e.g., Spark, Flink, Kafka, Databricks, Snowflake)
+* Proven ability to design for high performance, scalability, and reliability
+* Deep knowledge of cloud infrastructure (AWS, GCP) and containerized systems (Kubernetes, Docker)
+* Strong collaboration skills and ability to work cross-functionally with ML practitioners and infrastructure engineers
+* Experience mentoring junior engineers and driving technical direction on complex projects
+
+### **Nice to have**
+
+* Familiarity with ML workflows, platforms, and systems
+* Experience building or maintaining ML batch or real-time feature systems
+* Background in MLOps, experimentation platforms, or ML observability
+
+**Use of AI in Our Hiring Process**
+
+We may use automated AI tools to evaluate job applications for efficiency and consistency. These tools comply with local regulations, including bias audits, and we handle all personal data in accordance with state and local privacy laws.
+
+Contact us at privacy@block.xyz with hiring practice or data usage questions.
+
+*Every benefit we offer is designed with one goal: empowering you to do the best work of your career while building the life you want. Remote work, medical insurance, flexible time off, retirement savings plans, and modern family planning are just some of our offering.*
+
+*Block, Inc. (NYSE: XYZ) builds technology to increase access to the global economy. Each of our brands unlocks different aspects of the economy for more people.* ***Square*** *makes commerce and financial services accessible to sellers.* ***Cash App*** *is the easy way to spend, send, and store money.* ***Afterpay*** *is transforming the way customers manage their spending over time.* ***TIDAL*** *is a music platform that empowers artists to thrive as entrepreneurs.* ***Bitkey*** *is a simple self-custody wallet built for bitcoin.* ***Proto*** *is a suite of bitcoin mining products and services. Together, we’re helping build a financial system that is open to everyone.*",,https://www.glassdoor.com.au/Overview/W-EI_IE422050.htm,https://media.glassdoor.com/sql/422050/block-squareLogo-1639605288649.png,,,,,,,,,,,
+gd-1009857012072,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009857012072,,AI Engineering Manager,Pearson,Sydney,2025-08-28,,direct_data,yearly,120000.0,120000.0,AUD,False,,,organic,TalentExperienceGlobalTeam@grp.pearson.com,"The Team
+
+The AI & Analytics team develops and delivers advanced AI, machine learning, and analytics solutions including the development and maintenance of Pearson’s workforce ontology of occupations and skills. We work across the full lifecycle, from research and experimentation through to production deployment, partnering closely with Product and other business teams to deliver strategically aligned, technically robust and scientifically validated solutions. Sitting within Pearson’s Enterprise Learning and Skills (ELS) division, our work supports ELS’s mission to help organisations understand how work is evolving, particularly through the lens of technology, and to position themselves for long-term success by combining workforce insights with tailored assessments and learning solutions.
+
+We are looking for a talented AI Engineering Manager to join our team and lead the AI Engineering function within AI & Analytics. The AI Engineering team is responsible for building and maintaining the infrastructure, systems, and APIs that bring AI models into production at scale. We develop and optimise large-scale GPU and cloud environments, design scalable architectures, and create high-performance machine learning and NLP pipelines. Our work ensures AI research, including ontology-powered solutions, can be deployed efficiently, securely, and reliably, enabling rapid experimentation and delivering measurable business impact.
+
+The Role
+
+Reporting to the Director of Data Science and Analytics, you will lead the AI Engineering function managing a high-performing group of engineers to deliver secure, scalable, and maintainable AI systems. You will provide technical leadership and mentorship, oversee AI infrastructure and model deployment, and ensure the adoption of best practices in engineering. You will also work closely with Data Scientists, Ontologists, and Data Engineers to bring research and models into production at scale.
+
+**As an Engineering Manager you will be responsible for:**
+
+* Manage a team of over 6 AI engineers, providing technical leadership, mentorship, and inspiration
+* Collaborate with cross-functional teams, including data scientists, software engineers, and product managers, to gather requirements and design AI solutions that meet customer needs.
+* Mentor and lead senior engineers, providing guidance on technical best practices and ensuring that code quality and standards are maintained through an agile delivery model.
+* Lead the design and development of AI models and systems from concept to deployment, ensuring that they meet business requirements and are secure, scalable, and maintainable.
+* Support the consumption of ML models, APIs, and data outputs by other teams and organizations.
+* Research and apply the latest AI techniques and technologies including Generative AI and Agentic techniques to develop cutting-edge solutions that differentiate our products and services.
+* Oversee our AI infrastructure, including monitoring production workflows and maintaining critical infrastructure components
+* Drive code quality and execution by ensuring that our engineering practices are followed in relation to testing, security and monitoring including the adoption of AI powered engineering methods.
+* Foster a culture of innovation, collaboration, and excellence, inspiring and motivating team members to achieve their full potential.
+
+**To be successful in this role, you'll ideally have:**
+
+* BS, MS, or PhD in Computer Science, Software Engineering, or related fields
+* 2+ years in Engineering Lead or Management role with at least 2 direct reports
+* 7+ years of experience in the field of AI, Data Engineering, and/or Data Science
+* Exceptional leadership skills, problem-solving skills, strategic thinking, and communication skills
+* Strong design skills in modern cloud-based architectures
+* Expertise in at least one area of AI, such as Natural Language Processing, or recommender systems
+* Strong skills in Python, Object Oriented design, and architecture patterns such as DDD
+
+**Our tech stack:** Python, Pytorch, Terraform, Databricks, Kubernetes, AWS
+
+At Pearson we ‘add life to a lifetime of learning’ so everyone can realise the life they imagine. We create vibrant and enriching learning experiences designed for real-life impact.
+
+Pearson is an equal opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all employees.
+
+**Who we are:**
+
+At Pearson, our purpose is simple: to help people realize the life they imagine through learning. We believe that every learning opportunity is a chance for a personal breakthrough. We are the world's lifelong learning company. For us, learning isn't just what we do. It's who we are. To learn more: We are Pearson.
+
+Pearson is an Equal Opportunity Employer and a member of E-Verify. Employment decisions are based on qualifications, merit and business need. Qualified applicants will receive consideration for employment without regard to race, ethnicity, color, religion, sex, sexual orientation, gender identity, gender expression, age, national origin, protected veteran status, disability status or any other group protected by law. We actively seek qualified candidates who are protected veterans and individuals with disabilities as defined under VEVRAA and Section 503 of the Rehabilitation Act.
+
+If you are an individual with a disability and are unable or limited in your ability to use or access our career site as a result of your disability, you may request reasonable accommodations by emailing TalentExperienceGlobalTeam@grp.pearson.com.
+
+**Job:** Data Engineering
+
+**Job Family:** TECHNOLOGY
+
+**Organization:** Enterprise Learning & Skills
+
+**Schedule:** FULL\\_TIME
+
+**Workplace Type:** Hybrid
+
+**Req ID:** 20755",,https://www.glassdoor.com.au/Overview/W-EI_IE3322.htm,https://media.glassdoor.com/sql/3322/pearson-squareLogo-1744730106937.png,,,,,,,,,,,
+gd-1009855761568,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009855761568,,Senior Software Engineer - AI Powered Engineering,Commonwealth Bank,Sydney,2025-08-27,,direct_data,yearly,136250.0,178875.0,AUD,False,,,organic,,"**S** **enior** **Software** **Engineer** **-** **AI Powered Engineering**
+
+**\*\*Multiple Roles\*\***
+
+**\*\*Sydney/Melbourne location\*\***
+
+* You are passionate about AI and working to deliver better outcomes for CBA’s people and customers!
+
+* We are leading the world in AI ambition within Australia’s largest bank and fintech!
+
+* Together, we will engineer the future of banking with innovative Gen AI solutions!
+
+**Your business**
+
+The CIO for Technology team ensures that CommBank has a world-class engineering capability and is at the forefront of technology, using innovative and emerging technology to help our customer s and support our Group Strategy.
+
+We work hard to ensure that best practice, whether inside CommBank or outside in the broader technology ecosystem, is discovered, sheltered, nurtured, and spread to wherever else it can drive the most benefit for the Group and our customers.
+
+We are actively involved in the technology community, contributing to education programs, innovation, research, and partnerships that will set Australia up for success as the economy transitions to a more digital future.
+
+**Do work that matters**
+
+Join our AI Powered Engineering function within the CIO for Technology portfolio. We are a very new, high energy team with a startup like dynamic inside the Bank, partnering with our global engineering community to embed AI - assisted tools and capabilities that measurably improve developer experience, delivery velocity, and software quality.
+
+**About the team**
+
+We operate at the intersection of platform engineering, developer productivity, and applied AI. As a newly formed squad, we move fast, experiment responsibly, and ship pragmatic, reusable capabilities that fit enterprise standards. You’ll help shape our technical direction, culture, and ways of working from the ground up.
+
+**What** **you’ll** **do**
+
+* Collaborate on complex technical problems from discovery through implementation, delivering h igh quality , maintainable solutions.
+
+* Break down requirements into actionable engineering tasks; create clarity for delivery squads and stakeholders.
+
+* Run h ands-on experiments with emerging AI/ML and GenAI tooling; design evaluation frameworks, measure outcomes, and provide evidence based recommendations.
+
+* Build resilient, reusable components, SDKs, and service integrations that slot into pipelines, IDEs, and developer platforms.
+
+* Contribute to architectural discussions; propose improvements and r ole model engineering standards and best practices.
+
+* Maintain h igh quality codebases via active code reviews, robust testing, and clear documentation for knowledge sharing.
+
+* Work c ross functionally to align roadmaps, manage dependencies, and land changes with minimal disruption.
+
+* Mentor junior engineers and uplift AI literacy across squads; contribute to communities of practice.
+
+**What you bring**
+
+* Extensive experience in designing and implementing scalable, maintainable, and reliable software systems.
+
+* Practical knowledge of AI/ML and Generative AI applied to software engineering workflows (e.g., code assist , test generation, knowledge retrieval, anomaly detection), with an understanding of limitations, risks, and safety considerations.
+
+* Proficiency in one or more languages such as Python, TypeScript/Node.js, or C#, and experience building microservices on AWS and/or Azure.
+
+* Architectures: Microservices, event driven patterns, REST/ gRPC
+
+* Cloud: AWS and Azure (e.g., Lambda/Functions, Containers/ECS/AKS, S3/Blob, API Gateway, Step Functions/Logic Apps)
+
+* Data: SQL, data pipelines, observability/telemetry for engineering productivity and quality metrics
+
+* DevSecOps : GitHub/GitLab/Azure DevOps, Actions/Pipelines, Terraform ( IaC ), SAST/DAST/SCA, secrets management
+
+* Strong technical influence: ability to review designs and code, set quality bars, and collaborate with stakeholders to solve business critical problems.
+
+* A growth mindset and bias toward iterative experimentation—from idea to prototype to pilot to product—with clear success metrics.
+
+* Proficiency in agile delivery (Scrum/Kanban) and tooling such as Jira and Confluence.
+
+If this sounds like you, **apply today!**
+
+We support our people with the flexibility to balance where work is done with at least half their time each month connecting in office.
+
+If you're already part of the Commonwealth Bank Group (including Bankwest, x15ventures), you'll need to apply through Sidekick to submit a valid application. We’re keen to support you with the next step in your career.
+
+We're aware of some accessibility issues on this site, particularly for screen reader users. We want to make finding your dream job as easy as possible, so if you require additional support please contact HR Direct on 1800 989 696.
+
+Advertising End Date: 12/09/2025",,https://www.glassdoor.com.au/Overview/W-EI_IE7922.htm,https://media.glassdoor.com/sql/7922/commonwealth-bank-of-australia-squarelogo-1603344370848.png,,,,,,,,,,,
+gd-1009854911419,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009854911419,,"Partner Engineer, AI/ML, Google Cloud",Google,Sydney,2025-08-27,,,,,,,False,,,organic,,"At Google, we have a vision of empowerment and equitable opportunity for all Aboriginal and Torres Strait Islander peoples and commit to building reconciliation through Google’s technology, platforms and people and we welcome Indigenous applicants. Please see our Reconciliation Action Plan for more information.
+
+  
+Note: By applying to this position you will have an opportunity to share your preferred working location from the following: **Sydney NSW, Australia; Melbourne VIC, Australia**.
+
+### **Minimum qualifications:**
+
+* Bachelor's degree or equivalent practical experience.
+* 6 years of experience with cloud native architecture in a customer-facing or support role.
+* Experience with Machine Learning model development and deployment.
+* Experience engaging with, and presenting to, technical stakeholders and executive leaders.
+* Experience with frameworks for deep learning (e.g. PyTorch, Tensorflow, Jax, Ray, etc.) and using machine learning APIs.
+
+  
+
+### **Preferred qualifications:**
+
+* Experience with virtualization or containerization platforms, migrating applications and services to cloud platforms and with networking and security concepts.
+* Experience working with partners and customers as sales engineering or delivery roles providing solutions.
+* Experience with Google Cloud Data, Artificial Intelligence and Machine Learning Services.
+* Experience in building strategic business partnerships.
+* Excellent communication skills and ability to conduct partner CTO and technical discussions , engagements and managing multiple stakeholders.
+
+**About the job**
+-----------------
+
+When leading companies choose Google Cloud, it's a huge win for spreading the power of cloud computing globally. Once educational institutions, government agencies, and other businesses sign on to use Google Cloud products, you come in to facilitate making their work more productive, mobile, and collaborative. You listen and deliver what is most helpful for the customer. You assist fellow sales Googlers by problem-solving key technical issues for our customers. You liaise with the product marketing management and engineering teams to stay on top of industry trends and devise enhancements to Google Cloud products.
+
+As a Partner Engineer, you will play a crucial role in growing and supporting the Google Cloud partner ecosystem. Your expertise in business development, technical sales and services, coupled with your experience in modern public cloud platforms, with an emphasis on Data and Artificial Intelligence/Machine Learning (AI/ML) capabilities using Google Cloud AI products and services (e.g., Vertex AI, Google Agent space, Customer Engagement Suite and Applied AI applications).
+  
+  
+You will lead the activation and enablement of partners across various technologies and solutions. You will contribute to the adoption of Google Cloud by empowering partners to develop creative cloud solutions and demonstrate how Google Cloud services drive innovation, accelerate time to market, differentiate against competitors, and create new business growth streams for customers. Your support will be vital during the proof-of-concept, migration, and deployment phases for partners.
+
+Google Cloud accelerates every organization’s ability to digitally transform its business and industry. We deliver enterprise-grade solutions that leverage Google’s cutting-edge technology, and tools that help developers build more sustainably. Customers in more than 200 countries and territories turn to Google Cloud as their trusted partner to enable growth and solve their most critical business problems.
+
+**Responsibilities**
+--------------------
+
+* Build and enable partners technical capability and capacity through co-developing solutions, prototyping and demonstrating product integrations and guiding them to help customers through assessments of their existing legacy application environments.
+* Empower partners to drive a pilot, PoC or production workload.
+* Build focused technical assets. Collaborate with partners to develop GCP specific solution documentation, joint technical articles, webinars, whitepapers, demos with ISV product and also recommend/review integration strategies, enterprise architectures, platforms and application infrastructure required to implement a complete solution on Google Cloud.
+* Scale customers wins through partners by promoting the partner with account teams and developing deep partner relationships.
+
+Google is proud to be an equal opportunity workplace and is an affirmative action employer. We are committed to equal employment opportunity regardless of race, color, ancestry, religion, sex, national origin, sexual orientation, age, citizenship, marital status, disability, gender identity or Veteran status. We also consider qualified applicants regardless of criminal histories, consistent with legal requirements. See also Google's EEO Policy and EEO is the Law. If you have a disability or special need that requires accommodation, please let us know by completing our Accommodations for Applicants form.",,https://www.glassdoor.com.au/Overview/W-EI_IE9079.htm,https://media.glassdoor.com/sql/9079/google-squarelogo-1441130773284.png,,,,,,,,,,,
+gd-1009855623743,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009855623743,,Senior Data Scientist - Hybrid,oOh!,North Sydney,2025-08-27,,direct_data,yearly,140000.0,171000.0,AUD,False,,,organic,,"**Work options:** Hybrid
+
+The Senior Data Scientist will lead the design, development, and optimisation of advanced pricing models that directly support business growth. Working closely with Pricing & Revenue, Product, and Technology teams, the role will integrate diverse data sources, apply machine learning and AI methods, and deliver scalable pricing solutions. It will collaborate with Data and ML Engineers to develop scalable data products and support the productionisation and deployment of pricing models. The role will also build tools and dashboards to deliver insights, and translate complex model outputs into clear, actionable recommendations for senior stakeholders.
+
+We are oOh!media (pronounced “oh!” media).
+
+oOh!media is the #1 Out of Home company in Australia and New Zealand.
+
+We exist to make public spaces better and brands unmissable, proudly leading the market with innovation, creativity, data and results. Our network plays an important role in the communities they are located, creating engaging environments that inform, entertain and inspire, while connecting brands with audiences at scale.
+
+We are oOh!media, and we are unmissable.
+
+**Join us:**
+
+We’re a team driven by creativity, innovation, and a sense of community. We show up every day ready to be bold, brave, and push the boundaries of Out of Home advertising. You’ll work alongside a group of talented individuals across Australia and New Zealand, all of whom are dedicated to raising the bar. If you’re ready to realise your potential and make an impact, join us.
+
+**About the opportunity:**
+
+* **Full-time, permanent position**
+* **Based in North Sydney with a hybrid work model**
+
+We are seeking a highly skilled Senior Data Scientist to lead the design and development of advanced pricing models. You will work closely with cross-functional teams to integrate diverse data sources, optimise machine learning models, and deliver impactful, data-driven pricing strategies that align with business goals. You will also have the opportunity to explore and apply emerging AI capabilities to enhance model performance, accelerate insights, and create innovative pricing solutions
+
+**Key responsibilities and experience:**
+
+* Partner with Pricing & Revenue, Product, and Technology teams to source, integrate, and transform data into production-ready assets, enabling scalable and repeatable pricing solutions.
+* Lead the design, development, and optimisation of pricing models using both classic machine learning approaches (e.g., regression, tree-based models, clustering) and potentially emerging AI-driven methods to accelerate insight generation and decision making.
+* Build Python, SQL, and interactive analytics applications to deliver pricing tools, dashboards, and insights.
+* Collaborate with Data and ML Engineers to develop scalable data products and support the product ionisation and deployment of pricing models.
+* Leverage advanced analytics and AI to identify new opportunities, improve model performance, and support pricing strategy simulations.
+* Translate complex model outputs into actionable insights for senior leadership and cross-functional stakeholders to influence pricing decisions.
+* Identify and implement automation opportunities to improve efficiency, reliability, and consistency of pricing processes.
+* Contribute to the ongoing refinement of pricing guardrails, governance frameworks, and strategic levers in response to market dynamics.
+
+**Qualifications and Experience**
+
+* 5+ years’ experience as a Data Scientist, with exposure to pricing or revenue-related problems.
+* Excellent problem-solving skills, with a “can-do” attitude and ability to operate in fast paced, evolving environments.
+* Strong proficiency with Python, SQL, and data visualisation tools.
+* Proficiency in designing, analysing, and managing large data sets.
+* Strong business acumen and strategic thinking abilities.
+
+**Highly Desirable:**
+
+* Demonstrated success in productionising machine learning models for business impact.
+* Exposure to Databricks, AWS, and PySpark, with an interest in developing deeper expertise in modern data platforms.
+* Exposure to the Out of Home industry or similar, with an understanding of how pricing impacts commercial outcomes.
+* Familiarity with applying AI techniques to enhance analytics, modelling, or decision making.
+* Experience collaborating with ML Engineering to productionise and scale models.
+* An interest in or exposure to mathematical optimisation concepts, particularly in contexts where pricing plays a central role in the optimisation.
+
+**Our benefits and perks:**
+
+* Competitive salary package
+* A positive, supportive workplace culture
+* Professional growth and development opportunities
+* Comprehensive, paid training and ongoing support
+
+If you’re curious, ready for a unique challenge, and want to make a real impact, we want to hear from you!
+
+At oOh!, we celebrate diversity and strive for an inclusive environment. We welcome applications from all backgrounds, including Aboriginal and Torres Strait Islander peoples, people with disabilities, LGBTQIA+ individuals, and refugees.
+
+To be considered, applicants must be Australian citizens or permanent residents with full working rights in Australia, and all offers of employment are subject to employer-funded pre-employment checks including police, reference, and work rights verification, with additional checks such as credit, bankruptcy, drug and alcohol screening, or driver’s licence verification required for some roles.",,https://www.glassdoor.com.au/Overview/W-EI_IE657380.htm,https://media.glassdoor.com/sql/657380/ooh-media-squareLogo-1638743466968.png,,,,,,,,,,,
+gd-1009855254121,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009855254121,,AI Data Scientist,Macquarie Group Limited,Sydney,2025-08-27,,direct_data,yearly,140000.0,170000.0,AUD,False,,,organic,,"Become part of a dynamic and innovative group within our Commodities and Global Markets AI team, dedicated to delivering sophisticated Generative AI (GenAI) solutions. Our team drives advancements in trading, risk management, and client services across global markets. We foster a supportive, collaborative environment that values expertise, encourages curiosity, and thrives on pushing the boundaries of AI innovation.
+
+At Macquarie, our advantage is bringing together diverse people and empowering them to shape all kinds of possibilities. We are a global financial services group operating in 31 markets and with 56 years of unbroken profitability. You’ll be part of a friendly and supportive team where everyone - no matter what role - contributes ideas and drives outcomes.
+
+What role will you play?
+
+As an AI Data Scientist (GenAI & Engineering Hybrid), you will take a leading role in designing, prototyping, and deploying cutting-edge Generative AI solutions to tackle complex business challenges. Your responsibilities will span both domains, focusing on solutioning business problems, rapid prototyping, prompt engineering, engaging with stakeholders, and delivering actionable insights. You will also be contributing by writing production-grade code, integrating APIs, managing databases, developing CI/CD pipelines, and building scalable, maintainable AI systems.
+
+  
+
+In addition to driving technical excellence, you will serve as a senior technical mentor within the data science stream, collaborating closely with a team of dedicated platform engineers (so you won’t be the sole engineer!). However, you’ll also have the flexibility and capability to step into engineering tasks when needed, ensuring seamless integration and delivery of AI solutions.
+
+  
+
+What you offer
+
+* Proven expertise in Generative AI (GenAI) and Large Language Models (LLMs), including hands-on experience with LLMs, RAG techniques, AI agents, prompt engineering, and frameworks such as LangChain, LlamaIndex, LangGraph, AWS Bedrock Agents & Bedrock Agentcore, GCP Agentspace, etc.
+* A hybrid data science and engineering skillset, with a strong ability to productionise AI/ML models in Python, write maintainable code, and work in cloud environments (AWS, GCP, Azure).
+* A personal passion for GenAI, demonstrated through personal projects, experimentation, or active use of tools like GitHub Copilot or Claude Code to enhance creativity and productivity.
+* Strong business and communication skills, including the ability to translate technical concepts into business value and collaborate effectively with stakeholders to deliver impactful solutions.
+* Leadership and mentoring experience, with a passion for knowledge sharing and fostering a high-performing, collaborative team culture.
+
+We love hearing from anyone inspired to build a better future with us, if you're excited about the role or working at Macquarie we encourage you to apply.
+
+What we offer
+
+At Macquarie, you’re empowered to shape a career that’s rewarding in all the ways that matter most to you. Macquarie employees can access a wide range of benefits which, depending on employment type, include:
+
+* 1 wellbeing leave day per year
+* Up to 5 additional service bonus leave days per year
+* Up to 20 weeks’ paid parental leave for primary caregivers along with 12 days of transition leave upon return to work, and 6 weeks’ paid leave for non-primary caregivers
+* 2 days of paid volunteer leave and donation matching
+* Up to 12 months’ gender affirmation leave, including 6 weeks’ paid leave
+* Access to Employee Assistance Program and wellbeing benefits including skin and health checks, and flu vaccinations
+* Access to a wide range of salary packaging options
+* Access to a wide range of learning and development opportunities, including reimbursement for professional membership or subscription
+* Hybrid and flexible working arrangements, dependent on role
+* Reimbursement for work from home equipment
+
+About Technology
+
+Technology enables every aspect of Macquarie, for our people, our customers and our communities. We’re a global team that is passionate about accelerating the digital enterprise, connecting people and data, building platforms and applications and designing tomorrow’s technology solutions.
+
+Our commitment to diversity, equity and inclusion
+
+We are committed to fostering a diverse, equitable and inclusive workplace. We encourage people from all backgrounds to apply and welcome all identities, including race, ethnicity, cultural identity, nationality, gender (including gender identity or expression), age, sexual orientation, marital or partnership status, parental, caregiving or family status, family and domestic violence status, neurodiversity, religion or belief, disability, or socio-economic background. We welcome further discussions on how you can feel included and belong at Macquarie as you progress through our recruitment process. To learn more, contact our team by clicking here.
+
+Our aim is to provide reasonable adjustments to individuals who may need support during the recruitment process and through working arrangements. If you require additional assistance, please let us know in the application process.",,https://www.glassdoor.com.au/Overview/W-EI_IE12088.htm,https://media.glassdoor.com/sql/12088/macquarie-group-squareLogo-1684797770187.png,,,,,,,,,,,
+gd-1009854550283,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009854550283,,Lead AI Engineer,Westpac Group,Sydney,2025-08-26,,direct_data,yearly,85579.0,95000.0,AUD,False,,,organic,,"**Create your best future and join Westpac as a Lead AI Engineer**
+
+**What’s the role?**
+
+An exciting opportunity is available for a Lead AI Engineer to complement our Data Platforms, Data Strategy, Cortex and Advanced Analytics teams.
+
+The role works within delivery squads focusing on building and operationalising AI applications and ML models that will further enhance our service and product offerings.
+
+Additionally, the role is responsible for engineering design, development, and deployment of machine learning (ML) models and Gen-AI agentic applications that solve complex problems and enhance our products and services. This role will work closely with data scientists, software engineers, and product managers to integrate machine learning solutions into production systems.
+
+**What do I need?**
+
+* Advanced programming skills in Python and strong familiarity with ML libraries such as TensorFlow, PyTorch, or scikit-learn.
+* Advanced experience building solutions leveraging frameworks such as LlamaIndex, LangChain, AutoGen, DSPy, etc.
+* Deep experience building CI/CD pipelines and automation in Jenkins, GitHub and Bamboo, plus IaaC & configuration management tools such Terraform and Chef.
+* Solid experience with big data technologies like Hadoop, Spark, or similar for data processing and feature engineering, and implementing solutions on Azure ML, Synapse and Azure AI Services.
+* Highly experienced in dealing with diverse stakeholders at all levels within a complex enterprise setting.
+* Strong familiarity with Graph databases and their usage pattern, with hands-on experience in backend & frontend development using Nodejs, and React.
+* Familiarity with scripting languages such as bash, PowerShell.
+* Possess certification on Azure & AWS for solution design.
+* Solid experience with A/B testing and experimental design.
+* Well-rounded relationship management and business acumen with a default ability to cater language and style to suit any audience.
+
+**Why join us?**
+
+We’re obsessed with becoming our customers' #1 banking partner for life and we’re looking for people who are passionate about helping us achieve that goal. In return, we’re committed to making Westpac the best place to work in the country. Here are just a few of the ways we’re already doing that:
+
+* Special offers on banking products and discounts from top brands, including generous employee-only mortgage rates!
+* Flexible work arrangements to help you achieve a greater work/life balance, and a variety of leave options including Culture, Lifestyle and Wellbeing leave.
+* Tailored learning and development opportunities to help your grow your career within the bank.
+* Lots of opportunities to ‘give back’ to the Community by getting involved in our many volunteering initiatives.
+
+**Create your future today**
+
+To get started, simply click on the APPLY or APPLY NOW button
+
+We’re all about creating a supportive and inclusive community. We welcome everyone – no matter your age, gender, background, or abilities. We also provide additional support to welcome our veterans, Indigenous Australians and neurodiverse community.
+
+If you need any adjustments during the recruitment process, you can find out more information and additional contact details by visiting the *""People with Disability and/or needing Accessibility Requirements""* page on our website .",,https://www.glassdoor.com.au/Overview/W-EI_IE5769.htm,https://media.glassdoor.com/sql/5769/westpac-group-squareLogo-1754976179119.png,,,,,,,,,,,
+gd-1009854296933,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009854296933,,AI & Data Lead,Forwood Safety,Brisbane,2025-08-26,,direct_data,yearly,73000.0,160000.0,AUD,False,,,organic,,"Lead AI and Data for technology that saves lives. We’re an Australian, remote‑first company building risk management and fatality‑prevention software for high‑risk industries. Our platform helps organisations identify hazards earlier, act decisively, and protect their people.
+
+**The Role**  
+As AI and Data Lead, you will lead leaders across AI/ML, Data Engineering, and Data Science to deliver AI‑powered product capabilities and transform data into measurable business outcomes. You’ll own the AI/Data strategy and portfolio, set governance for data quality and MLOps, embed Responsible AI, and represent AI/Data with customers and the executive team. You will champion AI‑augmented ways of working—including agentic workflows and copilots (e.g., Cursor, Copilot)—to lift velocity and quality at scale.
+
+**Key Responsibilities**
+
+* Define and communicate a multi‑year AI/Data strategy and a prioritised portfolio tied to product and commercial outcomes.
+* Govern delivery through outcome‑based OKRs, investment cases, and quarterly portfolio reviews; unblock systemic issues (not task‑level execution).
+* Oversee data platform and MLOps standards: data governance, lineage, quality SLAs, feature management, model registry, training/serving pipelines, and observability.
+* Institutionalise Responsible AI practices (risk assessment, explainability, bias monitoring, human‑in‑the‑loop) and ensure auditability for safety‑sensitive contexts.
+* Build, develop, and retain high‑performing managers and principal talent; set the hiring bar and operating rhythms for a remote Australian organisation.
+* Establish strategic partnerships with cloud/data/AI vendors and research groups; represent AI/Data with customers and executives.
+* **Qualifications & Experience (Must‑Have)**
+* 8+ years across data/AI/engineering with significant leadership over managers and senior ICs in SaaS or platform environments.
+* Proven record of shipping ML to production with measurable outcomes (adoption, accuracy, revenue/retention, cost efficiency).
+* Executive‑level command of modern data/AI architectures and MLOps—able to make portfolio and governance decisions at the right altitude.
+* Responsible‑AI and privacy/security leadership in compliance‑ or safety‑sensitive contexts.
+* Experience institutionalising AI copilot/agentic workflows across analytics/ML engineering with measurable productivity/quality uplift.
+* Exceptional communication and stakeholder influence across technical and non‑technical audiences (customers, execs, board‑level).
+
+  
+
+**Highly Regarded (Nice‑to‑Have)**
+
+* HSE / safety domain experience and partnership with safety leaders or regulators.
+* Monetising data through data products, risk analytics, or embedded AI features in SaaS.
+* Vendor ecosystem leadership (cloud, data, and AI tooling) and cost‑to‑serve optimisation.
+* AWS Certified Machine Learning – Specialty or Google Professional Data Engineer.
+* DAMA CDMP or IAPP/CIPT.
+
+  
+
+**How We Work**  
+Remote within Australia. Mission‑driven and outcome‑focused. Competitive salary; strong support for professional development. Australian work rights required.  
+If you want to lead AI and Data where your work helps protect workers and delivers clear commercial value, we’d love to talk. Apply now!",,https://www.glassdoor.com.au/Overview/W-EI_IE6618238.htm,https://media.glassdoor.com/sql/6618238/forwood-squarelogo-1653554223952.png,,,,,,,,,,,
+gd-1009854354052,glassdoor,https://www.glassdoor.com.au/job-listing/j?jl=1009854354052,,Data Engineer,WWF,Sydney,2025-08-26,,direct_data,yearly,110000.0,150000.0,AUD,False,,,organic,jobs-au@wwf.org.au,"About the role
+
+Are you passionate about applying your technical data expertise to drive impact in a values-led organisation working to regenerate nature and protect the planet? WWF-Australia is seeking a Data Engineer to lead the development of scalable, cloud-native data infrastructure that powers fundraising and supporter engagement. You’ll design ML-ready data models, build robust ETL pipelines, and enable predictive analytics that inform strategic decisions across the organization. This is a unique opportunity to apply your skills in data warehousing, cloud technologies(GCP), SQL, Python, BigQuery, dbt, and Power BI to support a mission-driven team committed to nature regeneration by 2030.
+
+* Workplace flexibility including monthly RDO
+* WWF-Australia Office location negotiable
+* 2 years full-time contract
+* Join a diverse global network working for people and planet across 100 countries
+* Work in a high performing, values-driven organisation
+
+You can find the full position description and selection criteria by ((“clicking here“)).
+
+About Us
+
+WWF-Australia is an award-winning and innovative organisation determined to do things differently. We use our superpowers to partner in delivering nature-positive solutions, empowering communities, and halting climate change – in Australia, the Asia-Pacific region, the Southern Hemisphere and globally. We are a values-driven organisation with a diverse global network of local organisations working in 100 countries. We work as a catalyst with communities, First Nations, governments, businesses, innovators, and philanthropists towards our global mission: to build a world where people live and prosper in harmony with nature.
+
+About the Role  
+The Data Engineer plays a key role in enabling data-driven decision-making at WWF-Australia. The role is primarily focused on data engineering—building and maintaining the WWF-Australia data warehouse, designing scalable data models, and managing ETL pipelines. It also involves contributing to data analysis and data science initiatives leveraging AI & machine learning, supporting WWF-Australia’s evolution into a mature, insight-driven organisation.
+
+Key Accountabilities (Refer to Position Description for full list of Key Accountabilities)
+
+* Deliver and maintain a high-performing data warehouse: Lead the development and optimisation of the data warehouse in Google BigQuery to support scalable analytics, Artificial Intelligence (AI)/ Machine Learning (ML) workloads and an effective Customer Relationship Management platform.
+* Design efficient data models for analytics and ML: Create structured, performant, and ML-ready data models using SQL and dbt, ensuring efficient storage, transformation, and accessibility.
+* Develop and manage ETL pipelines: Build robust ETL processes leveraging GCP-native tools and Python to enable reliable data ingestion, transformation, and delivery across platforms.
+
+Skills, Knowledge and Experience (Refer to Position Description for full list of Selection Criteria)
+
+* Data Engineering: Advanced experience with SQL (BigQuery and PostgreSQL preferred), Python, database management, ETL processes, data modelling (dbt) and preparing datasets for AI/ML applications.
+* Cloud Technologies: Expertise with core GCP services such as BigQuery, Cloud Storage, and Cloud Functions (or similar services on other platforms such as AWS or Azure).
+* Customer Data Platforms (CDPs): Hand-on experience working with CDPs such as the Salesforce Data Cloud
+
+Our Commitment to Diversity: WWF values diversity and is building a workforce that reflects the community we serve. WWF is an equal opportunity employer and Aboriginal & Torres Strait Islander peoples, people from culturally & linguistically diverse (CALD) backgrounds, sexuality and gender diverse (LGBTQIA+) community members, and people living with disabilities are encouraged to apply.
+
+Our Commitment to Safeguarding: WWF-Australia is committed to acting with respect and upholding the human rights, welfare and dignity of all persons we employ, engage with or who are affected by our activities and work, with special regard for vulnerable individuals and children.
+
+As part of your employment, you will be required to undergo background checks relevant to your position (eg. Police Checks, Working with Children Checks, Reference Checks), abide by our safeguarding policies, and sign our Safeguarding Code of Conduct.
+
+  
+
+You can find the full position description and selection criteria by ((“clicking here“)).
+
+Applications
+
+Please include the following two attachments: (1) a cover letter/statements against the selection criteria and (2) your resume (CV).
+
+We may review applications and interview candidates on a rolling-basis, therefore we encourage you to apply at your earliest convenience.
+
+Note that applicants require current unlimited working rights in Australia to be eligible for this role.
+
+Closing Date: 11:59PM, Sunday 7th September 2025.
+
+Contact: For any questions, please contact jobs-au@wwf.org.au
+
+Why You'll love working here
+
+#### **Work from home**
+
+#### **Professional development assistance**
+
+#### **Employee mentoring program**
+
+Please include the following two attachments: (1) a cover letter/statements against the selection criteria and (2) your resume (CV).
+
+We may review applications and interview candidates on a rolling-basis, therefore we encourage you to apply at your earliest convenience.
+
+#PBA3  
+
+*Please quote in application:* *Data Engineer via Pro Bono Australia.*
+
+Profession: #Information\_and\_Communication\_Technology  
+Sector: #Conservation\_and\_Environment",,https://www.glassdoor.com.au/Overview/W-EI_IE16152.htm,https://media.glassdoor.com/sql/16152/world-wildlife-fund-squarelogo.png,,,,,,,,,,,

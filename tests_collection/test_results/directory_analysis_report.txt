@@ -1,0 +1,92 @@
+
+JobSpy 測試目錄分析報告
+生成時間: 2025-09-02 00:38:07
+==================================================
+
+## 測試腳本目錄分析
+
+### tests/ 目錄 (正式測試框架)
+- 類型: 正式測試框架目錄
+- 說明: 使用 pytest 的正式測試框架，包含單元測試、整合測試、性能測試
+- 文件數量: 18
+- 子目錄數量: 6
+
+文件列表:
+  - conftest.py
+  - debug_seek_advanced.py
+  - INTEGRATION_SUMMARY.md
+  - pytest.ini
+  - quick_test.py
+  - README.md
+  - requirements-test.txt
+  - run_tests.py
+  - seek_debug.html
+  - seek_debug.png
+  - seek_error.png
+  - seek_search_advanced.html
+  - seek_search_advanced.png
+  - test_all_sites.py
+  - test_australia_ai_engineer.py
+  - test_config.py
+  - test_examples.py
+  - test_runner.py
+
+子目錄:
+  - fixtures/
+  - integration/
+  - logs/
+  - performance/
+  - results/
+  - unit/
+
+### tests_collection/ 目錄 (自定義測試腳本)
+- 類型: 自定義測試腳本集合
+- 說明: 包含各種功能驗證和職位搜尋測試腳本
+- 腳本數量: 11
+
+腳本列表:
+  - final_verification_test.py
+  - ml_engineer_test.py
+  - ml_engineer_test_final.py
+  - ml_engineer_test_fixed.py
+  - organize_test_directories.py
+  - run_all_tests.py
+  - simple_test.py
+  - test_bdjobs_fix.py
+  - test_enhanced_scrapers.py
+  - test_enhanced_scrapers_final.py
+  - ui_ux_test.py
+
+## 測試結果目錄分析
+
+### UI/UX 測試結果目錄
+數量: 3
+  - ui_ux_test_20250902_002354
+  - ui_ux_test_20250902_002411
+  - ui_ux_test_20250902_002729
+
+### 機器學習工程師測試結果目錄
+數量: 4
+  - ml_engineer_test_20250901_211708
+  - ml_engineer_test_20250901_211743
+  - ml_engineer_test_final_20250901_212616
+  - ml_engineer_test_fixed_20250901_212155
+
+### 其他測試結果目錄
+數量: 1
+  - enhanced_test_20250901_215209
+
+## 整合建議
+
+1. **保持現有結構**: tests/ 和 tests_collection/ 各有不同用途，建議保持分離
+2. **統一結果管理**: 將所有測試結果目錄整理到 tests_collection/test_results/ 下
+3. **分類存放**: 按測試類型分別存放結果，便於管理和查找
+4. **定期清理**: 建立歸檔機制，避免目錄過於雜亂
+
+## 目錄用途對比
+
+| 目錄 | 用途 | 特點 | 建議 |
+|------|------|------|------|
+| tests/ | 正式測試框架 | pytest 標準、CI/CD 友好 | 保持現狀，用於正式測試 |
+| tests_collection/ | 功能驗證腳本 | 靈活自定義、詳細報告 | 繼續用於開發驗證 |
+| 各種 *_test_* 目錄 | 測試結果存放 | 分散管理、不易維護 | 整合到統一結構中 |

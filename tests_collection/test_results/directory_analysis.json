@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-09-02 00:38:07",
+  "analysis": {
+    "test_script_directories": {
+      "tests": {
+        "type": "正式測試框架目錄",
+        "description": "使用 pytest 的正式測試框架，包含單元測試、整合測試、性能測試",
+        "files": [
+          "conftest.py",
+          "debug_seek_advanced.py",
+          "INTEGRATION_SUMMARY.md",
+          "pytest.ini",
+          "quick_test.py",
+          "README.md",
+          "requirements-test.txt",
+          "run_tests.py",
+          "seek_debug.html",
+          "seek_debug.png",
+          "seek_error.png",
+          "seek_search_advanced.html",
+          "seek_search_advanced.png",
+          "test_all_sites.py",
+          "test_australia_ai_engineer.py",
+          "test_config.py",
+          "test_examples.py",
+          "test_runner.py"
+        ],
+        "subdirs": [
+          "fixtures",
+          "integration",
+          "logs",
+          "performance",
+          "results",
+          "unit"
+        ]
+      },
+      "tests_collection": {
+        "type": "自定義測試腳本集合",
+        "description": "包含各種功能驗證和職位搜尋測試腳本",
+        "files": [
+          "final_verification_test.py",
+          "ml_engineer_test.py",
+          "ml_engineer_test_final.py",
+          "ml_engineer_test_fixed.py",
+          "organize_test_directories.py",
+          "run_all_tests.py",
+          "simple_test.py",
+          "test_bdjobs_fix.py",
+          "test_enhanced_scrapers.py",
+          "test_enhanced_scrapers_final.py",
+          "ui_ux_test.py"
+        ],
+        "subdirs": []
+      }
+    },
+    "test_result_directories": {
+      "ui_ux_test_results": [
+        "ui_ux_test_20250902_002354",
+        "ui_ux_test_20250902_002411",
+        "ui_ux_test_20250902_002729"
+      ],
+      "ml_engineer_test_results": [
+        "ml_engineer_test_20250901_211708",
+        "ml_engineer_test_20250901_211743",
+        "ml_engineer_test_final_20250901_212616",
+        "ml_engineer_test_fixed_20250901_212155"
+      ],
+      "other_test_results": [
+        "enhanced_test_20250901_215209"
+      ]
+    }
+  }
+}

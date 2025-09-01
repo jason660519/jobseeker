@@ -1,0 +1,118 @@
+ML Engineer 職位測試報告 (修正版)
+==================================================
+
+測試時間: 2025-09-01 21:24:28
+搜尋關鍵字: ML Engineer
+每個網站目標職位數: 15
+時間範圍: 近7天內
+修正內容: 添加延遲、重試機制、參數調整
+
+測試統計:
+------------------------------
+測試網站總數: 9
+成功網站數: 5
+成功率: 55.6%
+總職位數: 75
+總執行時間: 106.50 秒
+平均每個網站耗時: 11.83 秒
+
+各網站詳細結果:
+------------------------------
+
+網站: linkedin
+  狀態: success
+  職位數量: 15
+  執行時間: 6.22 秒
+  嘗試次數: 1
+  平均每個職位耗時: 0.41 秒
+  CSV文件: linkedin_ml_engineer_jobs.csv
+  JSON文件: linkedin_ml_engineer_raw_data.json
+
+網站: indeed
+  狀態: success
+  職位數量: 15
+  執行時間: 0.53 秒
+  嘗試次數: 1
+  平均每個職位耗時: 0.04 秒
+  CSV文件: indeed_ml_engineer_jobs.csv
+  JSON文件: indeed_ml_engineer_raw_data.json
+
+網站: zip_recruiter
+  狀態: no_results
+  職位數量: 0
+  執行時間: 16.80 秒
+  嘗試次數: 3
+  錯誤信息: No jobs found after all attempts
+
+網站: glassdoor
+  狀態: success
+  職位數量: 15
+  執行時間: 8.28 秒
+  嘗試次數: 1
+  平均每個職位耗時: 0.55 秒
+  CSV文件: glassdoor_ml_engineer_jobs.csv
+  JSON文件: glassdoor_ml_engineer_raw_data.json
+
+網站: google
+  狀態: no_results
+  職位數量: 0
+  執行時間: 16.29 秒
+  嘗試次數: 3
+  錯誤信息: No jobs found after all attempts
+
+網站: bayt
+  狀態: no_results
+  職位數量: 0
+  執行時間: 14.81 秒
+  嘗試次數: 3
+  錯誤信息: No jobs found after all attempts
+
+網站: naukri
+  狀態: success
+  職位數量: 15
+  執行時間: 1.22 秒
+  嘗試次數: 1
+  平均每個職位耗時: 0.08 秒
+  CSV文件: naukri_ml_engineer_jobs.csv
+  JSON文件: naukri_ml_engineer_raw_data.json
+
+網站: bdjobs
+  狀態: error
+  職位數量: 0
+  執行時間: 16.44 秒
+  嘗試次數: 3
+  錯誤信息: BDJobs.__init__() got an unexpected keyword argument 'user_agent'
+
+網站: seek
+  狀態: success
+  職位數量: 15
+  執行時間: 25.90 秒
+  嘗試次數: 1
+  平均每個職位耗時: 1.73 秒
+  CSV文件: seek_ml_engineer_jobs.csv
+  JSON文件: seek_ml_engineer_raw_data.json
+
+
+修正措施說明:
+------------------------------
+- ZipRecruiter: 添加3-6秒隨機延遲，使用美國地區
+- Google: 調整搜尋詞為'Machine Learning Engineer'，指定悉尼地區
+- Bayt: 添加重試機制，使用杜拜地區，增加延遲
+- BDJobs: 移除user_agent參數，使用達卡地區
+- 所有網站: 添加隨機延遲和重試機制
+
+
+生成的文件:
+------------------------------
+- linkedin_ml_engineer_jobs.csv
+- linkedin_ml_engineer_raw_data.json
+- indeed_ml_engineer_jobs.csv
+- indeed_ml_engineer_raw_data.json
+- glassdoor_ml_engineer_jobs.csv
+- glassdoor_ml_engineer_raw_data.json
+- naukri_ml_engineer_jobs.csv
+- naukri_ml_engineer_raw_data.json
+- seek_ml_engineer_jobs.csv
+- seek_ml_engineer_raw_data.json
+- all_sites_ml_engineer_combined.csv
+- ml_engineer_test_report_fixed.txt
