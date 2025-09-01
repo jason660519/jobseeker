@@ -10,27 +10,97 @@
 - **高效能**：使用異步處理和智能重試機制
 - **易於擴展**：模組化設計，輕鬆添加新的求職平台
 
-## 📦 安裝
+## 📦 安裝指南
 
-### 使用 Poetry（推薦）
+### 🔧 前置需求
+
+在開始安裝之前，請確保您的電腦已安裝：
+- **Python 3.8 或更新版本** - [下載 Python](https://www.python.org/downloads/)
+- **Git** - [下載 Git](https://git-scm.com/downloads)（用於下載專案）
+
+### 方法一：使用 uv（最簡單，推薦新手）
+
+1. **安裝 uv 工具**
+   ```bash
+   # Windows 用戶
+   pip install uv
+   
+   # 或使用 PowerShell
+   irm https://astral.sh/uv/install.ps1 | iex
+   ```
+
+2. **下載並安裝 JobSeeker**
+   ```bash
+   # 下載專案
+   git clone https://github.com/jason660519/jobseeker.git
+   cd jobseeker
+   
+   # 創建虛擬環境
+   uv venv
+   
+   # 啟動虛擬環境（Windows）
+   .venv\Scripts\activate
+   
+   # 安裝專案和所有依賴
+   uv pip install -e .
+   uv pip install playwright
+   
+   # 安裝瀏覽器驅動（用於 Seek 等平台）
+   playwright install
+   ```
+
+### 方法二：使用 Poetry（進階用戶）
+
+1. **安裝 Poetry**
+   ```bash
+   # Windows 用戶
+   pip install poetry
+   ```
+
+2. **下載並安裝 JobSeeker**
+   ```bash
+   # 下載專案
+   git clone https://github.com/jason660519/jobseeker.git
+   cd jobseeker
+   
+   # 安裝依賴
+   poetry install
+   
+   # 啟動虛擬環境
+   poetry shell
+   
+   # 安裝額外依賴
+   poetry add playwright
+   playwright install
+   ```
+
+### 方法三：使用 pip（傳統方式）
 
 ```bash
-# 克隆專案
+# 下載專案
 git clone https://github.com/jason660519/jobseeker.git
 cd jobseeker
 
+# 建議先創建虛擬環境
+python -m venv venv
+venv\Scripts\activate  # Windows
+# 或 source venv/bin/activate  # macOS/Linux
+
 # 安裝依賴
-poetry install
-
-# 啟動虛擬環境
-poetry shell
+pip install -e .
+pip install playwright
+playwright install
 ```
 
-### 使用 pip
+### ✅ 驗證安裝
 
-```bash
-pip install -r requirements.txt
+安裝完成後，執行以下命令測試是否成功：
+
+```python
+python -c "from jobspy import scrape_jobs; print('JobSeeker 安裝成功！')"
 ```
+
+如果看到「JobSeeker 安裝成功！」訊息，表示安裝完成！
 
 ## 🔧 使用方法
 
