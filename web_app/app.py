@@ -232,8 +232,11 @@ def download_results(search_id, format):
             filename = f"jobseeker_{query_safe}_{timestamp}.csv"
             filepath = app.config['UPLOAD_FOLDER'] / filename
             
+            # 轉換為標準格式
+            standardized_data = convert_to_standard_format(result.combined_jobs_data)
+            
             # 儲存 CSV 檔案
-            result.combined_jobs_data.to_csv(filepath, index=False, encoding='utf-8-sig')
+            standardized_data.to_csv(filepath, index=False, encoding='utf-8-sig')
             
             return send_file(
                 filepath,
@@ -350,6 +353,76 @@ def health_check():
         'timestamp': datetime.now().isoformat(),
         'version': '1.0.0'
     })
+
+
+def convert_to_standard_format(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    轉換職位數據為標準格式
+    按照用戶指定的格式：SITE, TITLE, COMPANY, CITY, STATE, JOB_TYPE, INTERVAL, MIN_AMOUNT, MAX_AMOUNT, JOB_URL, DESCRIPTION
+    
+    Args:
+        df: 原始職位數據 DataFrame
+        
+    Returns:
+        標準化的 DataFrame
+    """
+    # 創建標準化的 DataFrame
+    standardized_df = pd.DataFrame()
+    
+    # 按照標準格式映射欄位
+    standardized_df['SITE'] = df.get('site', '').fillna('')
+    standardized_df['TITLE'] = df.get('title', '').fillna('')
+    standardized_df['COMPANY'] = df.get('company', '').fillna('')
+    
+    # 處理地點資訊 - 分離城市和州/省
+    location = df.get('location', '').fillna('')
+    standardized_df['CITY'] = location.apply(extract_city)
+    standardized_df['STATE'] = location.apply(extract_state)
+    
+    standardized_df['JOB_TYPE'] = df.get('job_type', '').fillna('')
+    standardized_df['INTERVAL'] = df.get('interval', '').fillna('')
+    standardized_df['MIN_AMOUNT'] = df.get('min_amount', '').fillna('')
+    standardized_df['MAX_AMOUNT'] = df.get('max_amount', '').fillna('')
+    standardized_df['JOB_URL'] = df.get('job_url', '').fillna('')
+    standardized_df['DESCRIPTION'] = df.get('description', '').fillna('')
+    
+    return standardized_df
+
+
+def extract_city(location_str):
+    """
+    從地點字串中提取城市名稱
+    
+    Args:
+        location_str: 地點字串
+        
+    Returns:
+        城市名稱
+    """
+    if pd.isna(location_str) or location_str == '':
+        return ''
+    
+    # 分割地點字串，通常格式為 "City, State" 或 "City"
+    parts = str(location_str).split(',')
+    return parts[0].strip() if parts else ''
+
+
+def extract_state(location_str):
+    """
+    從地點字串中提取州/省名稱
+    
+    Args:
+        location_str: 地點字串
+        
+    Returns:
+        州/省名稱
+    """
+    if pd.isna(location_str) or location_str == '':
+        return ''
+    
+    # 分割地點字串，通常格式為 "City, State" 或 "City"
+    parts = str(location_str).split(',')
+    return parts[1].strip() if len(parts) > 1 else ''
 
 
 def get_site_description(site: Site) -> str:

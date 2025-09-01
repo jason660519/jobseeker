@@ -382,55 +382,67 @@
                         <i class="fas fa-table me-2"></i>
                         標準 CSV 格式範例
                     </h4>
+                    <div class="alert alert-info mb-4">
+                        <strong>標準格式標題：</strong><br>
+                        <code>SITE, TITLE, COMPANY, CITY, STATE, JOB_TYPE, INTERVAL, MIN_AMOUNT, MAX_AMOUNT, JOB_URL, DESCRIPTION</code>
+                    </div>
                     <div class="csv-preview p-4">
                         <div class="table-responsive">
                             <table class="table table-sm table-striped">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>id</th>
-                                        <th>site</th>
-                                        <th>title</th>
-                                        <th>company</th>
-                                        <th>location</th>
-                                        <th>date_posted</th>
-                                        <th>is_remote</th>
-                                        <th>source_agent</th>
-                                        <th>...</th>
+                                        <th>SITE</th>
+                                        <th>TITLE</th>
+                                        <th>COMPANY</th>
+                                        <th>CITY</th>
+                                        <th>STATE</th>
+                                        <th>JOB_TYPE</th>
+                                        <th>INTERVAL</th>
+                                        <th>MIN_AMOUNT</th>
+                                        <th>MAX_AMOUNT</th>
+                                        <th>JOB_URL</th>
+                                        <th>DESCRIPTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>li-1234567890</td>
                                         <td>linkedin</td>
                                         <td>軟體工程師</td>
                                         <td>科技公司A</td>
                                         <td>台北</td>
-                                        <td>2025-01-01</td>
-                                        <td>False</td>
-                                        <td>linkedin</td>
-                                        <td>...</td>
+                                        <td>台灣</td>
+                                        <td>全職</td>
+                                        <td>月薪</td>
+                                        <td>50000</td>
+                                        <td>80000</td>
+                                        <td>https://www.linkedin.com/jobs/view/1234567890</td>
+                                        <td>負責軟體開發、系統設計與維護...</td>
                                     </tr>
                                     <tr>
-                                        <td>li-1234567891</td>
                                         <td>linkedin</td>
                                         <td>AI Engineer</td>
                                         <td>AI公司B</td>
                                         <td>新竹</td>
-                                        <td>2025-01-02</td>
-                                        <td>False</td>
-                                        <td>linkedin</td>
-                                        <td>...</td>
+                                        <td>台灣</td>
+                                        <td>全職</td>
+                                        <td>月薪</td>
+                                        <td>60000</td>
+                                        <td>100000</td>
+                                        <td>https://www.linkedin.com/jobs/view/1234567891</td>
+                                        <td>開發AI模型、機器學習演算法...</td>
                                     </tr>
                                     <tr>
-                                        <td>li-1234567892</td>
                                         <td>linkedin</td>
                                         <td>UX Designer</td>
                                         <td>設計公司C</td>
                                         <td>台中</td>
-                                        <td>2025-01-03</td>
-                                        <td>True</td>
-                                        <td>linkedin</td>
-                                        <td>...</td>
+                                        <td>台灣</td>
+                                        <td>全職</td>
+                                        <td>月薪</td>
+                                        <td>45000</td>
+                                        <td>70000</td>
+                                        <td>https://www.linkedin.com/jobs/view/1234567892</td>
+                                        <td>負責用戶體驗設計、介面設計...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -438,7 +450,7 @@
                         <div class="mt-3">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
-                                完整格式包含 35 個欄位：id, site, job_url, job_url_direct, title, company, location, date_posted, job_type, salary_source, interval, min_amount, max_amount, currency, is_remote, job_level, job_function, listing_type, emails, description, company_industry, company_url, company_logo, company_url_direct, company_addresses, company_num_employees, company_revenue, company_description, skills, experience_range, company_rating, company_reviews_count, vacancy_count, work_from_home_type, source_agent
+                                標準格式包含 11 個核心欄位：SITE, TITLE, COMPANY, CITY, STATE, JOB_TYPE, INTERVAL, MIN_AMOUNT, MAX_AMOUNT, JOB_URL, DESCRIPTION
                             </small>
                         </div>
                     </div>

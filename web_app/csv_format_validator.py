@@ -27,15 +27,10 @@ class CSVFormatValidator:
             downloads_dir: 下載目錄路徑
         """
         self.downloads_dir = Path(downloads_dir)
+        # 標準格式欄位 (按照用戶指定的格式)
         self.expected_columns = [
-            'id', 'site', 'job_url', 'job_url_direct', 'title', 'company', 'location',
-            'date_posted', 'job_type', 'salary_source', 'interval', 'min_amount',
-            'max_amount', 'currency', 'is_remote', 'job_level', 'job_function',
-            'listing_type', 'emails', 'description', 'company_industry', 'company_url',
-            'company_logo', 'company_url_direct', 'company_addresses', 'company_num_employees',
-            'company_revenue', 'company_description', 'skills', 'experience_range',
-            'company_rating', 'company_reviews_count', 'vacancy_count', 'work_from_home_type',
-            'source_agent'
+            'SITE', 'TITLE', 'COMPANY', 'CITY', 'STATE', 'JOB_TYPE', 
+            'INTERVAL', 'MIN_AMOUNT', 'MAX_AMOUNT', 'JOB_URL', 'DESCRIPTION'
         ]
         self.validation_results = []
     
@@ -252,51 +247,27 @@ class CSVFormatValidator:
         Args:
             output_file: 輸出檔案路徑
         """
-        # 創建範例數據
+        # 創建標準格式範例數據 (按照用戶指定的格式)
         sample_data = {
-            'id': ['li-1234567890', 'li-1234567891', 'li-1234567892'],
-            'site': ['linkedin', 'linkedin', 'linkedin'],
-            'job_url': [
+            'SITE': ['linkedin', 'indeed', 'glassdoor'],
+            'TITLE': ['軟體工程師', 'AI Engineer', 'UX Designer'],
+            'COMPANY': ['科技公司A', 'AI公司B', '設計公司C'],
+            'CITY': ['台北', '新竹', '台中'],
+            'STATE': ['台灣', '台灣', '台灣'],
+            'JOB_TYPE': ['全職', '全職', '遠端'],
+            'INTERVAL': ['月薪', '年薪', '月薪'],
+            'MIN_AMOUNT': ['50000', '800000', '45000'],
+            'MAX_AMOUNT': ['80000', '1200000', '65000'],
+            'JOB_URL': [
                 'https://www.linkedin.com/jobs/view/1234567890',
-                'https://www.linkedin.com/jobs/view/1234567891',
-                'https://www.linkedin.com/jobs/view/1234567892'
+                'https://www.indeed.com/viewjob?jk=1234567891',
+                'https://www.glassdoor.com/job-listing/1234567892'
             ],
-            'job_url_direct': ['', '', ''],
-            'title': ['軟體工程師', 'AI Engineer', 'UX Designer'],
-            'company': ['科技公司A', 'AI公司B', '設計公司C'],
-            'location': ['台北', '新竹', '台中'],
-            'date_posted': ['2025-01-01', '2025-01-02', '2025-01-03'],
-            'job_type': ['', '', ''],
-            'salary_source': ['', '', ''],
-            'interval': ['', '', ''],
-            'min_amount': ['', '', ''],
-            'max_amount': ['', '', ''],
-            'currency': ['', '', ''],
-            'is_remote': [False, False, True],
-            'job_level': ['', '', ''],
-            'job_function': ['', '', ''],
-            'listing_type': ['', '', ''],
-            'emails': ['', '', ''],
-            'description': ['軟體開發相關工作', 'AI模型開發', 'UI/UX設計'],
-            'company_industry': ['', '', ''],
-            'company_url': [
-                'https://www.linkedin.com/company/company-a',
-                'https://www.linkedin.com/company/company-b',
-                'https://www.linkedin.com/company/company-c'
-            ],
-            'company_logo': ['', '', ''],
-            'company_url_direct': ['', '', ''],
-            'company_addresses': ['', '', ''],
-            'company_num_employees': ['', '', ''],
-            'company_revenue': ['', '', ''],
-            'company_description': ['', '', ''],
-            'skills': ['', '', ''],
-            'experience_range': ['', '', ''],
-            'company_rating': ['', '', ''],
-            'company_reviews_count': ['', '', ''],
-            'vacancy_count': ['', '', ''],
-            'work_from_home_type': ['', '', ''],
-            'source_agent': ['linkedin', 'linkedin', 'linkedin']
+            'DESCRIPTION': [
+                '負責軟體開發、系統設計與維護，需具備Python、Java等程式語言經驗',
+                '開發AI模型，進行機器學習演算法研究，需熟悉TensorFlow、PyTorch',
+                '負責使用者介面設計，提升使用者體驗，需熟悉Figma、Sketch等設計工具'
+            ]
         }
         
         # 創建DataFrame並保存

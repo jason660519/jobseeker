@@ -1,4 +1,4 @@
-﻿id,site,job_url,job_url_direct,title,company,location,date_posted,job_type,salary_source,interval,min_amount,max_amount,currency,is_remote,job_level,job_function,listing_type,emails,description,company_industry,company_url,company_logo,company_url_direct,company_addresses,company_num_employees,company_revenue,company_description,skills,experience_range,company_rating,company_reviews_count,vacancy_count,work_from_home_type,source_agent
-li-1234567890,linkedin,https://www.linkedin.com/jobs/view/1234567890,,軟體工程師,科技公司A,台北,2025-01-01,,,,,,,False,,,,,軟體開發相關工作,,https://www.linkedin.com/company/company-a,,,,,,,,,,,,,linkedin
-li-1234567891,linkedin,https://www.linkedin.com/jobs/view/1234567891,,AI Engineer,AI公司B,新竹,2025-01-02,,,,,,,False,,,,,AI模型開發,,https://www.linkedin.com/company/company-b,,,,,,,,,,,,,linkedin
-li-1234567892,linkedin,https://www.linkedin.com/jobs/view/1234567892,,UX Designer,設計公司C,台中,2025-01-03,,,,,,,True,,,,,UI/UX設計,,https://www.linkedin.com/company/company-c,,,,,,,,,,,,,linkedin
+﻿SITE,TITLE,COMPANY,CITY,STATE,JOB_TYPE,INTERVAL,MIN_AMOUNT,MAX_AMOUNT,JOB_URL,DESCRIPTION
+linkedin,軟體工程師,科技公司A,台北,台灣,全職,月薪,50000,80000,https://www.linkedin.com/jobs/view/1234567890,負責軟體開發、系統設計與維護，需具備Python、Java等程式語言經驗
+indeed,AI Engineer,AI公司B,新竹,台灣,全職,年薪,800000,1200000,https://www.indeed.com/viewjob?jk=1234567891,開發AI模型，進行機器學習演算法研究，需熟悉TensorFlow、PyTorch
+glassdoor,UX Designer,設計公司C,台中,台灣,遠端,月薪,45000,65000,https://www.glassdoor.com/job-listing/1234567892,負責使用者介面設計，提升使用者體驗，需熟悉Figma、Sketch等設計工具
