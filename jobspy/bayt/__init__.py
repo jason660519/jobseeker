@@ -15,11 +15,15 @@ from jobspy.model import (
     Country,
 )
 from jobspy.util import create_logger, create_session
+from .enhanced_bayt import EnhancedBaytScraper
 
 log = create_logger("Bayt")
 
+# 使用增強版 Bayt 爬蟲作為主要實現
+BaytScraper = EnhancedBaytScraper
 
-class BaytScraper(Scraper):
+# 保留原始實現作為備用
+class OriginalBaytScraper(Scraper):
     base_url = "https://www.bayt.com"
     delay = 2
     band_delay = 3

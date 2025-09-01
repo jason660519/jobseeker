@@ -1,0 +1,63 @@
+﻿id,site,job_url,job_url_direct,title,company,location,date_posted,job_type,salary_source,interval,min_amount,max_amount,currency,is_remote,job_level,job_function,listing_type,emails,description,company_industry,company_url,company_logo,company_url_direct,company_addresses,company_num_employees,company_revenue,company_description,skills,experience_range,company_rating,company_reviews_count,vacancy_count,work_from_home_type
+in-aac6be11ecd71e33,indeed,https://de.indeed.com/viewjob?jk=aac6be11ecd71e33,https://www.amazon.jobs/jobs/3024355/senior-bi-engineer-multiple-teams-amazon-stores?cmpid=DA_INAD200785B,"Senior BI Engineer, Multiple Teams, Amazon Stores",Amazon.com,"Berlin, BE, DE",2025-07-02,fulltime,,,,,,False,,,,,"**DESCRIPTION**
+---------------
+
+This position is posted to hire for multiple teams. Team(s) currently hiring:
+  
+
+* Amazon Strategic Account Services
+
+  
+Strategic Account Services :  
+What is the Amazon Marketplace?  
+  
+Amazon is the largest marketplace on earth. Millions of customers shop in Amazon’s marketplaces globally. Every day, customers browse, purchase, and review products sold by third-party (3P) sellers right alongside products sold by Amazon. Since 2000, Amazon welcomes companies of all sizes to offer their products, helping them reach hundreds of millions of customers, build their brands, and grow their business.  
+  
+What is Amazon Strategic Account Services (SAS)?  
+  
+With increasing complexity of today’s eCommerce and rise of opportunities, the SAS Team aims to leverage the full potential of each Amazon selling partner. Our team provides in-depth strategic consultancy using a data-driven, collaborative, and customer-focused approach to achieve commercial goals of our sellers.  
+  
+What is the role of a BIE?  
+  
+As a member of the central product team within SAS, you will assist the business teams in making data-driven decisions by transforming raw information into actionable intelligence through the creation of sophisticated data products.  
+  
+Key job responsibilities  
+
+* Gather and translate business requirements into scalable products.
+* Develop complex automated data products including dashboards, reports and self-service.
+* Define the data architecture and mechanisms to optimize the functions of the team.
+* Actively mentor junior BIE colleagues on trends, technologies, and best practices.
+
+**BASIC QUALIFICATIONS**
+------------------------
+
+* Experience programming to extract, transform and clean large (multi-TB) data sets
+* Experience with theory and practice of design of experiments and statistical analysis of results
+* Experience with AWS technologies
+* Experience in scripting for automation (e.g. Python) and advanced SQL skills.
+* Experience with theory and practice of information retrieval, data science, machine learning and data mining
+* Experience working directly with business stakeholders to translate between data and business needs
+* Experience with data visualization using Tableau, Quicksight, or similar tools
+* Experience in the data/BI space
+
+**PREFERRED QUALIFICATIONS**
+----------------------------
+
+* Experience managing, analyzing and communicating results to senior leadership
+
+  
+Amazon is an equal opportunities employer. We believe passionately that employing a diverse workforce is central to our success. We make recruiting decisions based on your experience and skills. We value your passion to discover, invent, simplify and build. Protecting your privacy and the security of your data is a longstanding top priority for Amazon. Please consult our Privacy Notice (https://www.amazon.jobs/en/privacy\_page) to know more about how we collect, use and transfer the personal data of our candidates.  
+  
+m/w/d  
+  
+Our inclusive culture empowers Amazonians to deliver the best results for our customers. If you have a disability and need a workplace accommodation or adjustment during the application and hiring process, including support for the interview or onboarding process, please visit https://amazon.jobs/content/en/how-we-hire/accommodations for more information. If the country/region you’re applying in isn’t listed, please contact your Recruiting Partner.",Internet And Software,https://de.indeed.com/cmp/Amazon.com,https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/3e9d43f5c277de169808abdcaf49ba2c,https://www.amazon.jobs,"440 Terry Ave N, Seattle, WA, United States, Washington","10,000+",more than $10B (USD),Our mission is to be Earth's most customer-centric company.,,,,,,
+li-4242992273,linkedin,https://www.linkedin.com/jobs/view/4242992273,,Staff Data Scientist - (Quick Commerce),Delivery Hero,"Berlin, Berlin, Germany",2025-08-31,,,,,,,False,,,,,,,https://de.linkedin.com/company/delivery-hero-se,,,,,,,,,,,,
+li-4291718703,linkedin,https://www.linkedin.com/jobs/view/4291718703,,(Senior) Data Scientist (m/f/d) - Energy Tech Start Up,Green Fusion,"Berlin, Berlin, Germany",2025-08-31,,,,,,,False,,,,,,,https://de.linkedin.com/company/green-fusion-gmbh,,,,,,,,,,,,
+li-4124975030,linkedin,https://www.linkedin.com/jobs/view/4124975030,,Machine Learning Engineer - Content Solutions,Zalando,"Berlin, Berlin, Germany",2025-08-30,,,,,,,False,,,,,,,https://de.linkedin.com/company/zalando,,,,,,,,,,,,
+li-4291197210,linkedin,https://www.linkedin.com/jobs/view/4291197210,,Software Engineer - New Grad (2025 Start),Databricks,"Berlin, Berlin, Germany",2025-08-30,,,,,,,False,,,,,,,https://www.linkedin.com/company/databricks,,,,,,,,,,,,
+li-4085371392,linkedin,https://www.linkedin.com/jobs/view/4085371392,,Software Engineer in Test,Dataiku,"Berlin, Berlin, Germany",2025-08-30,,,,,,,False,,,,,,,https://www.linkedin.com/company/dataiku,,,,,,,,,,,,
+li-4294112332,linkedin,https://www.linkedin.com/jobs/view/4294112332,,Data Scientist (f/m/x),AUTO1 Group,"Berlin, Berlin, Germany",,,,,,,,False,,,,,,,https://de.linkedin.com/company/auto1-group,,,,,,,,,,,,
+li-4291788689,linkedin,https://www.linkedin.com/jobs/view/4291788689,,Python Software Engineer (all) - Mid-level,Sonia,"Berlin, Berlin, Germany",,,,,,,,False,,,,,,,https://de.linkedin.com/company/soniasolutions,,,,,,,,,,,,
+li-4251788068,linkedin,https://www.linkedin.com/jobs/view/4251788068,,Senior Machine Learning Engineer,SGI,"Berlin, Germany",,,,,,,,False,,,,,,,https://uk.linkedin.com/company/source-group-international,,,,,,,,,,,,
+li-4291741881,linkedin,https://www.linkedin.com/jobs/view/4291741881,,Data Scientist,7Learnings,"Berlin, Germany",,,,,,,,False,,,,,,,https://de.linkedin.com/company/7learnings,,,,,,,,,,,,
+li-4291792916,linkedin,https://www.linkedin.com/jobs/view/4291792916,,Machine Learning (GenAI) Engineer,Orange Quarter,"Berlin, Germany",,,,,,,,False,,,,,,,https://nl.linkedin.com/company/orange-quarter,,,,,,,,,,,,

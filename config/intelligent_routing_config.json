@@ -1,0 +1,218 @@
+{
+  "description": "JobSpy 智能路由系統配置文件",
+  "version": "1.0.0",
+  "last_updated": "2025-01-27",
+  
+  "routing_settings": {
+    "max_concurrent_agents": 4,
+    "default_timeout_seconds": 60,
+    "retry_failed_agents": true,
+    "max_retries": 2,
+    "fallback_enabled": true,
+    "confidence_threshold": 0.6
+  },
+  
+  "geographic_regions": {
+    "custom_regions": [
+      {
+        "name": "Taiwan",
+        "countries": ["taiwan", "台灣", "中華民國"],
+        "states_provinces": ["台北", "新北", "桃園", "台中", "台南", "高雄"],
+        "cities": [
+          "taipei", "台北", "new taipei", "新北", "taoyuan", "桃園",
+          "taichung", "台中", "tainan", "台南", "kaohsiung", "高雄",
+          "hsinchu", "新竹", "keelung", "基隆"
+        ],
+        "keywords": ["台灣", "taiwan", "twd", "新台幣", "中文"],
+        "primary_agents": ["indeed", "linkedin"],
+        "secondary_agents": ["google"]
+      },
+      
+      {
+        "name": "Hong_Kong",
+        "countries": ["hong kong", "香港", "hk"],
+        "states_provinces": ["hong kong island", "kowloon", "new territories"],
+        "cities": [
+          "central", "中環", "causeway bay", "銅鑼灣", "tsim sha tsui", "尖沙咀",
+          "mong kok", "旺角", "admiralty", "金鐘", "wan chai", "灣仔"
+        ],
+        "keywords": ["香港", "hong kong", "hkd", "港幣", "繁體中文"],
+        "primary_agents": ["indeed", "linkedin"],
+        "secondary_agents": ["google"]
+      },
+      
+      {
+        "name": "Singapore",
+        "countries": ["singapore", "新加坡", "sg"],
+        "states_provinces": [],
+        "cities": [
+          "singapore", "新加坡", "orchard", "marina bay", "raffles place",
+          "jurong", "tampines", "woodlands", "ang mo kio"
+        ],
+        "keywords": ["新加坡", "singapore", "sgd", "星幣"],
+        "primary_agents": ["indeed", "linkedin"],
+        "secondary_agents": ["google"]
+      }
+    ]
+  },
+  
+  "industry_categories": {
+    "custom_industries": [
+      {
+        "name": "Fintech",
+        "keywords": [
+          "fintech", "financial technology", "blockchain", "cryptocurrency",
+          "digital banking", "payment systems", "robo advisor", "insurtech",
+          "金融科技", "區塊鏈", "數位銀行", "支付系統"
+        ],
+        "preferred_agents": ["linkedin", "indeed", "glassdoor"],
+        "weight": 1.3
+      },
+      
+      {
+        "name": "E_commerce",
+        "keywords": [
+          "e-commerce", "online retail", "marketplace", "digital commerce",
+          "shopify", "amazon", "alibaba", "logistics", "supply chain",
+          "電商", "網路零售", "線上購物", "物流", "供應鏈"
+        ],
+        "preferred_agents": ["indeed", "linkedin"],
+        "weight": 1.1
+      },
+      
+      {
+        "name": "Gaming",
+        "keywords": [
+          "game development", "gaming", "unity", "unreal engine", "mobile games",
+          "game design", "3d modeling", "animation", "esports",
+          "遊戲開發", "遊戲設計", "手機遊戲", "電競"
+        ],
+        "preferred_agents": ["linkedin", "indeed"],
+        "weight": 1.2
+      },
+      
+      {
+        "name": "Renewable_Energy",
+        "keywords": [
+          "renewable energy", "solar", "wind power", "green energy",
+          "sustainability", "clean tech", "carbon neutral", "esg",
+          "再生能源", "太陽能", "風力發電", "綠能", "永續發展"
+        ],
+        "preferred_agents": ["indeed", "linkedin"],
+        "weight": 1.1
+      }
+    ]
+  },
+  
+  "agent_preferences": {
+    "seek": {
+      "priority_boost": 0.1,
+      "timeout_seconds": 45,
+      "retry_count": 3
+    },
+    "indeed": {
+      "priority_boost": 0.05,
+      "timeout_seconds": 60,
+      "retry_count": 2
+    },
+    "linkedin": {
+      "priority_boost": 0.15,
+      "timeout_seconds": 90,
+      "retry_count": 2
+    },
+    "glassdoor": {
+      "priority_boost": 0.0,
+      "timeout_seconds": 75,
+      "retry_count": 1
+    },
+    "ziprecruiter": {
+      "priority_boost": 0.0,
+      "timeout_seconds": 50,
+      "retry_count": 2
+    },
+    "google": {
+      "priority_boost": -0.05,
+      "timeout_seconds": 30,
+      "retry_count": 1
+    }
+  },
+  
+  "language_settings": {
+    "supported_languages": ["en", "zh", "zh-tw", "zh-hk", "ar", "hi", "bn"],
+    "default_language": "en",
+    "language_detection": {
+      "chinese_threshold": 0.3,
+      "arabic_threshold": 0.1
+    }
+  },
+  
+  "distance_settings": {
+    "local_search_threshold_km": 100,
+    "unit_conversions": {
+      "mile_to_km": 1.609344,
+      "km_to_mile": 0.621371
+    },
+    "default_search_radius_km": 50
+  },
+  
+  "performance_settings": {
+    "cache_enabled": true,
+    "cache_duration_minutes": 30,
+    "parallel_execution": true,
+    "max_workers": 4,
+    "request_delay_seconds": 1
+  },
+  
+  "logging_settings": {
+    "log_level": "INFO",
+    "log_routing_decisions": true,
+    "log_execution_times": true,
+    "log_file_path": "logs/intelligent_routing.log"
+  },
+  
+  "experimental_features": {
+    "ai_query_enhancement": false,
+    "dynamic_agent_scoring": false,
+    "predictive_routing": false,
+    "cross_platform_deduplication": true
+  },
+  
+  "custom_rules": [
+    {
+      "name": "prefer_local_for_trades",
+      "description": "對於技工類職位優先使用本地代理",
+      "condition": {
+        "keywords": ["electrician", "plumber", "carpenter", "technician", "電工", "水電工", "木工", "技師"],
+        "has_location": true
+      },
+      "action": {
+        "boost_local_agents": 0.2,
+        "reduce_global_agents": 0.1
+      }
+    },
+    
+    {
+      "name": "tech_jobs_prefer_linkedin",
+      "description": "科技職位優先使用 LinkedIn",
+      "condition": {
+        "keywords": ["software", "developer", "engineer", "programmer", "tech", "程式", "工程師", "開發"]
+      },
+      "action": {
+        "boost_agents": ["linkedin"],
+        "boost_value": 0.15
+      }
+    },
+    
+    {
+      "name": "entry_level_prefer_indeed",
+      "description": "入門級職位優先使用 Indeed",
+      "condition": {
+        "keywords": ["entry level", "junior", "graduate", "intern", "fresher", "新鮮人", "實習", "初級"]
+      },
+      "action": {
+        "boost_agents": ["indeed"],
+        "boost_value": 0.1
+      }
+    }
+  ]
+}

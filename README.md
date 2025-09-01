@@ -4,6 +4,7 @@
 
 ## 🚀 功能特色
 
+- **🧠 智能路由系統**：根據查詢內容自動選擇最適合的爬蟲代理，提高搜索效率
 - **多平台支援**：支援 Indeed、LinkedIn、Glassdoor、Google Jobs、Seek、Naukri、ZipRecruiter、Bayt、BDJobs 等主流求職網站
 - **靈活搜尋**：支援關鍵字、地點、薪資範圍等多種搜尋條件
 - **資料格式化**：統一的資料結構，便於後續處理和分析
@@ -103,6 +104,52 @@ python -c "from jobspy import scrape_jobs; print('JobSeeker 安裝成功！')"
 如果看到「JobSeeker 安裝成功！」訊息，表示安裝完成！
 
 ## 🔧 使用方法
+
+### 🧠 智能路由搜索（推薦）
+
+```python
+from jobspy.route_manager import smart_scrape_jobs
+
+# 智能搜索 - 系統會自動選擇最適合的代理
+result = smart_scrape_jobs(
+    user_query="請你幫我找Australia NSW Gledswood Hill 50公里內有關建築行業的工作",
+    results_wanted=20
+)
+
+print(f"找到 {result.total_jobs} 個職位")
+print(f"使用的代理: {[a.value for a in result.successful_agents]}")
+
+# 保存結果
+if result.combined_jobs_data is not None:
+    result.combined_jobs_data.to_csv("smart_jobs.csv", index=False)
+```
+
+### 🖥️ 命令行智能搜索
+
+```bash
+# 基本智能搜索
+python smart_job_search.py "請你幫我找Australia NSW Gledswood Hill 50公里內有關建築行業的工作"
+
+# 帶參數搜索
+python smart_job_search.py "Looking for software engineer jobs in San Francisco" --results 20 --hours 48
+
+# 保存結果到文件
+python smart_job_search.py "Find marketing jobs in Mumbai" --output results.csv
+
+# 只顯示路由決策（不執行搜索）
+python smart_job_search.py "尋找台北的資料科學家工作" --dry-run --explain
+```
+
+### 🎯 智能路由示例
+
+智能路由系統會根據查詢內容自動選擇最適合的代理：
+
+| 查詢示例 | 選中代理 | 理由 |
+|----------|----------|------|
+| "Australia NSW 建築工作" | Seek, Indeed, LinkedIn | 地理位置匹配澳洲 + 建築行業 |
+| "San Francisco software engineer" | LinkedIn, Indeed, ZipRecruiter | 美國地區 + 科技行業 + 高級職位 |
+| "Bangalore data scientist fresher" | Naukri, Indeed, LinkedIn | 印度地區 + 科技行業 + 新鮮人 |
+| "Dubai investment banking" | Bayt, LinkedIn, Indeed | 中東地區 + 金融行業 |
 
 ### 基本使用
 
