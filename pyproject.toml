@@ -1,4 +1,4 @@
-﻿[build-system]
+[build-system]
 requires = [ "poetry-core",]
 build-backend = "poetry.core.masonry.api"
 
@@ -31,4 +31,3 @@ regex = "^2024.4.28"
 jupyter = "^1.0.0"
 black = "*"
 pre-commit = "*"
-

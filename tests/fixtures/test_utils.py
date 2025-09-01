@@ -63,6 +63,27 @@ class MockResponse:
             raise requests.exceptions.HTTPError(f"HTTP {self.status_code}")
 
 
+class MockHTTPResponse:
+    """Mock HTTP 響應類別（與 MockResponse 類似但參數名稱不同）"""
+    
+    def __init__(self, json_data: Dict = None, text: str = None,
+                 status_code: int = 200, headers: Dict = None):
+        self.json_data = json_data or {}
+        self.text = text or ""
+        self.status_code = status_code
+        self.headers = headers or {}
+        self.ok = 200 <= status_code < 300
+    
+    def json(self):
+        """返回 JSON 資料"""
+        return self.json_data
+    
+    def raise_for_status(self):
+        """檢查狀態碼"""
+        if not self.ok:
+            raise requests.exceptions.HTTPError(f"HTTP {self.status_code}")
+
+
 class MockAsyncResponse:
     """Mock 非同步 HTTP 響應類別"""
     
@@ -238,6 +259,28 @@ class MockMetrics:
         }
 
 
+class NetworkDelaySimulator:
+    """網路延遲模擬器"""
+    
+    def __init__(self, min_delay: float = 0.1, max_delay: float = 2.0):
+        self.min_delay = min_delay
+        self.max_delay = max_delay
+    
+    def simulate_delay(self):
+        """模擬網路延遲"""
+        import random
+        delay = random.uniform(self.min_delay, self.max_delay)
+        time.sleep(delay)
+        return delay
+    
+    async def simulate_async_delay(self):
+        """模擬非同步網路延遲"""
+        import random
+        delay = random.uniform(self.min_delay, self.max_delay)
+        await asyncio.sleep(delay)
+        return delay
+
+
 # ==================== 測試輔助函數 ====================
 
 def create_temp_directory() -> str:
@@ -353,10 +396,16 @@ def generate_test_jobs(count: int, site: str = "indeed") -> List[Dict]:
     return jobs
 
 
+def create_mock_job_data(num_jobs: int = 3) -> List[Dict]:
+    """創建 Mock 工作資料"""
+    return SAMPLE_JOBS_LIST[:num_jobs]
+
+
 def create_test_dataframe(jobs: List[Dict] = None) -> pd.DataFrame:
-    """創建測試 DataFrame"""
+    """創建測試用的 DataFrame"""
     if jobs is None:
-        jobs = SAMPLE_JOBS_LIST
+        jobs = SAMPLE_JOBS_LIST[:5]
+    
     return pd.DataFrame(jobs)
 
 
@@ -604,10 +653,12 @@ def timeout_test(timeout_seconds: float = 30.0):
 __all__ = [
     # Mock 類別
     "MockResponse",
+    "MockHTTPResponse",
     "MockAsyncResponse",
     "MockScraper",
     "MockCache",
     "MockMetrics",
+    "NetworkDelaySimulator",
     
     # 輔助函數
     "create_temp_directory",
@@ -624,6 +675,7 @@ __all__ = [
     "create_mock_aiohttp_session",
     
     # 測試資料生成
+    "create_mock_job_data",
     "generate_test_jobs",
     "create_test_dataframe",
     "validate_dataframe_structure",

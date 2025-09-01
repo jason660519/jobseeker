@@ -607,6 +607,28 @@ def clean_test_data(job_data: Dict[str, Any]) -> Dict[str, Any]:
     return cleaned
 
 
+def get_sample_jobs(count: int = 5) -> List[Dict[str, Any]]:
+    """獲取範例職位資料"""
+    if count <= len(SAMPLE_JOBS_LIST):
+        return SAMPLE_JOBS_LIST[:count]
+    else:
+        # 如果需要更多資料，重複使用現有資料
+        result = SAMPLE_JOBS_LIST.copy()
+        while len(result) < count:
+            result.extend(SAMPLE_JOBS_LIST[:min(len(SAMPLE_JOBS_LIST), count - len(result))])
+        return result[:count]
+
+
+# ==================== 別名常數 ====================
+
+# 為了向後兼容，提供別名
+SEARCH_PARAMETERS = VALID_SEARCH_PARAMS
+MOCK_RESPONSES = {
+    "html": "MOCK_HTML_RESPONSE",
+    "json": "MOCK_JSON_RESPONSE", 
+    "error": "MOCK_ERROR_RESPONSE"
+}
+
 # ==================== 導出所有測試資料 ====================
 
 __all__ = [
@@ -617,6 +639,7 @@ __all__ = [
     # 搜尋參數
     "VALID_SEARCH_PARAMS",
     "INVALID_SEARCH_PARAMS",
+    "SEARCH_PARAMETERS",
     
     # 網站資料
     "SITE_SPECIFIC_DATA",
@@ -625,6 +648,7 @@ __all__ = [
     "MOCK_HTML_RESPONSE",
     "MOCK_JSON_RESPONSE",
     "MOCK_ERROR_RESPONSE",
+    "MOCK_RESPONSES",
     
     # 配置資料
     "TEST_CONFIGURATIONS",
@@ -652,5 +676,6 @@ __all__ = [
     "create_cache_test_scenario",
     "create_error_test_scenario",
     "validate_job_data",
-    "clean_test_data"
+    "clean_test_data",
+    "get_sample_jobs"
 ]
