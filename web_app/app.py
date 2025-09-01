@@ -90,6 +90,17 @@ def search_jobs():
         location = data.get('location', '').strip()
         results_wanted = int(data.get('results_wanted', 20))
         hours_old = data.get('hours_old')
+        selected_sites = data.get('selected_sites', '')
+        
+        # 處理選擇的網站
+        site_name = None
+        if selected_sites:
+            # 如果有選擇特定網站，將逗號分隔的字符串轉換為列表
+            sites_list = [site.strip() for site in selected_sites.split(',') if site.strip()]
+            if len(sites_list) == 1:
+                # 如果只選擇了一個網站，使用該網站
+                site_name = sites_list[0]
+            # 如果選擇了多個網站，保持 site_name 為 None（搜尋所有網站）
         
         # 驗證輸入
         if not user_query:
@@ -118,11 +129,17 @@ def search_jobs():
         
         # 執行智能搜尋
         print(f"開始搜尋: {user_query}")
+        if site_name:
+            print(f"指定搜尋網站: {site_name}")
+        else:
+            print(f"選擇的網站: {selected_sites if selected_sites else '所有網站'}")
+            
         result = smart_scrape_jobs(
             user_query=user_query,
             location=location if location else None,
             results_wanted=results_wanted,
-            hours_old=hours_old
+            hours_old=hours_old,
+            site_name=site_name
         )
         
         # 處理搜尋結果

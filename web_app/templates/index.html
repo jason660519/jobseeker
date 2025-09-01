@@ -52,7 +52,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-12">
             <div class="search-card">
-                <form id="searchForm" method="POST" action="{{ url_for('search') }}">
+                <form id="searchForm" method="POST" action="{{ url_for('search_jobs') }}">
                     <div class="row g-3">
                         <!-- 職位關鍵字 -->
                         <div class="col-md-6">
@@ -73,7 +73,7 @@
                         </div>
                         
                         <!-- 結果數量 -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="results_wanted" class="form-label">
                                 <i class="fas fa-list-ol me-2"></i>結果數量
                             </label>
@@ -86,7 +86,7 @@
                         </div>
                         
                         <!-- 發布時間 -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="days_since_posted" class="form-label">
                                 <i class="fas fa-calendar-alt me-2"></i>發布時間
                             </label>
@@ -96,20 +96,6 @@
                                 <option value="7" selected>7 天內</option>
                                 <option value="14">14 天內</option>
                                 <option value="30">30 天內</option>
-                            </select>
-                        </div>
-                        
-                        <!-- 搜尋網站 -->
-                        <div class="col-md-4">
-                            <label for="site_name" class="form-label">
-                                <i class="fas fa-globe me-2"></i>搜尋網站
-                            </label>
-                            <select class="form-select" id="site_name" name="site_name">
-                                <option value="">所有網站</option>
-                                <option value="linkedin">LinkedIn</option>
-                                <option value="indeed">Indeed</option>
-                                <option value="glassdoor">Glassdoor</option>
-                                <option value="zip_recruiter">ZipRecruiter</option>
                             </select>
                         </div>
                     </div>
