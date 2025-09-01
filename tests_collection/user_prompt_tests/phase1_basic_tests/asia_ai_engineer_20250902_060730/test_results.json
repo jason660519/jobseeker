@@ -1,0 +1,35 @@
+{
+  "test_name": "asia_ai_engineer",
+  "user_prompt": "搜尋台北和東京近7日創建的AI Engineer職位",
+  "start_time": "2025-09-02T06:07:30.147545",
+  "locations_tested": [
+    "Taipei, Taiwan",
+    "Tokyo, Japan"
+  ],
+  "total_jobs": 155,
+  "jobs_by_location": {
+    "Taipei, Taiwan": 90,
+    "Tokyo, Japan": 65
+  },
+  "jobs_by_site": {
+    "linkedin": 100,
+    "indeed": 55
+  },
+  "recent_jobs_count": 134,
+  "status": "success",
+  "csv_file": "C:\\Users\\a0922\\OneDrive\\Desktop\\JobSpy\\tests_collection\\user_prompt_tests\\phase1_basic_tests\\asia_ai_engineer_20250902_060730\\asia_ai_engineer_combined.csv",
+  "json_file": "C:\\Users\\a0922\\OneDrive\\Desktop\\JobSpy\\tests_collection\\user_prompt_tests\\phase1_basic_tests\\asia_ai_engineer_20250902_060730\\asia_ai_engineer_raw_data.json",
+  "statistics": {
+    "unique_companies": 98,
+    "unique_locations": 23,
+    "has_salary_info": 11,
+    "remote_jobs": 13
+  },
+  "keyword_analysis": {
+    "AI": 60,
+    "Machine Learning": 16,
+    "Artificial Intelligence": 1
+  },
+  "end_time": "2025-09-02T06:08:20.587685",
+  "execution_time": 50.44014
+}

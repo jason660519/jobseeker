@@ -63,21 +63,15 @@ class UserPromptTestRunner:
     
     def _get_test_script_path(self, test_id: str) -> Path:
         """獲取測試腳本路徑"""
-        phase = self._get_test_phase(test_id)
-        phase_dir = f"phase{phase}_{'basic' if phase == 1 else 'advanced' if phase == 2 else 'specialized'}_tests"
+        # 從配置檔案中查找測試的腳本路徑
+        for test in self.test_config['test_prompts']:
+            if test['test_id'] == test_id:
+                script_path = test.get('script_path')
+                if script_path:
+                    return self.base_dir / script_path
+                break
         
-        # 映射測試ID到腳本檔案名
-        script_mapping = {
-            'australia': 'test_australia_ai_engineer.py',
-            'asia': 'test_asia_ai_engineer.py',
-            'singapore': 'test_singapore_ml_engineer.py'
-        }
-        
-        script_name = script_mapping.get(test_id)
-        if not script_name:
-            return None
-            
-        return self.base_dir / phase_dir / script_name
+        return None
     
     def run_single_test(self, test_id: str) -> bool:
         """執行單一測試"""

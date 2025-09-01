@@ -1,0 +1,49 @@
+{
+  "test_info": {
+    "test_name": "Europe Senior AI Developer Search",
+    "test_date": "2025-09-02T06:30:26.661188",
+    "total_jobs": 68,
+    "cities_tested": [
+      "london",
+      "berlin"
+    ]
+  },
+  "city_results": {
+    "london": {
+      "job_count": 50,
+      "site_distribution": {
+        "linkedin": 50
+      },
+      "top_companies": {
+        "TieTalent": 4,
+        "Bending Spoons": 2,
+        "Illumina": 1,
+        "JPMorganChase": 1,
+        "NatureMetrics": 1
+      },
+      "salary_info": {
+        "avg_salary": null,
+        "min_salary": null,
+        "max_salary": null
+      }
+    },
+    "berlin": {
+      "job_count": 18,
+      "site_distribution": {
+        "linkedin": 18
+      },
+      "top_companies": {
+        "Delivery Hero": 2,
+        "TieTalent": 2,
+        "HeyJobs": 2,
+        "Simon-Kucher": 1,
+        "Zalando": 1
+      },
+      "salary_info": {
+        "avg_salary": null,
+        "min_salary": null,
+        "max_salary": null
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "test_name": "singapore_ml_engineer",
+  "user_prompt": "尋找新加坡和香港的Machine Learning Engineer職位，薪資範圍80k-150k USD",
+  "start_time": "2025-09-02T06:35:24.897823",
+  "locations_tested": [
+    "Singapore",
+    "Hong Kong"
+  ],
+  "total_jobs": 375,
+  "jobs_by_location": {
+    "Singapore": 225,
+    "Hong Kong": 150
+  },
+  "jobs_by_site": {
+    "indeed": 150,
+    "linkedin": 150,
+    "glassdoor": 75
+  },
+  "salary_analysis": {
+    "jobs_with_salary": 32,
+    "jobs_in_range": 32,
+    "avg_min_salary": 94420.46875,
+    "avg_max_salary": 123034.8125,
+    "salary_currencies": {
+      "SGD": 26,
+      "USD": 6
+    }
+  },
+  "status": "success",
+  "csv_file": "C:\\Users\\a0922\\OneDrive\\Desktop\\JobSpy\\tests_collection\\user_prompt_tests\\phase2_advanced_tests\\singapore_ml_engineer_20250902_063524\\singapore_ml_engineer_combined.csv",
+  "json_file": "C:\\Users\\a0922\\OneDrive\\Desktop\\JobSpy\\tests_collection\\user_prompt_tests\\phase2_advanced_tests\\singapore_ml_engineer_20250902_063524\\singapore_ml_engineer_raw_data.json",
+  "statistics": {
+    "unique_companies": 240,
+    "unique_locations": 36,
+    "remote_jobs": 31,
+    "senior_positions": 83
+  },
+  "skill_analysis": {
+    "Python": 144,
+    "TensorFlow": 63,
+    "PyTorch": 64,
+    "Scikit-learn": 29,
+    "Keras": 5,
+    "AWS": 74,
+    "Azure": 50,
+    "GCP": 27,
+    "Docker": 40,
+    "Kubernetes": 34,
+    "SQL": 55,
+    "Spark": 20,
+    "Hadoop": 12
+  },
+  "end_time": "2025-09-02T06:36:47.455388",
+  "execution_time": 82.557565
+}

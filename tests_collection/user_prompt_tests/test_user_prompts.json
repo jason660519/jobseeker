@@ -11,6 +11,7 @@
       "test_id": "australia",
       "description": "搜尋澳洲Sydney和Melbourne的AI Engineer工作",
       "prompt": "請幫我搜尋澳洲Sydney和Melbourne的AI Engineer工作機會",
+      "script_path": "phase1_basic_tests/test_australia_ai_engineer.py",
       "expected_results": {
         "min_jobs": 50,
         "target_locations": ["Sydney, Australia", "Melbourne, Australia"],
@@ -24,6 +25,7 @@
       "test_id": "asia",
       "description": "搜尋台北和東京近7日創建的AI Engineer職位",
       "prompt": "我想找台北和東京近7日內新發布的AI Engineer職位",
+      "script_path": "phase1_basic_tests/test_asia_ai_engineer.py",
       "expected_results": {
         "min_jobs": 30,
         "target_locations": ["Taipei, Taiwan", "Tokyo, Japan"],
@@ -38,6 +40,7 @@
       "test_id": "singapore",
       "description": "搜尋新加坡和香港薪資80k-150k USD的Machine Learning Engineer",
       "prompt": "尋找新加坡和香港年薪80k-150k美金的Machine Learning Engineer職位",
+      "script_path": "phase2_advanced_tests/test_singapore_ml_engineer.py",
       "expected_results": {
         "min_jobs": 40,
         "target_locations": ["Singapore", "Hong Kong"],
@@ -52,6 +55,7 @@
       "test_id": "europe",
       "description": "搜尋倫敦和柏林的Senior AI Developer遠程工作",
       "prompt": "我需要找倫敦和柏林的Senior AI Developer遠程工作機會",
+      "script_path": "phase2_advanced_tests/test_europe_senior_ai_developer.py",
       "expected_results": {
         "min_jobs": 25,
         "target_locations": ["London, UK", "Berlin, Germany"],
@@ -66,6 +70,7 @@
       "test_id": "us_west",
       "description": "搜尋舊金山和西雅圖要求Python和TensorFlow技能的Data Scientist",
       "prompt": "找舊金山和西雅圖需要Python和TensorFlow技能的Data Scientist職位",
+      "script_path": "phase2_advanced_tests/test_us_west_data_scientist.py",
       "expected_results": {
         "min_jobs": 35,
         "target_locations": ["San Francisco, CA", "Seattle, WA"],
@@ -80,6 +85,7 @@
       "test_id": "middle_east",
       "description": "搜尋杜拜和阿布達比的AI Consultant職位，要求碩士學位",
       "prompt": "尋找杜拜和阿布達比的AI Consultant工作，優先考慮有碩士學位的候選人",
+      "script_path": "phase3_specialized_tests/test_middle_east_ai_consultant.py",
       "expected_results": {
         "min_jobs": 15,
         "target_locations": ["Dubai, UAE", "Abu Dhabi, UAE"],
@@ -94,6 +100,7 @@
       "test_id": "india",
       "description": "搜尋班加羅爾和海德拉巴3-5年經驗的Deep Learning Engineer",
       "prompt": "我想找班加羅爾和海德拉巴有3-5年經驗的Deep Learning Engineer職位",
+      "script_path": "phase3_specialized_tests/test_india_deep_learning_engineer.py",
       "expected_results": {
         "min_jobs": 30,
         "target_locations": ["Bangalore, India", "Hyderabad, India"],
@@ -108,6 +115,7 @@
       "test_id": "canada",
       "description": "搜尋多倫多和溫哥華的AI Research Scientist職位",
       "prompt": "幫我搜尋加拿大多倫多和溫哥華的AI Research Scientist研究職位",
+      "script_path": "phase3_specialized_tests/test_canada_ai_research_scientist.py",
       "expected_results": {
         "min_jobs": 20,
         "target_locations": ["Toronto, Canada", "Vancouver, Canada"],

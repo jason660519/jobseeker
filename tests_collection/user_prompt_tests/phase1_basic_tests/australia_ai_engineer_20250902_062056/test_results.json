@@ -1,0 +1,28 @@
+{
+  "test_name": "australia_ai_engineer",
+  "user_prompt": "搜尋澳洲Sydney和Melbourne的AI Engineer工作",
+  "start_time": "2025-09-02T06:20:56.936292",
+  "locations_tested": [
+    "Sydney, Australia",
+    "Melbourne, Australia"
+  ],
+  "total_jobs": 200,
+  "jobs_by_location": {
+    "Sydney, Australia": 100,
+    "Melbourne, Australia": 100
+  },
+  "jobs_by_site": {
+    "indeed": 100,
+    "linkedin": 100
+  },
+  "status": "success",
+  "csv_file": "C:\\Users\\a0922\\OneDrive\\Desktop\\JobSpy\\tests_collection\\user_prompt_tests\\phase1_basic_tests\\australia_ai_engineer_20250902_062056\\australia_ai_engineer_combined.csv",
+  "json_file": "C:\\Users\\a0922\\OneDrive\\Desktop\\JobSpy\\tests_collection\\user_prompt_tests\\phase1_basic_tests\\australia_ai_engineer_20250902_062056\\australia_ai_engineer_raw_data.json",
+  "statistics": {
+    "unique_companies": 125,
+    "unique_locations": 29,
+    "has_salary_info": 0
+  },
+  "end_time": "2025-09-02T06:21:45.236654",
+  "execution_time": 48.300362
+}

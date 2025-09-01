@@ -1,0 +1,44 @@
+{
+  "test_info": {
+    "test_name": "US West Data Scientist Search",
+    "test_date": "2025-09-02T06:38:40.872860",
+    "total_jobs": 300,
+    "cities_tested": [
+      "san_francisco",
+      "seattle"
+    ]
+  },
+  "salary_analysis": {},
+  "city_results": {
+    "san_francisco": {
+      "job_count": 150,
+      "site_distribution": {
+        "indeed": 75,
+        "linkedin": 75
+      },
+      "top_companies": {
+        "Amazon Web Services": 58,
+        "Amazon.com": 16,
+        "OpenAI": 6,
+        "TikTok": 5,
+        "Toyota Research Institute": 4
+      },
+      "salary_analysis": {}
+    },
+    "seattle": {
+      "job_count": 150,
+      "site_distribution": {
+        "indeed": 75,
+        "linkedin": 75
+      },
+      "top_companies": {
+        "Amazon Web Services": 52,
+        "Amazon.com": 23,
+        "Meta": 8,
+        "Amazon": 7,
+        "Scale AI": 4
+      },
+      "salary_analysis": {}
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "test_info": {
+    "test_name": "India Deep Learning Engineer Search",
+    "test_date": "2025-09-02T06:19:05.582832",
+    "total_jobs": 176,
+    "cities_tested": [
+      "bangalore",
+      "hyderabad"
+    ]
+  },
+  "skill_analysis": {
+    "tensorflow": 0,
+    "pytorch": 0,
+    "keras": 0,
+    "python": 0,
+    "cnn": 0,
+    "rnn": 0,
+    "transformer": 0,
+    "computer_vision": 0,
+    "nlp": 0,
+    "gpu": 0,
+    "docker": 0,
+    "cloud": 0
+  },
+  "company_analysis": {
+    "tech_giants": 

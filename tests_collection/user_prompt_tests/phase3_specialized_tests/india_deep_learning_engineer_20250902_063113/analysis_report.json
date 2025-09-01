@@ -1,0 +1,71 @@
+{
+  "test_info": {
+    "test_name": "India Deep Learning Engineer Search",
+    "test_date": "2025-09-02T06:31:13.576114",
+    "total_jobs": 176,
+    "cities_tested": [
+      "bangalore",
+      "hyderabad"
+    ]
+  },
+  "skill_analysis": {
+    "tensorflow": 0,
+    "pytorch": 0,
+    "keras": 0,
+    "python": 0,
+    "cnn": 0,
+    "rnn": 0,
+    "transformer": 0,
+    "computer_vision": 0,
+    "nlp": 0,
+    "gpu": 0,
+    "docker": 0,
+    "cloud": 0
+  },
+  "company_analysis": {
+    "tech_giants": 26,
+    "indian_it_services": 6,
+    "startups": 2,
+    "others": 142
+  },
+  "city_results": {
+    "bangalore": {
+      "job_count": 98,
+      "site_distribution": {
+        "naukri": 75,
+        "linkedin": 23
+      },
+      "top_companies": {
+        "Google": 5,
+        "Apple": 5,
+        "Accenture in India": 4,
+        "ThoughtWorks": 4,
+        "Databricks": 4
+      },
+      "salary_info": {
+        "avg_salary": null,
+        "min_salary": null,
+        "max_salary": null
+      }
+    },
+    "hyderabad": {
+      "job_count": 78,
+      "site_distribution": {
+        "naukri": 75,
+        "linkedin": 3
+      },
+      "top_companies": {
+        "Apple": 5,
+        "Google": 5,
+        "ThoughtWorks": 4,
+        "Kefi Tech Solutions": 2,
+        "Ericsson": 2
+      },
+      "salary_info": {
+        "avg_salary": null,
+        "min_salary": null,
+        "max_salary": null
+      }
+    }
+  }
+}
