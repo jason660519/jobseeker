@@ -1,0 +1,569 @@
+{% extends "base.html" %}
+
+{% block title %}jobseeker - 智能職位搜尋平台{% endblock %}
+
+{% block content %}
+<!-- 歡迎區塊 -->
+<div class="row mb-5">
+    <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4 fw-bold text-primary mb-3">
+            <i class="fas fa-rocket me-3"></i>
+            找到您的理想工作
+        </h1>
+        <p class="lead text-secondary mb-4">
+            使用 AI 智能搜尋技術，從全球多個求職平台為您找到最適合的職位機會
+        </p>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number">50+</div>
+                    <div class="stats-label">支援網站</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number">100+</div>
+                    <div class="stats-label">國家地區</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number">AI</div>
+                    <div class="stats-label">智能路由</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 搜尋表單 -->
+<div class="row mb-5">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-search me-2 text-primary"></i>
+                    開始搜尋職位
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                <form id="searchForm">
+                    <div class="row g-3">
+                        <!-- 搜尋關鍵字 -->
+                        <div class="col-md-6">
+                            <label for="query" class="form-label fw-semibold">
+                                <i class="fas fa-briefcase me-1"></i>
+                                職位關鍵字 *
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="query" 
+                                   name="query" 
+                                   placeholder="例如：軟體工程師、數據分析師、產品經理"
+                                   required>
+                            <div class="form-text">輸入您想搜尋的職位名稱或技能關鍵字</div>
+                        </div>
+                        
+                        <!-- 地點 -->
+                        <div class="col-md-6">
+                            <label for="location" class="form-label fw-semibold">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                工作地點
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="location" 
+                                   name="location" 
+                                   placeholder="例如：台北、新竹、遠端工作">
+                            <div class="form-text">留空將搜尋所有地區</div>
+                        </div>
+                        
+                        <!-- 結果數量 -->
+                        <div class="col-md-6">
+                            <label for="results_wanted" class="form-label fw-semibold">
+                                <i class="fas fa-list-ol me-1"></i>
+                                搜尋結果數量
+                            </label>
+                            <select class="form-select" id="results_wanted" name="results_wanted">
+                                <option value="20" selected>20 個結果</option>
+                                <option value="50">50 個結果</option>
+                                <option value="100">100 個結果</option>
+                            </select>
+                        </div>
+                        
+                        <!-- 時間限制 -->
+                        <div class="col-md-6">
+                            <label for="hours_old" class="form-label fw-semibold">
+                                <i class="fas fa-clock me-1"></i>
+                                發布時間限制
+                            </label>
+                            <select class="form-select" id="hours_old" name="hours_old">
+                                <option value="">不限制</option>
+                                <option value="24">24 小時內</option>
+                                <option value="72">3 天內</option>
+                                <option value="168">1 週內</option>
+                                <option value="720">1 個月內</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- 搜尋按鈕 -->
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-search me-2"></i>
+                                開始智能搜尋
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 載入中動畫 -->
+<div id="loadingSpinner" class="loading-spinner">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">搜尋中...</span>
+    </div>
+    <h4 class="mt-3 text-primary">AI 智能搜尋中...</h4>
+    <p class="text-secondary">正在從多個平台為您搜尋最佳職位機會</p>
+    <div class="progress mt-3" style="width: 300px; margin: 0 auto;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+             role="progressbar" 
+             style="width: 0%" 
+             id="searchProgress"></div>
+    </div>
+</div>
+
+<!-- 搜尋結果區域 -->
+<div id="searchResults" style="display: none;">
+    <!-- 結果統計 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <h3 class="text-primary mb-1" id="totalJobs">0</h3>
+                            <small class="text-muted">找到職位</small>
+                        </div>
+                        <div class="col-md-3">
+                            <h3 class="text-success mb-1" id="successfulAgents">0</h3>
+                            <small class="text-muted">成功平台</small>
+                        </div>
+                        <div class="col-md-3">
+                            <h3 class="text-info mb-1" id="confidenceScore">0%</h3>
+                            <small class="text-muted">信心指數</small>
+                        </div>
+                        <div class="col-md-3">
+                            <h3 class="text-warning mb-1" id="executionTime">0s</h3>
+                            <small class="text-muted">搜尋時間</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 下載按鈕 -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-success" id="downloadCsv">
+                    <i class="fas fa-file-csv me-1"></i>
+                    下載 CSV
+                </button>
+                <button type="button" class="btn btn-outline-info" id="downloadJson">
+                    <i class="fas fa-file-code me-1"></i>
+                    下載 JSON
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 職位列表 -->
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-3">
+                <i class="fas fa-list me-2 text-primary"></i>
+                搜尋結果
+            </h3>
+            <div id="jobsList"></div>
+            
+            <!-- 載入更多按鈕 -->
+            <div class="text-center mt-4" id="loadMoreContainer" style="display: none;">
+                <button class="btn btn-outline-primary" id="loadMoreBtn">
+                    <i class="fas fa-plus me-1"></i>
+                    載入更多職位
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 功能介紹區塊 -->
+<div class="row mt-5" id="featuresSection">
+    <div class="col-12">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-star me-2 text-warning"></i>
+            為什麼選擇 jobseeker？
+        </h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-robot fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">AI 智能搜尋</h5>
+                        <p class="card-text">使用先進的 AI 技術，智能分析您的需求，從多個平台找到最相關的職位。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-globe fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">全球覆蓋</h5>
+                        <p class="card-text">支援 50+ 個求職網站，覆蓋全球 100+ 個國家和地區，機會無處不在。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-lightning-bolt fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">快速高效</h5>
+                        <p class="card-text">一次搜尋，多平台結果，節省您寶貴的時間，提高求職效率。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    let currentSearchId = null;
+    let currentJobs = [];
+    let displayedJobs = 0;
+    const jobsPerPage = 10;
+    
+    // 搜尋表單提交
+    $('#searchForm').on('submit', function(e) {
+        e.preventDefault();
+        performSearch();
+    });
+    
+    // 下載按鈕事件
+    $('#downloadCsv').on('click', function() {
+        if (currentSearchId) {
+            window.open(`/download/${currentSearchId}/csv`, '_blank');
+        }
+    });
+    
+    $('#downloadJson').on('click', function() {
+        if (currentSearchId) {
+            window.open(`/download/${currentSearchId}/json`, '_blank');
+        }
+    });
+    
+    // 載入更多職位
+    $('#loadMoreBtn').on('click', function() {
+        displayMoreJobs();
+    });
+    
+    /**
+     * 執行搜尋
+     */
+    function performSearch() {
+        const formData = {
+            query: $('#query').val().trim(),
+            location: $('#location').val().trim(),
+            results_wanted: parseInt($('#results_wanted').val()),
+            hours_old: $('#hours_old').val() || null
+        };
+        
+        // 驗證輸入
+        if (!formData.query) {
+            showAlert('請輸入搜尋關鍵字', 'warning');
+            return;
+        }
+        
+        // 顯示載入動畫
+        showLoading();
+        
+        // 模擬進度條
+        simulateProgress();
+        
+        // 發送搜尋請求
+        $.ajax({
+            url: '/search',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            timeout: 120000, // 2分鐘超時
+            success: function(response) {
+                hideLoading();
+                
+                if (response.success) {
+                    currentSearchId = response.search_id;
+                    currentJobs = response.jobs || [];
+                    displayedJobs = 0;
+                    
+                    displaySearchResults(response);
+                    displayMoreJobs();
+                } else {
+                    showAlert(response.error || '搜尋失敗', 'danger');
+                }
+            },
+            error: function(xhr, status, error) {
+                hideLoading();
+                
+                let errorMessage = '搜尋過程中發生錯誤';
+                if (status === 'timeout') {
+                    errorMessage = '搜尋超時，請稍後再試';
+                } else if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMessage = xhr.responseJSON.error;
+                }
+                
+                showAlert(errorMessage, 'danger');
+            }
+        });
+    }
+    
+    /**
+     * 顯示載入動畫
+     */
+    function showLoading() {
+        $('#searchResults').hide();
+        $('#featuresSection').hide();
+        $('#loadingSpinner').show();
+        $('html, body').animate({
+            scrollTop: $('#loadingSpinner').offset().top - 100
+        }, 500);
+    }
+    
+    /**
+     * 隱藏載入動畫
+     */
+    function hideLoading() {
+        $('#loadingSpinner').hide();
+        $('#searchProgress').css('width', '0%');
+    }
+    
+    /**
+     * 模擬進度條動畫
+     */
+    function simulateProgress() {
+        let progress = 0;
+        const interval = setInterval(function() {
+            progress += Math.random() * 15;
+            if (progress > 90) {
+                progress = 90;
+                clearInterval(interval);
+            }
+            $('#searchProgress').css('width', progress + '%');
+        }, 500);
+    }
+    
+    /**
+     * 顯示搜尋結果
+     */
+    function displaySearchResults(response) {
+        // 更新統計資訊
+        $('#totalJobs').text(response.total_jobs.toLocaleString());
+        $('#successfulAgents').text(response.routing_info.successful_agents.length);
+        $('#confidenceScore').text(Math.round(response.routing_info.confidence_score * 100) + '%');
+        $('#executionTime').text(response.routing_info.execution_time ? response.routing_info.execution_time.toFixed(1) + 's' : 'N/A');
+        
+        // 清空職位列表
+        $('#jobsList').empty();
+        
+        // 顯示結果區域
+        $('#searchResults').show().addClass('fade-in');
+        
+        // 滾動到結果區域
+        $('html, body').animate({
+            scrollTop: $('#searchResults').offset().top - 100
+        }, 500);
+        
+        // 顯示成功訊息
+        if (response.total_jobs > 0) {
+            showAlert(`成功找到 ${response.total_jobs} 個職位！`, 'success');
+        } else {
+            showAlert(response.message || '未找到符合條件的職位', 'info');
+        }
+    }
+    
+    /**
+     * 顯示更多職位
+     */
+    function displayMoreJobs() {
+        const endIndex = Math.min(displayedJobs + jobsPerPage, currentJobs.length);
+        const jobsToShow = currentJobs.slice(displayedJobs, endIndex);
+        
+        jobsToShow.forEach(function(job) {
+            const jobCard = createJobCard(job);
+            $('#jobsList').append(jobCard);
+        });
+        
+        displayedJobs = endIndex;
+        
+        // 更新載入更多按鈕
+        if (displayedJobs < currentJobs.length) {
+            $('#loadMoreContainer').show();
+        } else {
+            $('#loadMoreContainer').hide();
+        }
+    }
+    
+    /**
+     * 創建職位卡片
+     */
+    function createJobCard(job) {
+        const salaryText = formatSalary(job.salary_min, job.salary_max, job.salary_currency);
+        const dateText = formatDate(job.date_posted);
+        
+        return `
+            <div class="job-card fade-in">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="job-title mb-0">
+                        ${job.job_url ? `<a href="${job.job_url}" target="_blank" class="text-decoration-none">${escapeHtml(job.title)}</a>` : escapeHtml(job.title)}
+                    </h5>
+                    <span class="badge bg-primary">${escapeHtml(job.site)}</span>
+                </div>
+                
+                <div class="job-company">
+                    <i class="fas fa-building me-1"></i>
+                    ${escapeHtml(job.company)}
+                </div>
+                
+                <div class="job-location">
+                    <i class="fas fa-map-marker-alt me-1"></i>
+                    ${escapeHtml(job.location)}
+                    ${job.is_remote ? '<span class="badge bg-success ms-2">遠端工作</span>' : ''}
+                </div>
+                
+                ${salaryText ? `<div class="job-salary"><i class="fas fa-dollar-sign me-1"></i>${salaryText}</div>` : ''}
+                
+                ${job.description ? `
+                    <div class="mt-2">
+                        <p class="text-muted mb-2">${escapeHtml(job.description)}</p>
+                    </div>
+                ` : ''}
+                
+                <div class="job-meta">
+                    ${job.job_type ? `
+                        <div class="job-meta-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span>${escapeHtml(job.job_type)}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${dateText ? `
+                        <div class="job-meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>${dateText}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${job.job_url ? `
+                        <div class="job-meta-item">
+                            <a href="${job.job_url}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-external-link-alt me-1"></i>
+                                查看詳情
+                            </a>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    /**
+     * 格式化薪資
+     */
+    function formatSalary(min, max, currency) {
+        if (!min && !max) return null;
+        
+        const currencySymbol = currency || '';
+        
+        if (min && max) {
+            return `${currencySymbol}${min.toLocaleString()} - ${currencySymbol}${max.toLocaleString()}`;
+        } else if (min) {
+            return `${currencySymbol}${min.toLocaleString()}+`;
+        } else if (max) {
+            return `最高 ${currencySymbol}${max.toLocaleString()}`;
+        }
+        
+        return null;
+    }
+    
+    /**
+     * 格式化日期
+     */
+    function formatDate(dateStr) {
+        if (!dateStr) return null;
+        
+        try {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) {
+                return '1 天前';
+            } else if (diffDays < 7) {
+                return `${diffDays} 天前`;
+            } else {
+                return date.toLocaleDateString('zh-TW');
+            }
+        } catch (e) {
+            return dateStr;
+        }
+    }
+    
+    /**
+     * HTML 轉義
+     */
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    /**
+     * 顯示警告訊息
+     */
+    function showAlert(message, type) {
+        const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'danger' ? 'times-circle' : 'info-circle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        
+        // 移除現有警告
+        $('.alert').remove();
+        
+        // 添加新警告
+        $('.container').prepend(alertHtml);
+        
+        // 滾動到頂部
+        $('html, body').animate({ scrollTop: 0 }, 300);
+        
+        // 自動隱藏成功訊息
+        if (type === 'success') {
+            setTimeout(function() {
+                $('.alert-success').fadeOut();
+            }, 5000);
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,174 @@
+{
+  "test_summary": {
+    "total_tests": 8,
+    "successful_tests": 4,
+    "failed_tests": 4,
+    "success_rate": "50.0%",
+    "test_date": "2025-09-02T07:20:31.073394"
+  },
+  "test_results": [
+    {
+      "test_id": "test_001",
+      "test_name": "軟體工程師搜索 - 台北",
+      "start_time": "2025-09-02T07:16:37.583340",
+      "success": true,
+      "error": null,
+      "search_params": {
+        "query": "軟體工程師",
+        "location": "台北",
+        "results_wanted": 20,
+        "hours_old": null
+      },
+      "search_results": {
+        "success": true,
+        "total_jobs": 5,
+        "displayed_jobs": 2,
+        "has_download_buttons": true,
+        "csv_button_visible": true,
+        "json_button_visible": true
+      },
+      "download_results": {
+        "csv_download": false,
+        "json_download": false,
+        "error": "Timeout 30000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================"
+      },
+      "end_time": "2025-09-02T07:17:18.861617"
+    },
+    {
+      "test_id": "test_002",
+      "test_name": "AI Engineer搜索 - 新竹",
+      "start_time": "2025-09-02T07:17:21.043277",
+      "success": true,
+      "error": null,
+      "search_params": {
+        "query": "AI Engineer",
+        "location": "新竹",
+        "results_wanted": 50,
+        "hours_old": 24
+      },
+      "search_results": {
+        "success": true,
+        "total_jobs": 12,
+        "displayed_jobs": 10,
+        "has_download_buttons": true,
+        "csv_button_visible": true,
+        "json_button_visible": true
+      },
+      "download_results": {
+        "csv_download": true,
+        "json_download": true,
+        "csv_file_path": "downloads\\test_test_002_results.csv",
+        "json_file_path": "downloads\\test_test_002_results.json"
+      },
+      "end_time": "2025-09-02T07:17:36.694137"
+    },
+    {
+      "test_id": "test_003",
+      "test_name": "數據分析師搜索 - 全球",
+      "start_time": "2025-09-02T07:17:38.891931",
+      "success": false,
+      "error": "填寫搜索表單失敗",
+      "search_params": {
+        "query": "數據分析師",
+        "location": "",
+        "results_wanted": 30,
+        "hours_old": null
+      }
+    },
+    {
+      "test_id": "test_004",
+      "test_name": "Product Manager搜索 - 遠端",
+      "start_time": "2025-09-02T07:18:12.767112",
+      "success": false,
+      "error": "填寫搜索表單失敗",
+      "search_params": {
+        "query": "Product Manager",
+        "location": "遠端",
+        "results_wanted": 25,
+        "hours_old": 72
+      }
+    },
+    {
+      "test_id": "test_005",
+      "test_name": "Frontend Developer搜索 - 高雄",
+      "start_time": "2025-09-02T07:18:46.349374",
+      "success": false,
+      "error": "填寫搜索表單失敗",
+      "search_params": {
+        "query": "Frontend Developer",
+        "location": "高雄",
+        "results_wanted": 15,
+        "hours_old": null
+      }
+    },
+    {
+      "test_id": "test_006",
+      "test_name": "DevOps Engineer搜索 - 新加坡",
+      "start_time": "2025-09-02T07:19:19.919106",
+      "success": false,
+      "error": "填寫搜索表單失敗",
+      "search_params": {
+        "query": "DevOps Engineer",
+        "location": "Singapore",
+        "results_wanted": 40,
+        "hours_old": 48
+      }
+    },
+    {
+      "test_id": "test_007",
+      "test_name": "UX Designer搜索 - 台中",
+      "start_time": "2025-09-02T07:19:53.481662",
+      "success": true,
+      "error": null,
+      "search_params": {
+        "query": "UX Designer",
+        "location": "台中",
+        "results_wanted": 20,
+        "hours_old": null
+      },
+      "search_results": {
+        "success": true,
+        "total_jobs": 6,
+        "displayed_jobs": 6,
+        "has_download_buttons": true,
+        "csv_button_visible": true,
+        "json_button_visible": true
+      },
+      "download_results": {
+        "csv_download": true,
+        "json_download": true,
+        "csv_file_path": "downloads\\test_test_007_results.csv",
+        "json_file_path": "downloads\\test_test_007_results.json"
+      },
+      "end_time": "2025-09-02T07:20:04.814825"
+    },
+    {
+      "test_id": "test_008",
+      "test_name": "Machine Learning搜索 - 美國",
+      "start_time": "2025-09-02T07:20:06.978630",
+      "success": true,
+      "error": null,
+      "search_params": {
+        "query": "Machine Learning",
+        "location": "United States",
+        "results_wanted": 100,
+        "hours_old": 168
+      },
+      "search_results": {
+        "success": true,
+        "total_jobs": 25,
+        "displayed_jobs": 10,
+        "has_download_buttons": true,
+        "csv_button_visible": true,
+        "json_button_visible": true
+      },
+      "download_results": {
+        "csv_download": true,
+        "json_download": true,
+        "csv_file_path": "downloads\\test_test_008_results.csv",
+        "json_file_path": "downloads\\test_test_008_results.json"
+      },
+      "end_time": "2025-09-02T07:20:28.867806"
+    }
+  ]
+}

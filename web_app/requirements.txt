@@ -1,0 +1,30 @@
+# jobseeker 網頁應用依賴套件
+# 核心 Web 框架
+Flask==3.0.0
+Flask-CORS==4.0.0
+
+# 數據處理
+pandas>=2.0.0
+numpy>=1.24.0
+
+# HTTP 請求
+requests>=2.31.0
+
+# 環境變數管理
+python-dotenv>=1.0.0
+
+# 日期時間處理
+python-dateutil>=2.8.2
+
+# JSON 處理增強
+orjson>=3.9.0
+
+# 生產環境 WSGI 伺服器
+gunicorn>=21.2.0
+
+# 開發工具（可選）
+watchdog>=3.0.0  # 檔案監控
+
+# jobseeker 核心套件（本地安裝）
+# 注意：需要先安裝 jobseeker 套件
+# pip install -e .
