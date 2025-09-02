@@ -73,10 +73,10 @@ def index():
 @app.route('/search', methods=['POST'])
 def search_jobs():
     """
-    執行職位搜尋
+    執行職位搜尋 (支援分頁)
     
     接受 JSON 或表單數據
-    返回搜尋結果的 JSON 響應
+    返回搜尋結果的 JSON 響應，包含分頁資訊
     """
     try:
         # 獲取請求數據
@@ -91,6 +91,16 @@ def search_jobs():
         results_wanted = int(data.get('results_wanted', 20))
         hours_old = data.get('hours_old')
         selected_sites = data.get('selected_sites', '')
+        
+        # 新增分頁參數
+        page = int(data.get('page', 1))
+        per_page = int(data.get('per_page', 20))
+        
+        # 驗證分頁參數
+        if page < 1:
+            page = 1
+        if per_page < 1 or per_page > 100:
+            per_page = 20
         
         # 處理選擇的網站
         site_name = None
