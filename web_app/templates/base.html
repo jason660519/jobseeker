@@ -445,7 +445,223 @@
         padding: 2rem;
         background: var(--light-bg);
         min-height: 100vh;
-        margin-left: 16.666667%; /* 為固定 sidebar 預留空間 */
+        margin-left: 16.666667%; /* 為固定左側 sidebar 預留空間 */
+        margin-right: 16.666667%; /* 為固定右側 sidebar 預留空間 */
+      }
+
+      /* 右側邊欄樣式 */
+      .right-sidebar {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        border-left: 1px solid var(--border-color);
+        height: calc(100vh - 76px);
+        padding: 1.5rem 1rem;
+        position: fixed;
+        top: 76px;
+        right: 0;
+        width: 16.666667%; /* col-md-3 的寬度 */
+        z-index: 1000;
+        overflow-y: auto;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+        transform: translateZ(0);
+        will-change: transform;
+      }
+
+      /* 搜尋歷史小工具 */
+      .search-history-widget {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 1.5rem;
+      }
+
+      .history-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .history-item:hover {
+        background: var(--light-bg);
+        transform: translateX(-2px);
+      }
+
+      .history-icon {
+        width: 20px;
+        text-align: center;
+        margin-right: 0.75rem;
+        color: var(--text-secondary);
+      }
+
+      .history-text {
+        flex: 1;
+        font-size: 0.8rem;
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .history-time {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+      }
+
+      /* 熱門搜尋小工具 */
+      .trending-widget {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 1.5rem;
+      }
+
+      .trending-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .trending-item:hover {
+        background: var(--light-bg);
+      }
+
+      .trending-rank {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-right: 0.75rem;
+      }
+
+      .trending-rank.top3 {
+        background: var(--gradient-warning);
+      }
+
+      .trending-text {
+        flex: 1;
+        font-size: 0.8rem;
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .trending-count {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        background: var(--light-bg);
+        padding: 0.2rem 0.5rem;
+        border-radius: 12px;
+      }
+
+      /* 即時通知小工具 */
+      .notifications-widget {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 1.5rem;
+      }
+
+      .notification-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+        border-left: 3px solid var(--primary-color);
+        background: var(--light-bg);
+      }
+
+      .notification-icon {
+        width: 20px;
+        text-align: center;
+        margin-right: 0.75rem;
+        color: var(--primary-color);
+        margin-top: 0.1rem;
+      }
+
+      .notification-content {
+        flex: 1;
+      }
+
+      .notification-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+      }
+
+      .notification-text {
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        line-height: 1.4;
+      }
+
+      .notification-time {
+        font-size: 0.6rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+      }
+
+      /* 快速篩選小工具 */
+      .filter-widget {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 1.5rem;
+      }
+
+      .filter-group {
+        margin-bottom: 1rem;
+      }
+
+      .filter-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .filter-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .filter-tag {
+        background: var(--light-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .filter-tag:hover,
+      .filter-tag.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
       }
 
       /* 頁尾樣式 */
@@ -489,8 +705,25 @@
           left: 0;
         }
 
+        .right-sidebar {
+          position: fixed;
+          right: -100%;
+          width: 280px;
+          z-index: 1040;
+          transition: right 0.3s ease;
+          background: white;
+          box-shadow: var(--shadow-xl);
+          top: 76px;
+          height: calc(100vh - 76px);
+        }
+
+        .right-sidebar.show {
+          right: 0;
+        }
+
         .main-content {
-          margin-left: 0; /* 移動端不需要左邊距 */
+          margin-left: 0; /* 移動端不需要左右邊距 */
+          margin-right: 0;
         }
 
         .sidebar-overlay {
@@ -1545,6 +1778,11 @@
               </a>
             </li>
             {% endif %}
+            <li class="nav-item">
+              <button class="btn btn-outline-light me-2" onclick="toggleRightSidebar()" title="切換右側邊欄">
+                <i class="fas fa-columns"></i>
+              </button>
+            </li>
           </ul>
         </div>
       </div>
@@ -1745,7 +1983,7 @@
         </div>
 
         <!-- 主內容區域 -->
-        <div class="col-md-9 col-lg-10">
+        <div class="col-md-6 col-lg-8">
           <main class="main-content" id="main-content" role="main">
             <!-- Flash 訊息 -->
             {% with messages = get_flashed_messages(with_categories=true) %} {%
@@ -1764,9 +2002,169 @@
                 data-bs-dismiss="alert"
               ></button>
             </div>
-            {% endfor %} {% endif %} {% endwith %} {% block content %}{%
-            endblock %}
+            {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
           </main>
+        </div>
+
+        <!-- 右側邊欄 -->
+        <div class="col-md-3 col-lg-2">
+          <div class="right-sidebar" id="rightSidebar">
+            <!-- 右側邊欄內容 -->
+            <div class="right-sidebar-content">
+              <!-- 搜尋歷史 -->
+              <div class="search-history-widget">
+                <div class="stats-header">
+                  <h6 class="stats-title">
+                    <i class="fas fa-history me-2"></i>搜尋歷史
+                  </h6>
+                </div>
+                <div id="searchHistory">
+                  <div class="history-item" onclick="searchFromHistory('軟體工程師 台北')">
+                    <div class="history-icon">
+                      <i class="fas fa-search"></i>
+                    </div>
+                    <div class="history-content">
+                      <div class="history-text">軟體工程師 台北</div>
+                      <div class="history-time">2小時前</div>
+                    </div>
+                  </div>
+                  <div class="history-item" onclick="searchFromHistory('前端開發 遠端')">
+                    <div class="history-icon">
+                      <i class="fas fa-search"></i>
+                    </div>
+                    <div class="history-content">
+                      <div class="history-text">前端開發 遠端</div>
+                      <div class="history-time">1天前</div>
+                    </div>
+                  </div>
+                  <div class="history-item" onclick="searchFromHistory('資料科學家')">
+                    <div class="history-icon">
+                      <i class="fas fa-search"></i>
+                    </div>
+                    <div class="history-content">
+                      <div class="history-text">資料科學家</div>
+                      <div class="history-time">3天前</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 熱門搜尋 -->
+              <div class="trending-widget">
+                <div class="stats-header">
+                  <h6 class="stats-title">
+                    <i class="fas fa-fire me-2"></i>熱門搜尋
+                  </h6>
+                </div>
+                <div id="trendingSearches">
+                  <div class="trending-item" onclick="searchFromTrending('軟體工程師')">
+                    <div class="trending-rank top3">1</div>
+                    <div class="trending-text">軟體工程師</div>
+                    <div class="trending-count">1.2k</div>
+                  </div>
+                  <div class="trending-item" onclick="searchFromTrending('前端開發')">
+                    <div class="trending-rank top3">2</div>
+                    <div class="trending-text">前端開發</div>
+                    <div class="trending-count">856</div>
+                  </div>
+                  <div class="trending-item" onclick="searchFromTrending('產品經理')">
+                    <div class="trending-rank top3">3</div>
+                    <div class="trending-text">產品經理</div>
+                    <div class="trending-count">743</div>
+                  </div>
+                  <div class="trending-item" onclick="searchFromTrending('UI/UX設計師')">
+                    <div class="trending-rank">4</div>
+                    <div class="trending-text">UI/UX設計師</div>
+                    <div class="trending-count">621</div>
+                  </div>
+                  <div class="trending-item" onclick="searchFromTrending('資料分析師')">
+                    <div class="trending-rank">5</div>
+                    <div class="trending-text">資料分析師</div>
+                    <div class="trending-count">534</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 即時通知 -->
+              <div class="notifications-widget">
+                <div class="stats-header">
+                  <h6 class="stats-title">
+                    <i class="fas fa-bell me-2"></i>即時通知
+                  </h6>
+                </div>
+                <div id="notifications">
+                  <div class="notification-item">
+                    <div class="notification-icon">
+                      <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <div class="notification-content">
+                      <div class="notification-title">新增職位</div>
+                      <div class="notification-text">LinkedIn 新增了 15 個軟體工程師職位</div>
+                      <div class="notification-time">5分鐘前</div>
+                    </div>
+                  </div>
+                  <div class="notification-item">
+                    <div class="notification-icon">
+                      <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="notification-content">
+                      <div class="notification-title">市場趨勢</div>
+                      <div class="notification-text">AI 相關職位需求上升 23%</div>
+                      <div class="notification-time">1小時前</div>
+                    </div>
+                  </div>
+                  <div class="notification-item">
+                    <div class="notification-icon">
+                      <i class="fas fa-star"></i>
+                    </div>
+                    <div class="notification-content">
+                      <div class="notification-title">推薦職位</div>
+                      <div class="notification-text">根據您的搜尋找到 3 個匹配職位</div>
+                      <div class="notification-time">2小時前</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 快速篩選 -->
+              <div class="filter-widget">
+                <div class="stats-header">
+                  <h6 class="stats-title">
+                    <i class="fas fa-filter me-2"></i>快速篩選
+                  </h6>
+                </div>
+                <div class="filter-group">
+                  <label class="filter-label">工作類型</label>
+                  <div class="filter-tags">
+                    <span class="filter-tag" onclick="toggleFilter(this, 'type', 'fulltime')">全職</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'type', 'parttime')">兼職</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'type', 'remote')">遠端</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'type', 'contract')">約聘</span>
+                  </div>
+                </div>
+                <div class="filter-group">
+                  <label class="filter-label">經驗要求</label>
+                  <div class="filter-tags">
+                    <span class="filter-tag" onclick="toggleFilter(this, 'experience', 'entry')">新鮮人</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'experience', 'junior')">1-3年</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'experience', 'mid')">3-5年</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'experience', 'senior')">5年以上</span>
+                  </div>
+                </div>
+                <div class="filter-group">
+                  <label class="filter-label">熱門技能</label>
+                  <div class="filter-tags">
+                    <span class="filter-tag" onclick="toggleFilter(this, 'skill', 'python')">Python</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'skill', 'javascript')">JavaScript</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'skill', 'react')">React</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'skill', 'nodejs')">Node.js</span>
+                    <span class="filter-tag" onclick="toggleFilter(this, 'skill', 'ai')">AI/ML</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 結束 right-sidebar-content -->
+          </div>
         </div>
       </div>
     </div>
@@ -2508,6 +2906,121 @@
        // 定期更新 sidebar 統計 - 暫時禁用
        // setInterval(function() { ... }, 30000);
 
+       // 右側邊欄功能
+       function searchFromHistory(query) {
+           const searchInput = document.getElementById('query') || document.getElementById('navQuery');
+           if (searchInput) {
+               searchInput.value = query;
+               // 觸發搜尋
+               const form = searchInput.closest('form');
+               if (form) {
+                   form.dispatchEvent(new Event('submit'));
+               }
+           }
+       }
+
+       function searchFromTrending(query) {
+           searchFromHistory(query);
+       }
+
+       function toggleFilter(element, category, value) {
+           element.classList.toggle('active');
+           
+           // 這裡可以添加實際的篩選邏輯
+           console.log(`Filter toggled: ${category} = ${value}`);
+           
+           // 可以觸發搜尋結果的重新篩選
+           applyFilters();
+       }
+
+       function applyFilters() {
+           // 收集所有啟用的篩選條件
+           const activeFilters = {
+               type: [],
+               experience: [],
+               skill: []
+           };
+           
+           document.querySelectorAll('.filter-tag.active').forEach(tag => {
+               const onclick = tag.getAttribute('onclick');
+               const matches = onclick.match(/toggleFilter\(this, '(\w+)', '(\w+)'\)/);
+               if (matches) {
+                   const [, category, value] = matches;
+                   activeFilters[category].push(value);
+               }
+           });
+           
+           console.log('Active filters:', activeFilters);
+           // 這裡可以實現實際的篩選邏輯
+       }
+
+       function toggleRightSidebar() {
+           const rightSidebar = document.getElementById('rightSidebar');
+           const overlay = document.getElementById('sidebarOverlay');
+           
+           if (rightSidebar) {
+               rightSidebar.classList.toggle('show');
+               if (overlay) {
+                   overlay.style.display = rightSidebar.classList.contains('show') ? 'block' : 'none';
+               }
+           }
+       }
+
+       function updateSearchHistory(query) {
+           // 更新搜尋歷史
+           const historyContainer = document.getElementById('searchHistory');
+           if (historyContainer && query) {
+               const newItem = document.createElement('div');
+               newItem.className = 'history-item';
+               newItem.onclick = () => searchFromHistory(query);
+               newItem.innerHTML = `
+                   <div class="history-icon">
+                       <i class="fas fa-search"></i>
+                   </div>
+                   <div class="history-content">
+                       <div class="history-text">${query}</div>
+                       <div class="history-time">剛剛</div>
+                   </div>
+               `;
+               
+               // 插入到最前面
+               historyContainer.insertBefore(newItem, historyContainer.firstChild);
+               
+               // 限制歷史記錄數量
+               const items = historyContainer.querySelectorAll('.history-item');
+               if (items.length > 5) {
+                   historyContainer.removeChild(items[items.length - 1]);
+               }
+           }
+       }
+
+       function addNotification(title, text, icon = 'fas fa-info-circle') {
+           const notificationsContainer = document.getElementById('notifications');
+           if (notificationsContainer) {
+               const newNotification = document.createElement('div');
+               newNotification.className = 'notification-item';
+               newNotification.innerHTML = `
+                   <div class="notification-icon">
+                       <i class="${icon}"></i>
+                   </div>
+                   <div class="notification-content">
+                       <div class="notification-title">${title}</div>
+                       <div class="notification-text">${text}</div>
+                       <div class="notification-time">剛剛</div>
+                   </div>
+               `;
+               
+               // 插入到最前面
+               notificationsContainer.insertBefore(newNotification, notificationsContainer.firstChild);
+               
+               // 限制通知數量
+               const items = notificationsContainer.querySelectorAll('.notification-item');
+               if (items.length > 3) {
+                   notificationsContainer.removeChild(items[items.length - 1]);
+               }
+           }
+       }
+
        // 頁面載入完成後執行初始化
        document.addEventListener('DOMContentLoaded', function() {
            console.log('Page loaded successfully');
@@ -2516,8 +3029,20 @@
                // 初始化主題
                initTheme();
                console.log('Theme initialized');
+               
+               // 監聽搜尋表單提交，更新搜尋歷史
+               const searchForms = document.querySelectorAll('form[role="search"], #searchForm');
+               searchForms.forEach(form => {
+                   form.addEventListener('submit', function(e) {
+                       const queryInput = form.querySelector('input[type="search"], input[name="query"]');
+                       if (queryInput && queryInput.value.trim()) {
+                           updateSearchHistory(queryInput.value.trim());
+                       }
+                   });
+               });
+               
            } catch (error) {
-               console.error('Error initializing theme:', error);
+               console.error('Error initializing:', error);
            }
        });
     </script>
