@@ -1,1273 +1,2527 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}jobseeker - 智能職位搜尋平台{% endblock %}</title>
-    
+
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        :root {
-            --primary-color: #2563eb;
-            --primary-light: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --secondary-color: #64748b;
-            --accent-color: #f59e0b;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
-            --info-color: #06b6d4;
-            --light-bg: #f8fafc;
-            --border-color: #e2e8f0;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
-            
-            /* 漸變色彩 */
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --gradient-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            
-            /* 陰影系統 */
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+      :root {
+        /* 預設主題：Ocean (藍紫風格) */
+        --primary-color: #2563eb;
+        --primary-light: #3b82f6;
+        --primary-dark: #1d4ed8;
+        --secondary-color: #64748b;
+        --accent-color: #f59e0b;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --info-color: #06b6d4;
+        --light-bg: #f8fafc;
+        --border-color: #e2e8f0;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+
+        /* 漸變色彩 */
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --gradient-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        /* 陰影系統 */
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 10px 10px -5px rgb(0 0 0 / 0.04);
+      }
+
+      /* 主題變數定義 */
+      [data-theme="ocean"] {
+        --primary-color: #2563eb;
+        --primary-light: #3b82f6;
+        --primary-dark: #1d4ed8;
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      [data-theme="forest"] {
+        --primary-color: #059669;
+        --primary-light: #10b981;
+        --primary-dark: #047857;
+        --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        --gradient-hero: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        --gradient-success: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      }
+
+      [data-theme="sunset"] {
+        --primary-color: #ea580c;
+        --primary-light: #f97316;
+        --primary-dark: #c2410c;
+        --gradient-primary: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+        --gradient-hero: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+        --gradient-success: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background-color: var(--light-bg);
+        color: var(--text-primary);
+        line-height: 1.6;
+        padding-top: 76px; /* 為固定導航欄預留空間 */
+        /* 確保 body 不會影響 header 固定 */
+        overflow-x: hidden;
+      }
+
+      /* 確保 header 始終在最上層並固定 */
+      .navbar {
+        background: var(--gradient-primary);
+        box-shadow: var(--shadow-lg);
+        padding: 1rem 0;
+        backdrop-filter: blur(10px);
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        /* 確保 header 不會隨滾動移動 */
+        transform: translateZ(0);
+        will-change: transform;
+        transition: all 0.3s ease;
+        /* 強制固定定位 */
+        position: -webkit-sticky;
+        position: sticky;
+        position: fixed;
+      }
+
+      /* 移除滾動時的 header 效果 */
+      .navbar.scrolled {
+        /* 保持原始樣式，不變色 */
+      }
+
+      /* 確保沒有其他元素覆蓋 header */
+      .navbar * {
+        position: relative;
+        z-index: 10000;
+      }
+
+      /* 防止任何可能的覆蓋 */
+      .navbar::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        background: inherit;
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: white !important;
+      }
+
+      .navbar-brand i {
+        margin-right: 0.5rem;
+        color: #fbbf24;
+      }
+
+      .main-container {
+        min-height: 100vh;
+      }
+
+      /* 側邊欄樣式 - 固定定位，獨立於主內容滾動 */
+      .sidebar {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        border-right: 1px solid var(--border-color);
+        height: calc(100vh - 76px);
+        padding: 1.5rem 1rem;
+        position: fixed;
+        top: 76px;
+        left: 0;
+        width: 16.666667%; /* col-md-3 的寬度 */
+        z-index: 1000;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        /* 確保 sidebar 不會被其他元素覆蓋 */
+        transform: translateZ(0);
+        will-change: transform;
+      }
+
+      /* 用戶資訊卡片 */
+      .user-card {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        border-radius: 12px;
+        padding: 1rem;
+        color: white;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+      }
+
+      .user-avatar {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.9;
+      }
+
+      .user-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .user-status {
+        font-size: 0.75rem;
+        opacity: 0.8;
+      }
+
+      /* 統計小工具 */
+      .stats-widget {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .stats-header {
+        margin-bottom: 0.75rem;
+      }
+
+      .stats-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 0.5rem;
+        background: var(--light-bg);
+        border-radius: 8px;
+      }
+
+      .stat-number {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-label {
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      /* 區塊標題 */
+      .section-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* 導航樣式 */
+      .sidebar-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar-nav li {
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar-nav a {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sidebar-nav a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .sidebar-nav a:hover::before {
+        left: 100%;
+      }
+
+      .sidebar-nav a:hover,
+      .sidebar-nav a.active {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        transform: translateX(4px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .nav-icon {
+        width: 20px;
+        text-align: center;
+        margin-right: 0.75rem;
+        font-size: 1rem;
+      }
+
+      .nav-content {
+        flex: 1;
+      }
+
+      .nav-text {
+        display: block;
+        font-weight: 500;
+        font-size: 0.85rem;
+      }
+
+      .nav-desc {
+        display: block;
+        font-size: 0.7rem;
+        opacity: 0.7;
+        margin-top: 0.1rem;
+      }
+
+      .nav-badge {
+        margin-left: 0.5rem;
+      }
+
+      .nav-badge .badge {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+      }
+
+      /* 快速操作 */
+      .quick-actions {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: space-around;
+      }
+
+      .action-btn {
+        background: var(--light-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.5rem;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+
+      .action-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* 系統狀態 */
+      .system-status {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .status-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.75rem;
+      }
+
+      .status-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        animation: pulse 2s infinite;
+      }
+
+      .status-indicator.online {
+        background: var(--success-color);
+      }
+
+      .status-indicator.offline {
+        background: var(--danger-color);
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        50% {
+          opacity: 0.5;
         }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding-top: 76px; /* 為固定導航欄預留空間 */
+        100% {
+          opacity: 1;
         }
-        
-        .navbar {
-            background: var(--gradient-primary);
-            box-shadow: var(--shadow-lg);
-            padding: 1rem 0;
-            backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1030;
-            width: 100%;
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: white !important;
-        }
-        
-        .navbar-brand i {
-            margin-right: 0.5rem;
-            color: #fbbf24;
-        }
-        
-        .main-container {
-            min-height: 100vh;
-        }
-        
-        /* 側邊欄樣式 */
+      }
+
+      .status-text {
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      /* 主內容區域 */
+      .main-content {
+        padding: 2rem;
+        background: var(--light-bg);
+        min-height: 100vh;
+        margin-left: 16.666667%; /* 為固定 sidebar 預留空間 */
+      }
+
+      /* 頁尾樣式 */
+      .footer {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: white;
+        padding: 3rem 0 2rem;
+        margin-top: auto;
+      }
+
+      .footer h5 {
+        color: #fbbf24;
+        margin-bottom: 1rem;
+      }
+
+      .footer a {
+        color: #cbd5e1;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer a:hover {
+        color: #fbbf24;
+      }
+
+      /* 響應式設計 */
+      @media (max-width: 768px) {
         .sidebar {
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border-right: 1px solid var(--border-color);
-            min-height: calc(100vh - 76px);
-            padding: 2rem 1.5rem;
-            position: sticky;
-            top: 76px;
-            overflow-y: auto;
-        }
-        
-        .sidebar-nav {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar-nav li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .sidebar-nav a {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .sidebar-nav a:hover,
-        .sidebar-nav a.active {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            transform: translateX(4px);
-        }
-        
-        .sidebar-nav a i {
-            margin-right: 0.75rem;
-            width: 20px;
-            text-align: center;
-        }
-        
-        /* 主內容區域 */
-        .main-content {
-            padding: 2rem;
-            background: var(--light-bg);
-            min-height: 100vh;
-        }
-        
-        /* 頁尾樣式 */
-        .footer {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            color: white;
-            padding: 3rem 0 2rem;
-            margin-top: auto;
-        }
-        
-        .footer h5 {
-            color: #fbbf24;
-            margin-bottom: 1rem;
-        }
-        
-        .footer a {
-            color: #cbd5e1;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .footer a:hover {
-            color: #fbbf24;
-        }
-        
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                left: -100%;
-                width: 280px;
-                z-index: 1050;
-                transition: left 0.3s ease;
-                background: white;
-                box-shadow: var(--shadow-xl);
-                top: 76px;
-                height: calc(100vh - 76px);
-            }
-            
-            .sidebar.show {
-                left: 0;
-            }
-            
-            .sidebar-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 1040;
-                display: none;
-            }
-            
-            .sidebar-overlay.show {
-                display: block;
-            }
-            
-            .main-content {
-                padding: 1rem;
-            }
-            
-            .sidebar-toggle {
-                display: block !important;
-            }
-        }
-        
-        .sidebar-toggle {
-            display: none;
-        }
-        
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            background: white;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border-bottom: 1px solid var(--border-color);
-            border-radius: 12px 12px 0 0 !important;
-            padding: 1.5rem;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 1.5rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+          position: fixed;
+          left: -100%;
+          width: 280px;
+          z-index: 1050;
+          transition: left 0.3s ease;
+          background: white;
+          box-shadow: var(--shadow-xl);
+          top: 76px;
+          height: calc(100vh - 76px);
         }
 
-        /* 導航列搜尋欄樣式 */
-        .navbar { position: relative; }
+        .sidebar.show {
+          left: 0;
+        }
+
+        .main-content {
+          margin-left: 0; /* 移動端不需要左邊距 */
+        }
+
+        .sidebar-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 1040;
+          display: none;
+        }
+
+        .sidebar-overlay.show {
+          display: block;
+        }
+
+        .main-content {
+          padding: 1rem;
+        }
+
+        .sidebar-toggle {
+          display: block !important;
+        }
+
+        /* 移動端底部導航 */
+        .mobile-bottom-nav {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: white;
+          border-top: 1px solid var(--border-color);
+          padding: 0.5rem 0;
+          z-index: 1030;
+          display: flex;
+          justify-content: space-around;
+          box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+          /* 確保底部導航也不會隨滾動移動 */
+          transform: translateZ(0);
+          will-change: transform;
+        }
+
+        .mobile-nav-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-decoration: none;
+          color: var(--text-secondary);
+          font-size: 0.75rem;
+          padding: 0.5rem;
+          transition: color 0.3s ease;
+        }
+
+        .mobile-nav-item.active,
+        .mobile-nav-item:hover {
+          color: var(--primary-color);
+        }
+
+        .mobile-nav-item i {
+          font-size: 1.2rem;
+          margin-bottom: 0.25rem;
+        }
+
+        /* 為底部導航預留空間 */
+        .main-content {
+          padding-bottom: 80px;
+        }
+      }
+
+      @media (min-width: 769px) {
+        .mobile-bottom-nav {
+          display: none;
+        }
+      }
+
+      /* 中等螢幕適配 */
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .sidebar {
+          width: 20%; /* 稍微寬一點 */
+        }
+
+        .main-content {
+          margin-left: 20%;
+        }
+      }
+
+      /* 大螢幕適配 */
+      @media (min-width: 1025px) {
+        .sidebar {
+          width: 16.666667%; /* 保持原始比例 */
+        }
+
+        .main-content {
+          margin-left: 16.666667%;
+        }
+      }
+
+      .sidebar-toggle {
+        display: none;
+      }
+
+      .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        background: white;
+      }
+
+      .card-header {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-bottom: 1px solid var(--border-color);
+        border-radius: 12px 12px 0 0 !important;
+        padding: 1.5rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-dark) 100%
+        );
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      /* 導航列搜尋欄樣式 */
+      .navbar {
+        position: relative;
+      }
+      .nav-search {
+        flex: 1;
+        max-width: 720px;
+        margin: 0 1rem;
+      }
+      .nav-search .form-control {
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+      .nav-search .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .nav-search .form-control:focus {
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--text-primary);
+      }
+      /* 錄音狀態視覺化 */
+      #navSearchGroup.recording {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
+        border-radius: 8px;
+      }
+      #navMicBtn.mic-active {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: #fff;
+      }
+
+      /* 響應式設計 */
+      @media (max-width: 991.98px) {
         .nav-search {
-            flex: 1;
-            max-width: 720px;
-            margin: 0 1rem;
+          margin: 0.5rem 0.5rem;
+          max-width: none;
+        }
+      }
+
+      @media (max-width: 767.98px) {
+        .nav-search {
+          margin: 0.5rem 0.25rem;
+        }
+        .nav-search .btn {
+          padding: 0.375rem 0.5rem;
+          font-size: 0.875rem;
         }
         .nav-search .form-control {
-            border: 1px solid rgba(255,255,255,0.6);
-            background: rgba(255,255,255,0.15);
-            color: #fff;
+          font-size: 0.875rem;
         }
-        .nav-search .form-control::placeholder { color: rgba(255,255,255,0.85); }
-        .nav-search .form-control:focus {
-            background: rgba(255,255,255,0.9);
-            color: var(--text-primary);
-        }
-        /* 錄音狀態視覺化 */
-        #navSearchGroup.recording {
-            box-shadow: 0 0 0 3px rgba(239,68,68,0.4);
-            border-radius: 8px;
-        }
-        #navMicBtn.mic-active {
-            background: #ef4444;
-            border-color: #ef4444;
-            color: #fff;
-        }
-        
-        /* 響應式設計 */
-        @media (max-width: 991.98px) {
-            .nav-search {
-                margin: 0.5rem 0.5rem;
-                max-width: none;
-            }
-        }
-        
-        @media (max-width: 767.98px) {
-            .nav-search {
-                margin: 0.5rem 0.25rem;
-            }
-            .nav-search .btn {
-                padding: 0.375rem 0.5rem;
-                font-size: 0.875rem;
-            }
-            .nav-search .form-control {
-                font-size: 0.875rem;
-            }
-        }
-        
-        @media (max-width: 575.98px) {
-            .nav-search {
-                margin: 0.25rem;
-            }
-            .nav-search .btn {
-                padding: 0.25rem 0.375rem;
-                font-size: 0.75rem;
-            }
-            .nav-search .form-control {
-                font-size: 0.75rem;
-                padding: 0.375rem 0.5rem;
-            }
-            /* 隱藏語音按鈕文字，只顯示圖標 */
-            #navMicBtn {
-                min-width: auto;
-            }
-        }
-        
-        .form-control, .form-select {
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
-        }
-        
-        .alert {
-            border: none;
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
-        }
-        
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-        }
-        
-        .spinner-border {
-            width: 3rem;
-            height: 3rem;
-            border-width: 0.3em;
-        }
-        
-        /* 職位卡片樣式 */
-        .job-card {
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            background: white;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .job-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--gradient-primary);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
-        }
-        
-        .job-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary-color);
-        }
-        
-        .job-card:hover::before {
-            transform: scaleY(1);
-        }
-        
-        .job-card-enhanced {
-            border: none;
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            background: white;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .job-card-enhanced::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-        
-        .job-card-enhanced:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-xl);
-        }
-        
-        .job-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-        
-        .job-title-section {
-            flex: 1;
-        }
-        
-        .job-badges {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .job-salary {
-            text-align: right;
-            background: var(--gradient-success);
-            color: white;
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            min-width: 150px;
-        }
-        
-        .salary-amount {
-            font-size: 1.1rem;
-            font-weight: 700;
-            display: block;
-        }
-        
-        .salary-period {
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-        
-        .job-title {
-            color: var(--primary-color);
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .job-company {
-            color: var(--text-secondary);
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
-        
-        .job-location {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .job-salary {
-            color: var(--success-color);
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        
-        .job-meta {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .job-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        .badge {
-            font-size: 0.75rem;
-            padding: 0.35rem 0.65rem;
-            border-radius: 6px;
-        }
-        
-        .footer {
-            background: var(--text-primary);
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-        
-        /* 統計卡片樣式 */
-        .stats-card {
-            background: white;
-            border: none;
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stats-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-        
-        .stats-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-        }
-        
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            color: white;
-            font-size: 1.5rem;
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        
-        /* 載入動畫樣式 */
-        .loading-container {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: white;
-            border-radius: 16px;
-            box-shadow: var(--shadow-md);
-            margin: 2rem 0;
-        }
-        
-        .loading-animation {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--border-color);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .loading-text h4 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .loading-text p {
-            color: var(--text-secondary);
-            margin: 0;
-        }
-        
-        .loading-progress {
-            margin-top: 2rem;
-            width: 100%;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--border-color);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-        
-        .progress-steps {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-        
-        .step {
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-        
-        .step.active {
-            background: var(--primary-color);
-            color: white;
-        }
-        
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 1rem 0;
-            }
-            
-            .card {
-                margin: 0 0.5rem;
-            }
-            
-            .job-meta {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
-        }
-        
-        /* 搜尋表單樣式 */
-        .search-card {
-            border: none;
-            border-radius: 20px;
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-        }
-        
-        .search-card .card-header {
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 2rem;
-        }
-        
-        .search-card .card-body {
-            padding: 2rem;
-        }
-        
-        .form-floating > .form-control:focus ~ label,
-        .form-floating > .form-control:not(:placeholder-shown) ~ label {
-            color: var(--primary-color);
-        }
-        
-        /* 按鈕樣式 */
-        .btn-primary {
-            background: var(--gradient-primary);
-            border: none;
-            border-radius: 12px;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .btn-outline-primary {
-            border: 2px solid var(--primary-color);
-            border-radius: 8px;
-            color: var(--primary-color);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-outline-primary:hover {
-            background: var(--primary-color);
-            transform: translateY(-1px);
-        }
-        
-        /* 徽章樣式 */
-        .badge {
-            border-radius: 8px;
-            padding: 0.5rem 0.75rem;
-            font-weight: 500;
-        }
-        
-        /* 響應式優化 */
-        @media (max-width: 768px) {
-            .job-header {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .job-salary {
-                text-align: left;
-                min-width: auto;
-            }
-            
-            .job-footer {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start !important;
-            }
-            
-            .job-actions {
-                width: 100%;
-                display: flex;
-                gap: 0.5rem;
-            }
-            
-            .job-actions .btn {
-                flex: 1;
-            }
-        }
-    </style>
-    
-    {% block extra_css %}{% endblock %}
-</head>
-<body>
-    <!-- 導航欄 -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="fas fa-briefcase"></i>
-                jobseeker
-            </a>
-            <button class="btn btn-outline-light sidebar-toggle d-md-none" type="button" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar" aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- 搜尋欄 - 在所有螢幕尺寸都顯示 -->
-            <div class="nav-search mx-auto my-2 my-lg-0">
-                <form id="navbarSearchForm" class="d-flex" onsubmit="triggerHeaderSearch(event)">
-                    <div class="input-group" id="navSearchGroup">
-                        <input type="search" class="form-control" id="navQuery" placeholder="輸入想找的工作、地點或需求..." aria-label="搜尋職缺">
-                        <button class="btn btn-outline-light" id="navMicBtn" type="button" title="語音輸入" onclick="toggleVoiceInput()" aria-pressed="false"><i class="fas fa-microphone"></i></button>
-                        <button class="btn btn-light" type="submit"><i class="fas fa-search me-1"></i>搜尋</button>
-                    </div>
-                </form>
-            </div>
-            
-            <div class="collapse navbar-collapse" id="topNavbar">
+      }
 
-                <!-- 右側功能選單 -->
-                <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('docs_page') }}">
-                            <i class="fas fa-book me-1"></i> Doc
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('downloads_page') }}">
-                            <i class="fas fa-download me-1"></i> Downloads
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('donate_page') }}">
-                            <i class="fas fa-heart me-1"></i> Donate
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#contactModal">
-                            <i class="fas fa-envelope me-1"></i> 聯絡我們
-                        </a>
-                    </li>
-                    {% if is_admin %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('admin_tests_page') }}">
-                            <i class="fas fa-clipboard-check me-1"></i> 測試報告
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% if current_user.is_authenticated and (true) %}{% endif %}
-                    {% if current_user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('favorites_page') }}">
-                            <i class="fas fa-heart me-1"></i> 我的收藏
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('logout') }}">
-                            <i class="fas fa-sign-out-alt me-1"></i> 登出
-                        </a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('login') }}">
-                            <i class="fas fa-sign-in-alt me-1"></i> 登入
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('register') }}">
-                            <i class="fas fa-user-plus me-1"></i> 註冊
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
+      @media (max-width: 575.98px) {
+        .nav-search {
+          margin: 0.25rem;
+        }
+        .nav-search .btn {
+          padding: 0.25rem 0.375rem;
+          font-size: 0.75rem;
+        }
+        .nav-search .form-control {
+          font-size: 0.75rem;
+          padding: 0.375rem 0.5rem;
+        }
+        /* 隱藏語音按鈕文字，只顯示圖標 */
+        #navMicBtn {
+          min-width: auto;
+        }
+      }
+
+      .form-control,
+      .form-select {
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+      }
+
+      .alert {
+        border: none;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+      }
+
+      .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .spinner-border {
+        width: 3rem;
+        height: 3rem;
+        border-width: 0.3em;
+      }
+
+      /* 職位卡片樣式 */
+      .job-card {
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        background: white;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .job-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--gradient-primary);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+      }
+
+      .job-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-xl);
+        border-color: var(--primary-color);
+      }
+
+      .job-card:hover::before {
+        transform: scaleY(1);
+      }
+
+      .job-card-enhanced {
+        border: none;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        background: white;
+        box-shadow: var(--shadow-md);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .job-card-enhanced::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-primary);
+      }
+
+      .job-card-enhanced:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+      }
+
+      .job-title-section {
+        flex: 1;
+      }
+
+      .job-badges {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .job-salary {
+        text-align: right;
+        background: var(--gradient-success);
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        min-width: 150px;
+      }
+
+      .salary-amount {
+        font-size: 1.1rem;
+        font-weight: 700;
+        display: block;
+      }
+
+      .salary-period {
+        font-size: 0.8rem;
+        opacity: 0.9;
+      }
+
+      .job-title {
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .job-company {
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+
+      .job-location {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .job-salary {
+        color: var(--success-color);
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .job-meta {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .job-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.65rem;
+        border-radius: 6px;
+      }
+
+      .footer {
+        background: var(--text-primary);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 3rem;
+      }
+
+      /* 統計卡片樣式 */
+      .stats-card {
+        background: white;
+        border: none;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stats-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-primary);
+      }
+
+      .stats-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-primary);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: white;
+        font-size: 1.5rem;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      /* 載入動畫樣式 */
+      .loading-container {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--shadow-md);
+        margin: 2rem 0;
+      }
+
+      .loading-animation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid var(--border-color);
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-text h4 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .loading-text p {
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .loading-progress {
+        margin-top: 2rem;
+        width: 100%;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: var(--border-color);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: var(--gradient-primary);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+      }
+
+      .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+      }
+
+      .step {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .step.active {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .main-container {
+          padding: 1rem 0;
+        }
+
+        .card {
+          margin: 0 0.5rem;
+        }
+
+        .job-meta {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 搜尋表單樣式 */
+      .search-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .search-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .search-card .card-header {
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        padding: 2rem;
+      }
+
+      .search-card .card-body {
+        padding: 2rem;
+      }
+
+      /* 新搜尋表單樣式 */
+      .search-main {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      /* 快速選擇地點樣式 */
+      .quick-locations {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+        margin-bottom: 1rem;
+      }
+
+      .quick-locations .btn {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+      }
+
+      .quick-locations .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .quick-locations .btn.active {
+        background: var(--success-color);
+        border-color: var(--success-color);
+        color: white;
+      }
+
+      /* 快速選擇標題樣式 */
+      .quick-locations small {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+      }
+
+      .basic-settings {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+      }
+
+      .basic-settings .form-label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .basic-settings .form-select {
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .basic-settings .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+      }
+
+      /* Hero 區域樣式 */
+      .hero-content {
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      .hero-features .badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 進階選項按鈕樣式 */
+      .btn-outline-secondary {
+        border: 2px solid var(--border-color);
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-secondary:hover {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+      }
+
+      /* 載入動畫改善 */
+      .loading-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border: 1px solid var(--border-color);
+      }
+
+      .spinner {
+        border: 4px solid var(--border-color);
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* 無障礙設計改善 */
+      .btn:focus,
+      .form-control:focus,
+      .form-select:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+      }
+
+      .mobile-nav-item:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+        border-radius: 8px;
+      }
+
+      /* 高對比度模式支援 */
+      @media (prefers-contrast: high) {
+        .btn-primary {
+          background: #000;
+          border-color: #000;
+        }
+
+        .btn-primary:hover {
+          background: #333;
+          border-color: #333;
+        }
+      }
+
+      /* 減少動畫模式支援 */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      .form-floating > .form-control:focus ~ label,
+      .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: var(--primary-color);
+      }
+
+      /* 按鈕樣式 */
+      .btn-primary {
+        background: var(--gradient-primary);
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .btn-outline-primary {
+        border: 2px solid var(--primary-color);
+        border-radius: 8px;
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-primary:hover {
+        background: var(--primary-color);
+        transform: translateY(-1px);
+      }
+
+      /* 徽章樣式 */
+      .badge {
+        border-radius: 8px;
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+      }
+
+      /* 響應式優化 */
+      @media (max-width: 768px) {
+        .job-header {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .job-salary {
+          text-align: left;
+          min-width: auto;
+        }
+
+        .job-footer {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: flex-start !important;
+        }
+
+        .job-actions {
+          width: 100%;
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .job-actions .btn {
+          flex: 1;
+        }
+
+        /* 移動端職位卡片優化 */
+        .job-card-enhanced {
+          padding: 1.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .job-title {
+          font-size: 1rem;
+          line-height: 1.4;
+        }
+
+        .job-badges {
+          margin-top: 0.75rem;
+        }
+
+        .job-badges .badge {
+          font-size: 0.7rem;
+          padding: 0.3rem 0.6rem;
+        }
+
+        /* 搜尋表單移動端優化 */
+        .search-card .card-body {
+          padding: 1.5rem;
+        }
+
+        .form-floating {
+          margin-bottom: 1rem;
+        }
+
+        /* 統計卡片移動端優化 */
+        .stat-card {
+          padding: 1.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .stat-number {
+          font-size: 2rem;
+        }
+
+        .stat-icon {
+          width: 50px;
+          height: 50px;
+          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        /* 超小螢幕優化 */
+        .main-content {
+          padding: 0.75rem;
+        }
+
+        .job-card-enhanced {
+          padding: 1rem;
+        }
+
+        .search-card .card-body {
+          padding: 1rem;
+        }
+
+        .stat-card {
+          padding: 1rem;
+        }
+
+        .job-actions .btn {
+          font-size: 0.8rem;
+          padding: 0.5rem 0.75rem;
+        }
+      }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- 導航欄 -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark"
+      role="navigation"
+      aria-label="主要導航"
+    >
+      <div class="container-fluid">
+        <a
+          class="navbar-brand"
+          href="{{ url_for('index') }}"
+          aria-label="JobSeeker 首頁"
+        >
+          <i class="fas fa-briefcase" aria-hidden="true"></i>
+          jobseeker
+        </a>
+        <button
+          class="btn btn-outline-light sidebar-toggle d-md-none"
+          type="button"
+          onclick="toggleSidebar()"
+          aria-label="開啟側邊欄選單"
+          aria-expanded="false"
+        >
+          <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#topNavbar"
+          aria-controls="topNavbar"
+          aria-expanded="false"
+          aria-label="切換導航選單"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- 搜尋欄 - 在所有螢幕尺寸都顯示 -->
+        <div class="nav-search mx-auto my-2 my-lg-0">
+          <form
+            id="navbarSearchForm"
+            class="d-flex"
+            onsubmit="triggerHeaderSearch(event)"
+            role="search"
+            aria-label="職位搜尋"
+          >
+            <div class="input-group" id="navSearchGroup">
+              <input
+                type="search"
+                class="form-control"
+                id="navQuery"
+                placeholder="輸入想找的工作、地點或需求..."
+                aria-label="搜尋職缺"
+                aria-describedby="searchHelp"
+              />
+              <button
+                class="btn btn-outline-light"
+                id="navMicBtn"
+                type="button"
+                title="語音輸入"
+                onclick="toggleVoiceInput()"
+                aria-pressed="false"
+                aria-label="使用語音輸入搜尋"
+              >
+                <i class="fas fa-microphone" aria-hidden="true"></i>
+              </button>
+              <button class="btn btn-light" type="submit" aria-label="執行搜尋">
+                <i class="fas fa-search me-1" aria-hidden="true"></i>搜尋
+              </button>
             </div>
+          </form>
         </div>
+
+        <div class="collapse navbar-collapse" id="topNavbar">
+          <!-- 右側功能選單 -->
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{{ url_for('docs_page') }}">
+                <i class="fas fa-book me-1"></i> Doc
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link text-white"
+                href="{{ url_for('downloads_page') }}"
+              >
+                <i class="fas fa-download me-1"></i> Downloads
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link text-white"
+                href="{{ url_for('donate_page') }}"
+              >
+                <i class="fas fa-heart me-1"></i> Donate
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link text-white"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#contactModal"
+              >
+                <i class="fas fa-envelope me-1"></i> 聯絡我們
+              </a>
+            </li>
+            {% if is_admin %}
+            <li class="nav-item">
+              <a
+                class="nav-link text-white"
+                href="{{ url_for('admin_tests_page') }}"
+              >
+                <i class="fas fa-clipboard-check me-1"></i> 測試報告
+              </a>
+            </li>
+            {% endif %} {% if current_user.is_authenticated and (true) %}{%
+            endif %} {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a
+                class="nav-link text-white"
+                href="{{ url_for('favorites_page') }}"
+              >
+                <i class="fas fa-heart me-1"></i> 我的收藏
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{{ url_for('logout') }}">
+                <i class="fas fa-sign-out-alt me-1"></i> 登出
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{{ url_for('login') }}">
+                <i class="fas fa-sign-in-alt me-1"></i> 登入
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{{ url_for('register') }}">
+                <i class="fas fa-user-plus me-1"></i> 註冊
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
     </nav>
-    
+
     <!-- 側邊欄遮罩層 -->
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-    
+    <div
+      class="sidebar-overlay"
+      id="sidebarOverlay"
+      onclick="toggleSidebar()"
+    ></div>
+
     <!-- 主要佈局 -->
     <div class="main-container">
-        <div class="row g-0">
-            <!-- 側邊欄 -->
-            <div class="col-md-3 col-lg-2">
-                <div class="sidebar" id="sidebar">
-                    <div class="mb-4">
-                        <h6 class="text-muted text-uppercase fw-bold mb-3">主要功能</h6>
-                        <ul class="sidebar-nav">
-                            <li><a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
-                                <i class="fas fa-home"></i>
-                                首頁搜尋
-                            </a></li>
-                            <li><a href="{{ url_for('demo_results') }}" class="{% if request.endpoint == 'demo_results' %}active{% endif %}">
-                                <i class="fas fa-chart-bar"></i>
-                                測試結果
-                            </a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h6 class="text-muted text-uppercase fw-bold mb-3">工具與資源</h6>
-                        <ul class="sidebar-nav">
-                            <li><a href="#" onclick="downloadSample()">
-                                <i class="fas fa-download"></i>
-                                下載範例CSV
-                            </a></li>
-                            <li><a href="https://github.com/jason660519/jobseeker" target="_blank">
-                                <i class="fab fa-github"></i>
-                                GitHub 專案
-                            </a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h6 class="text-muted text-uppercase fw-bold mb-3">支援平台</h6>
-                        <ul class="sidebar-nav">
-                            <li><a href="#" class="text-sm">
-                                <i class="fab fa-linkedin"></i>
-                                LinkedIn
-                            </a></li>
-                            <li><a href="#" class="text-sm">
-                                <i class="fas fa-briefcase"></i>
-                                Indeed
-                            </a></li>
-                            <li><a href="#" class="text-sm">
-                                <i class="fas fa-building"></i>
-                                Glassdoor
-                            </a></li>
-                            <li><a href="#" class="text-sm" onclick="showSiteSelector()">
-                                <i class="fas fa-plus"></i>
-                                支援網站+
-                            </a></li>
-                        </ul>
-                    </div>
+      <div class="row g-0">
+        <!-- 側邊欄 -->
+        <div class="col-md-3 col-lg-2">
+          <div class="sidebar" id="sidebar">
+            <!-- 側邊欄內容 -->
+            <div class="sidebar-content">
+              <!-- 用戶資訊卡片 -->
+              <div class="user-card mb-4">
+                <div class="user-avatar">
+                  <i class="fas fa-user-circle"></i>
                 </div>
-            </div>
-            
-            <!-- 主內容區域 -->
-            <div class="col-md-9 col-lg-10">
-                <div class="main-content">
-                    <!-- Flash 訊息 -->
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                            {% for category, message in messages %}
-                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                                    <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }} me-2"></i>
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    {% endwith %}
-                    
-                    {% block content %}{% endblock %}
+                <div class="user-info">
+                  <h6 class="user-name">歡迎使用 JobSpy</h6>
+                  <small class="user-status text-success">
+                    <i class="fas fa-circle"></i> 系統正常
+                  </small>
                 </div>
+              </div>
+
+              <!-- 快速統計 -->
+              <div class="stats-widget mb-4">
+                <div class="stats-header">
+                  <h6 class="stats-title">
+                    <i class="fas fa-chart-line me-2"></i>今日統計
+                  </h6>
+                </div>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <div class="stat-number" id="todaySearches">0</div>
+                    <div class="stat-label">搜尋次數</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-number" id="todayJobs">0</div>
+                    <div class="stat-label">找到職位</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 主要功能 -->
+              <div class="mb-4">
+                <h6 class="section-title">
+                  <i class="fas fa-rocket me-2"></i>主要功能
+                </h6>
+                <ul class="sidebar-nav">
+                  <li>
+                    <a
+                      href="{{ url_for('index') }}"
+                      class="{% if request.endpoint == 'index' %}active{% endif %}"
+                    >
+                      <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                      </div>
+                      <div class="nav-content">
+                        <span class="nav-text">首頁搜尋</span>
+                        <small class="nav-desc">智能職位搜尋</small>
+                      </div>
+                      <div class="nav-badge">
+                        <span class="badge bg-primary">NEW</span>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('demo_results') }}"
+                      class="{% if request.endpoint == 'demo_results' %}active{% endif %}"
+                    >
+                      <div class="nav-icon">
+                        <i class="fas fa-chart-bar"></i>
+                      </div>
+                      <div class="nav-content">
+                        <span class="nav-text">測試結果</span>
+                        <small class="nav-desc">查看搜尋結果</small>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- 工具與資源 -->
+              <div class="mb-4">
+                <h6 class="section-title">
+                  <i class="fas fa-tools me-2"></i>工具與資源
+                </h6>
+                <ul class="sidebar-nav">
+                  <li>
+                    <a href="#" onclick="downloadSample()">
+                      <div class="nav-icon">
+                        <i class="fas fa-download"></i>
+                      </div>
+                      <div class="nav-content">
+                        <span class="nav-text">下載範例CSV</span>
+                        <small class="nav-desc">資料格式範例</small>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://github.com/jason660519/jobseeker"
+                      target="_blank"
+                    >
+                      <div class="nav-icon">
+                        <i class="fab fa-github"></i>
+                      </div>
+                      <div class="nav-content">
+                        <span class="nav-text">GitHub 專案</span>
+                        <small class="nav-desc">開源代碼</small>
+                      </div>
+                      <div class="nav-badge">
+                        <i class="fas fa-external-link-alt"></i>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- 支援平台 -->
+              <div class="mb-4">
+                <h6 class="section-title">
+                  <i class="fas fa-globe me-2"></i>支援平台
+                </h6>
+                <ul class="sidebar-nav">
+                  <li>
+                    <a href="#" onclick="showSiteSelector()">
+                      <div class="nav-icon">
+                        <i class="fas fa-cog"></i>
+                      </div>
+                      <div class="nav-content">
+                        <span class="nav-text">設定搜尋網站</span>
+                        <small class="nav-desc">選擇搜尋平台</small>
+                      </div>
+                      <div class="nav-badge">
+                        <span class="badge bg-success">9+</span>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- 快速操作 -->
+              <div class="quick-actions mb-4">
+                <h6 class="section-title">
+                  <i class="fas fa-bolt me-2"></i>快速操作
+                </h6>
+                <div class="action-buttons">
+                  <button
+                    class="action-btn"
+                    onclick="clearSearchHistory()"
+                    title="清除搜尋記錄"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                  <button
+                    class="action-btn"
+                    onclick="exportSettings()"
+                    title="匯出設定"
+                  >
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button
+                    class="action-btn"
+                    onclick="toggleTheme()"
+                    title="切換主題"
+                    id="themeToggleBtn"
+                  >
+                    <i class="fas fa-palette" id="themeIcon"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 系統狀態 -->
+              <div class="system-status">
+                <div class="status-item">
+                  <div class="status-indicator online"></div>
+                  <span class="status-text">所有平台正常</span>
+                </div>
+                <div class="status-item">
+                  <div class="status-indicator online"></div>
+                  <span class="status-text">AI 路由運行中</span>
+                </div>
+              </div>
             </div>
+            <!-- 結束 sidebar-content -->
+          </div>
         </div>
+
+        <!-- 主內容區域 -->
+        <div class="col-md-9 col-lg-10">
+          <main class="main-content" id="main-content" role="main">
+            <!-- Flash 訊息 -->
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %} {% for category, message in messages %}
+            <div
+              class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show"
+              role="alert"
+            >
+              <i
+                class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }} me-2"
+              ></i>
+              {{ message }}
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+              ></button>
+            </div>
+            {% endfor %} {% endif %} {% endwith %} {% block content %}{%
+            endblock %}
+          </main>
+        </div>
+      </div>
     </div>
-    
+
     <!-- 頁腳（精簡版） -->
     <footer class="footer">
-        <div class="container py-4">
-            <div class="row gy-4">
-                <div class="col-md-4 text-md-start text-center">
-                    <h5 class="mb-2"><i class="fas fa-briefcase me-2"></i>jobseeker</h5>
-                    <p class="text-muted mb-2">AI 智能職位搜尋平台，快速整合多站點結果。</p>
-                    <div class="d-flex gap-3 justify-content-md-start justify-content-center">
-                        <a href="https://github.com/jason660519/jobseeker" target="_blank" class="text-muted"><i class="fab fa-github fa-lg"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-4 text-md-center text-center">
-                    <h5 class="mb-2">快速連結</h5>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-1"><a href="{{ url_for('index') }}" class="text-muted">首頁搜尋</a></li>
-                        <li class="mb-1"><a href="{{ url_for('demo_results') }}" class="text-muted">測試結果</a></li>
-                        <li class="mb-1"><a href="{{ url_for('docs_page') }}" class="text-muted">Doc</a></li>
-                        <li class="mb-1"><a href="{{ url_for('donate_page') }}" class="text-muted">Donate</a></li>
-                        <li class="mb-1"><a href="/api/sites" class="text-muted">API 清單</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 text-md-end text-center">
-                    <h5 class="mb-2">聯絡我們</h5>
-                    <p class="mb-1">
-                        <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#contactModal">
-                            <i class="fas fa-envelope me-2"></i>聯絡我們
-                        </a>
-                    </p>
-                    <button class="btn btn-outline-light btn-sm" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-                        <i class="fas fa-arrow-up me-1"></i> 回到頂部
-                    </button>
-                </div>
+      <div class="container py-4">
+        <div class="row gy-4">
+          <div class="col-md-4 text-md-start text-center">
+            <h5 class="mb-2"><i class="fas fa-briefcase me-2"></i>jobseeker</h5>
+            <p class="text-muted mb-2">
+              AI 智能職位搜尋平台，快速整合多站點結果。
+            </p>
+            <div
+              class="d-flex gap-3 justify-content-md-start justify-content-center"
+            >
+              <a
+                href="https://github.com/jason660519/jobseeker"
+                target="_blank"
+                class="text-muted"
+                ><i class="fab fa-github fa-lg"></i
+              ></a>
             </div>
-            <hr class="my-4" style="border-color: #475569;">
-            <div class="d-flex justify-content-between flex-column flex-md-row text-muted small">
-                <span>&copy; 2025 jobseeker. All rights reserved.</span>
-                <span>Powered by AI Routing</span>
-            </div>
+          </div>
+          <div class="col-md-4 text-md-center text-center">
+            <h5 class="mb-2">快速連結</h5>
+            <ul class="list-unstyled mb-0">
+              <li class="mb-1">
+                <a href="{{ url_for('index') }}" class="text-muted">首頁搜尋</a>
+              </li>
+              <li class="mb-1">
+                <a href="{{ url_for('demo_results') }}" class="text-muted"
+                  >測試結果</a
+                >
+              </li>
+              <li class="mb-1">
+                <a href="{{ url_for('docs_page') }}" class="text-muted">Doc</a>
+              </li>
+              <li class="mb-1">
+                <a href="{{ url_for('donate_page') }}" class="text-muted"
+                  >Donate</a
+                >
+              </li>
+              <li class="mb-1">
+                <a href="/api/sites" class="text-muted">API 清單</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4 text-md-end text-center">
+            <h5 class="mb-2">聯絡我們</h5>
+            <p class="mb-1">
+              <a
+                href="#"
+                class="text-muted"
+                data-bs-toggle="modal"
+                data-bs-target="#contactModal"
+              >
+                <i class="fas fa-envelope me-2"></i>聯絡我們
+              </a>
+            </p>
+            <button
+              class="btn btn-outline-light btn-sm"
+              onclick="window.scrollTo({top:0, behavior:'smooth'})"
+            >
+              <i class="fas fa-arrow-up me-1"></i> 回到頂部
+            </button>
+          </div>
         </div>
+        <hr class="my-4" style="border-color: #475569" />
+        <div
+          class="d-flex justify-content-between flex-column flex-md-row text-muted small"
+        >
+          <span>&copy; 2025 jobseeker. All rights reserved.</span>
+          <span>Powered by AI Routing</span>
+        </div>
+      </div>
     </footer>
 
+    <!-- 移動端底部導航 -->
+    <nav class="mobile-bottom-nav" role="navigation" aria-label="底部導航">
+      <a
+        href="{{ url_for('index') }}"
+        class="mobile-nav-item {% if request.endpoint == 'index' %}active{% endif %}"
+        aria-label="前往首頁"
+      >
+        <i class="fas fa-home" aria-hidden="true"></i>
+        <span>首頁</span>
+      </a>
+      <a
+        href="{{ url_for('demo_results') }}"
+        class="mobile-nav-item {% if request.endpoint == 'demo_results' %}active{% endif %}"
+        aria-label="查看測試結果"
+      >
+        <i class="fas fa-chart-bar" aria-hidden="true"></i>
+        <span>測試</span>
+      </a>
+      <a
+        href="{{ url_for('docs_page') }}"
+        class="mobile-nav-item"
+        aria-label="查看文檔"
+      >
+        <i class="fas fa-book" aria-hidden="true"></i>
+        <span>文檔</span>
+      </a>
+      {% if current_user.is_authenticated %}
+      <a
+        href="{{ url_for('favorites_page') }}"
+        class="mobile-nav-item"
+        aria-label="查看我的收藏"
+      >
+        <i class="fas fa-heart" aria-hidden="true"></i>
+        <span>收藏</span>
+      </a>
+      {% else %}
+      <a
+        href="{{ url_for('login') }}"
+        class="mobile-nav-item"
+        aria-label="登入帳戶"
+      >
+        <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+        <span>登入</span>
+      </a>
+      {% endif %}
+    </nav>
+
     <!-- 網站選擇器彈出視窗 -->
-    <div class="modal fade" id="siteSelector" tabindex="-1" aria-labelledby="siteSelectorLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="siteSelectorLabel">
-                        <i class="fas fa-globe me-2"></i>選擇搜尋網站
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div
+      class="modal fade"
+      id="siteSelector"
+      tabindex="-1"
+      aria-labelledby="siteSelectorLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="siteSelectorLabel">
+              <i class="fas fa-globe me-2"></i>選擇搜尋網站
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted mb-3">請選擇您要搜尋的求職網站：</p>
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="linkedin"
+                    id="site_linkedin"
+                    checked
+                  />
+                  <label class="form-check-label" for="site_linkedin">
+                    <i class="fab fa-linkedin text-primary me-2"></i>LinkedIn
+                  </label>
                 </div>
-                <div class="modal-body">
-                    <p class="text-muted mb-3">請選擇您要搜尋的求職網站：</p>
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="linkedin" id="site_linkedin" checked>
-                                <label class="form-check-label" for="site_linkedin">
-                                    <i class="fab fa-linkedin text-primary me-2"></i>LinkedIn
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="indeed" id="site_indeed" checked>
-                                <label class="form-check-label" for="site_indeed">
-                                    <i class="fas fa-briefcase text-info me-2"></i>Indeed
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="glassdoor" id="site_glassdoor" checked>
-                                <label class="form-check-label" for="site_glassdoor">
-                                    <i class="fas fa-building text-success me-2"></i>Glassdoor
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="zip_recruiter" id="site_ziprecruiter" checked>
-                                <label class="form-check-label" for="site_ziprecruiter">
-                                    <i class="fas fa-search text-warning me-2"></i>ZipRecruiter
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="seek" id="site_seek">
-                                <label class="form-check-label" for="site_seek">
-                                    <i class="fas fa-compass text-danger me-2"></i>Seek
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="google" id="site_google">
-                                <label class="form-check-label" for="site_google">
-                                    <i class="fab fa-google text-primary me-2"></i>Google Jobs
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="104" id="site_104">
-                                <label class="form-check-label" for="site_104">
-                                    <i class="fas fa-building text-primary me-2"></i>104 人力
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="1111" id="site_1111">
-                                <label class="form-check-label" for="site_1111">
-                                    <i class="fas fa-building text-primary me-2"></i>1111 人力
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-outline-secondary" onclick="selectAllSites()">
-                            <i class="fas fa-check-double me-1"></i>全選
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary" onclick="clearAllSites()">
-                            <i class="fas fa-times me-1"></i>清除
-                        </button>
-                    </div>
+              </div>
+              <div class="col-6">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="indeed"
+                    id="site_indeed"
+                    checked
+                  />
+                  <label class="form-check-label" for="site_indeed">
+                    <i class="fas fa-briefcase text-info me-2"></i>Indeed
+                  </label>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="applySiteSelection()">確認選擇</button>
+              </div>
+              <div class="col-6">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="glassdoor"
+                    id="site_glassdoor"
+                    checked
+                  />
+                  <label class="form-check-label" for="site_glassdoor">
+                    <i class="fas fa-building text-success me-2"></i>Glassdoor
+                  </label>
                 </div>
+              </div>
+              <div class="col-6">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="zip_recruiter"
+                    id="site_ziprecruiter"
+                    checked
+                  />
+                  <label class="form-check-label" for="site_ziprecruiter">
+                    <i class="fas fa-search text-warning me-2"></i>ZipRecruiter
+                  </label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="seek"
+                    id="site_seek"
+                  />
+                  <label class="form-check-label" for="site_seek">
+                    <i class="fas fa-compass text-danger me-2"></i>Seek
+                  </label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="google"
+                    id="site_google"
+                  />
+                  <label class="form-check-label" for="site_google">
+                    <i class="fab fa-google text-primary me-2"></i>Google Jobs
+                  </label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="104"
+                    id="site_104"
+                  />
+                  <label class="form-check-label" for="site_104">
+                    <i class="fas fa-building text-primary me-2"></i>104 人力
+                  </label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value="1111"
+                    id="site_1111"
+                  />
+                  <label class="form-check-label" for="site_1111">
+                    <i class="fas fa-building text-primary me-2"></i>1111 人力
+                  </label>
+                </div>
+              </div>
             </div>
+            <hr />
+            <div class="d-flex justify-content-between">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                onclick="selectAllSites()"
+              >
+                <i class="fas fa-check-double me-1"></i>全選
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                onclick="clearAllSites()"
+              >
+                <i class="fas fa-times me-1"></i>清除
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="applySiteSelection()"
+            >
+              確認選擇
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
-
-
     <!-- 聯絡我們 Modal -->
-    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="contactModalLabel"><i class="fas fa-envelope me-2"></i>聯絡我們</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="mb-2">有任何建議或合作需求，歡迎與我們聯繫：</p>
-                    <p class="mb-1"><i class="fas fa-envelope me-2"></i><a href="mailto:jason660519@gmail.com">jason660519@gmail.com</a></p>
-                    <p class="mb-0"><i class="fab fa-github me-2"></i><a href="https://github.com/jason660519/jobseeker" target="_blank">GitHub 專案</a></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                    <a class="btn btn-primary" href="{{ url_for('demo_results') }}"><i class="fas fa-chart-bar me-1"></i> 查看 Demo</a>
-                </div>
-            </div>
+    <div
+      class="modal fade"
+      id="contactModal"
+      tabindex="-1"
+      aria-labelledby="contactModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="contactModalLabel">
+              <i class="fas fa-envelope me-2"></i>聯絡我們
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2">有任何建議或合作需求，歡迎與我們聯繫：</p>
+            <p class="mb-1">
+              <i class="fas fa-envelope me-2"></i
+              ><a href="mailto:jason660519@gmail.com">jason660519@gmail.com</a>
+            </p>
+            <p class="mb-0">
+              <i class="fab fa-github me-2"></i
+              ><a
+                href="https://github.com/jason660519/jobseeker"
+                target="_blank"
+                >GitHub 專案</a
+              >
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              關閉
+            </button>
+            <a class="btn btn-primary" href="{{ url_for('demo_results') }}"
+              ><i class="fas fa-chart-bar me-1"></i> 查看 Demo</a
+            >
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    
+
     <script>
-        // 側邊欄切換功能
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            sidebar.classList.toggle('show');
-            if (overlay) {
-                overlay.classList.toggle('show');
-            }
-        }
-        
-        // 下載範例CSV功能
-        function downloadSample() {
-            const link = document.createElement('a');
-            link.href = '/static/csv_format_sample.csv';
-            link.download = 'csv_format_sample.csv';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-        
-        // 響應式側邊欄處理
-        window.addEventListener('resize', function() {
-            const sidebar = document.getElementById('sidebar');
-            if (window.innerWidth >= 768) {
-                sidebar.classList.remove('show');
-            }
-        });
-        
-        // 點擊主內容區域時關閉側邊欄（移動設備）
-        document.addEventListener('click', function(e) {
-            const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.querySelector('.sidebar-toggle');
-            
-            if (window.innerWidth < 768 && 
-                !sidebar.contains(e.target) && 
-                !sidebarToggle.contains(e.target)) {
-                sidebar.classList.remove('show');
-            }
-        });
-        
-        // 網站選擇器功能
-        let selectedSites = ['linkedin', 'indeed', 'glassdoor', 'zip_recruiter']; // 預設選擇的網站
-        
-        // 顯示網站選擇器彈出視窗
-        function showSiteSelector() {
-            const modal = new bootstrap.Modal(document.getElementById('siteSelector'));
-            modal.show();
-        }
-        
-        // 全選網站
-        function selectAllSites() {
-            const checkboxes = document.querySelectorAll('#siteSelector input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
-        }
-        
-        // 清除所有選擇
-        function clearAllSites() {
-            const checkboxes = document.querySelectorAll('#siteSelector input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
-        }
-        
-        // 應用網站選擇
-        function applySiteSelection() {
-            const checkboxes = document.querySelectorAll('#siteSelector input[type="checkbox"]:checked');
-            selectedSites = Array.from(checkboxes).map(cb => cb.value);
-            
-            // 更新搜尋表單中的隱藏欄位
-            updateSearchFormSites();
-            
-            // 關閉彈出視窗
-            const modal = bootstrap.Modal.getInstance(document.getElementById('siteSelector'));
-            modal.hide();
-            
-            // 顯示選擇結果
-            if (selectedSites.length > 0) {
-                console.log('已選擇的網站:', selectedSites);
-            } else {
-                alert('請至少選擇一個搜尋網站！');
-            }
-        }
-        
-        // 更新搜尋表單中的網站選擇
-        function updateSearchFormSites() {
-            // 移除現有的隱藏欄位
-            const existingFields = document.querySelectorAll('input[name="selected_sites"]');
-            existingFields.forEach(field => field.remove());
-            
-            // 添加新的隱藏欄位
-            const form = document.getElementById('searchForm');
-            if (form && selectedSites.length > 0) {
-                const hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'selected_sites';
-                hiddenInput.value = selectedSites.join(',');
-                form.appendChild(hiddenInput);
-            }
-        }
-        
-        // 頁面載入時初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            updateSearchFormSites();
-        });
+      // 側邊欄切換功能
+      function toggleSidebar() {
+          const sidebar = document.getElementById('sidebar');
+          const overlay = document.getElementById('sidebarOverlay');
 
-        // Header 搜尋提交：將參數暫存並跳到首頁觸發搜尋
-        function triggerHeaderSearch(e) {
-            if (e) e.preventDefault();
-            const q = document.getElementById('navQuery')?.value?.trim() || '';
-            if (!q) {
-                // 簡單提示
-                alert('請輸入搜尋關鍵字');
-                return false;
-            }
-            const payload = {
-                query: q,
-                // 從現有站點選擇器帶入（若有）
-                selected_sites: (Array.isArray(selectedSites) && selectedSites.length) ? selectedSites.join(',') : ''
-            };
-            try { localStorage.setItem('pendingSearch', JSON.stringify(payload)); } catch (err) {}
-            // 導向首頁並捲到搜尋
-            window.location.href = '{{ url_for('index') }}#searchSection';
-            return false;
-        }
+          sidebar.classList.toggle('show');
+          if (overlay) {
+              overlay.classList.toggle('show');
+          }
+      }
 
-        // 語音輸入（Web Speech API）
-        let recognitionInstance = null;
-        let isRecording = false;
-        function setMicUI(active) {
-            const btn = document.getElementById('navMicBtn');
-            const grp = document.getElementById('navSearchGroup');
-            if (btn) btn.classList.toggle('mic-active', !!active);
-            if (btn) btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-            if (grp) grp.classList.toggle('recording', !!active);
-        }
-        function stopVoiceInput() {
-            try { if (recognitionInstance) recognitionInstance.stop(); } catch (e) {}
-            isRecording = false;
-            setMicUI(false);
-        }
-        function toggleVoiceInput() {
-            if (isRecording) { stopVoiceInput(); return; }
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                alert('此瀏覽器不支援語音輸入');
-                return;
-            }
-            if (!recognitionInstance) {
-                recognitionInstance = new SpeechRecognition();
-                recognitionInstance.lang = 'zh-TW';
-                recognitionInstance.interimResults = false;
-                recognitionInstance.maxAlternatives = 1;
-                recognitionInstance.onresult = (event) => {
-                    const transcript = event.results[0][0].transcript || '';
-                    const input = document.getElementById('navQuery');
-                    if (input) {
-                        input.value = transcript;
-                        // 自動觸發搜尋
-                        triggerHeaderSearch();
-                    }
-                };
-                recognitionInstance.onerror = () => { isRecording = false; setMicUI(false); };
-                recognitionInstance.onend = () => { isRecording = false; setMicUI(false); };
-                recognitionInstance.onstart = () => { isRecording = true; setMicUI(true); };
-            }
-            try { recognitionInstance.start(); } catch (e) {}
-        }
+      // 下載範例CSV功能
+      function downloadSample() {
+          const link = document.createElement('a');
+          link.href = '/static/csv_format_sample.csv';
+          link.download = 'csv_format_sample.csv';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      }
+
+      // 響應式側邊欄處理 - 暫時禁用
+      // window.addEventListener('resize', function() { ... });
+      // document.addEventListener('click', function(e) { ... });
+
+      // 網站選擇器功能
+      let selectedSites = ['linkedin', 'indeed', 'glassdoor', 'zip_recruiter']; // 預設選擇的網站
+
+      // 顯示網站選擇器彈出視窗
+      function showSiteSelector() {
+          const modal = new bootstrap.Modal(document.getElementById('siteSelector'));
+          modal.show();
+      }
+
+      // 全選網站
+      function selectAllSites() {
+          const checkboxes = document.querySelectorAll('#siteSelector input[type="checkbox"]');
+          checkboxes.forEach(checkbox => {
+              checkbox.checked = true;
+          });
+      }
+
+      // 清除所有選擇
+      function clearAllSites() {
+          const checkboxes = document.querySelectorAll('#siteSelector input[type="checkbox"]');
+          checkboxes.forEach(checkbox => {
+              checkbox.checked = false;
+          });
+      }
+
+      // 應用網站選擇
+      function applySiteSelection() {
+          const checkboxes = document.querySelectorAll('#siteSelector input[type="checkbox"]:checked');
+          selectedSites = Array.from(checkboxes).map(cb => cb.value);
+
+          // 更新搜尋表單中的隱藏欄位
+          updateSearchFormSites();
+
+          // 關閉彈出視窗
+          const modal = bootstrap.Modal.getInstance(document.getElementById('siteSelector'));
+          modal.hide();
+
+          // 顯示選擇結果
+          if (selectedSites.length > 0) {
+              console.log('已選擇的網站:', selectedSites);
+          } else {
+              alert('請至少選擇一個搜尋網站！');
+          }
+      }
+
+      // 更新搜尋表單中的網站選擇
+      function updateSearchFormSites() {
+          // 移除現有的隱藏欄位
+          const existingFields = document.querySelectorAll('input[name="selected_sites"]');
+          existingFields.forEach(field => field.remove());
+
+          // 添加新的隱藏欄位
+          const form = document.getElementById('searchForm');
+          if (form && selectedSites.length > 0) {
+              const hiddenInput = document.createElement('input');
+              hiddenInput.type = 'hidden';
+              hiddenInput.name = 'selected_sites';
+              hiddenInput.value = selectedSites.join(',');
+              form.appendChild(hiddenInput);
+          }
+      }
+
+      // 頁面載入時初始化 - 移除重複的監聽器
+
+      // Header 搜尋提交：將參數暫存並跳到首頁觸發搜尋
+      function triggerHeaderSearch(e) {
+          if (e) e.preventDefault();
+          const q = document.getElementById('navQuery')?.value?.trim() || '';
+          if (!q) {
+              // 簡單提示
+              alert('請輸入搜尋關鍵字');
+              return false;
+          }
+          const payload = {
+              query: q,
+              // 從現有站點選擇器帶入（若有）
+              selected_sites: (Array.isArray(selectedSites) && selectedSites.length) ? selectedSites.join(',') : ''
+          };
+          try { localStorage.setItem('pendingSearch', JSON.stringify(payload)); } catch (err) {}
+          // 導向首頁並捲到搜尋
+          window.location.href = '{{ url_for('index') }}#searchSection';
+          return false;
+      }
+
+      // 語音輸入（Web Speech API）
+      let recognitionInstance = null;
+      let isRecording = false;
+      function setMicUI(active) {
+          const btn = document.getElementById('navMicBtn');
+          const grp = document.getElementById('navSearchGroup');
+          if (btn) btn.classList.toggle('mic-active', !!active);
+          if (btn) btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+          if (grp) grp.classList.toggle('recording', !!active);
+      }
+      function stopVoiceInput() {
+          try { if (recognitionInstance) recognitionInstance.stop(); } catch (e) {}
+          isRecording = false;
+          setMicUI(false);
+      }
+      function toggleVoiceInput() {
+          if (isRecording) { stopVoiceInput(); return; }
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (!SpeechRecognition) {
+              alert('此瀏覽器不支援語音輸入');
+              return;
+          }
+          if (!recognitionInstance) {
+              recognitionInstance = new SpeechRecognition();
+              recognitionInstance.lang = 'zh-TW';
+              recognitionInstance.interimResults = false;
+              recognitionInstance.maxAlternatives = 1;
+              recognitionInstance.onresult = (event) => {
+                  const transcript = event.results[0][0].transcript || '';
+                  const input = document.getElementById('navQuery');
+                  if (input) {
+                      input.value = transcript;
+                      // 自動觸發搜尋
+                      triggerHeaderSearch();
+                  }
+              };
+              recognitionInstance.onerror = () => { isRecording = false; setMicUI(false); };
+              recognitionInstance.onend = () => { isRecording = false; setMicUI(false); };
+              recognitionInstance.onstart = () => { isRecording = true; setMicUI(true); };
+          }
+          try { recognitionInstance.start(); } catch (e) {}
+      }
+
+      // 效能優化：延遲載入非關鍵資源
+      function loadNonCriticalResources() {
+          // 預載入重要頁面
+          const importantPages = ['/demo_results', '/docs'];
+          importantPages.forEach(url => {
+              const link = document.createElement('link');
+              link.rel = 'prefetch';
+              link.href = url;
+              document.head.appendChild(link);
+          });
+      }
+
+      // 效能優化：圖片延遲載入
+      function lazyLoadImages() {
+          if ('IntersectionObserver' in window) {
+              const imageObserver = new IntersectionObserver((entries, observer) => {
+                  entries.forEach(entry => {
+                      if (entry.isIntersecting) {
+                          const img = entry.target;
+                          img.src = img.dataset.src;
+                          img.classList.remove('lazy');
+                          imageObserver.unobserve(img);
+                      }
+                  });
+              });
+
+              document.querySelectorAll('img[data-src]').forEach(img => {
+                  imageObserver.observe(img);
+              });
+          }
+      }
+
+      // 效能優化：防抖動搜尋
+      function debounce(func, wait) {
+          let timeout;
+          return function executedFunction(...args) {
+              const later = () => {
+                  clearTimeout(timeout);
+                  func(...args);
+              };
+              clearTimeout(timeout);
+              timeout = setTimeout(later, wait);
+          };
+      }
+
+      // 效能優化：虛擬滾動（適用於大量職位列表）
+      function initVirtualScroll() {
+          const container = document.getElementById('jobsList');
+          if (!container) return;
+
+          const items = container.children;
+          if (items.length < 50) return; // 只有大量項目時才啟用
+
+          // 實現簡單的虛擬滾動
+          const itemHeight = 200; // 預估項目高度
+          const visibleItems = Math.ceil(window.innerHeight / itemHeight) + 2;
+
+          // 只渲染可見項目
+          for (let i = 0; i < items.length; i++) {
+              if (i < visibleItems) {
+                  items[i].style.display = 'block';
+              } else {
+                  items[i].style.display = 'none';
+              }
+          }
+      }
+
+             // Header 滾動效果 - 已移除變色效果
+       function handleHeaderScroll() {
+           // 保持 header 固定，但不改變樣式
+           // 移除所有滾動時的視覺變化
+       }
+
+       // 強制確保 header 固定
+       function ensureHeaderFixed() {
+           const navbar = document.querySelector('.navbar');
+           if (navbar) {
+               // 強制設定固定定位
+               navbar.style.position = 'fixed';
+               navbar.style.top = '0';
+               navbar.style.left = '0';
+               navbar.style.right = '0';
+               navbar.style.zIndex = '9999';
+               navbar.style.width = '100%';
+           }
+       }
+
+       // 監聽滾動事件 - 暫時禁用
+       // window.addEventListener('scroll', handleHeaderScroll);
+
+                     // 頁面載入完成後執行優化 - 最簡化版本
+       // Sidebar 功能
+       function updateSidebarStats() {
+           // 模擬統計數據更新
+           const todaySearches = Math.floor(Math.random() * 50) + 10;
+           const todayJobs = Math.floor(Math.random() * 200) + 50;
+
+           document.getElementById('todaySearches').textContent = todaySearches;
+           document.getElementById('todayJobs').textContent = todayJobs;
+       }
+
+       function clearSearchHistory() {
+           if (confirm('確定要清除搜尋記錄嗎？')) {
+               localStorage.removeItem('searchHistory');
+               alert('搜尋記錄已清除');
+           }
+       }
+
+       function exportSettings() {
+           const settings = {
+               selectedSites: selectedSites || [],
+               theme: 'light',
+               language: 'zh-TW'
+           };
+
+           const dataStr = JSON.stringify(settings, null, 2);
+           const dataBlob = new Blob([dataStr], {type: 'application/json'});
+
+           const link = document.createElement('a');
+           link.href = URL.createObjectURL(dataBlob);
+           link.download = 'jobspy-settings.json';
+           link.click();
+       }
+
+       function toggleTheme() {
+           const themes = ['ocean', 'forest', 'sunset'];
+           const currentTheme = document.documentElement.getAttribute('data-theme') || 'ocean';
+           const currentIndex = themes.indexOf(currentTheme);
+           const nextIndex = (currentIndex + 1) % themes.length;
+           const nextTheme = themes[nextIndex];
+
+           // 切換主題
+           document.documentElement.setAttribute('data-theme', nextTheme);
+
+           // 更新按鈕圖標和提示
+           const themeIcon = document.getElementById('themeIcon');
+           const themeBtn = document.getElementById('themeToggleBtn');
+
+           const themeIcons = {
+               'ocean': 'fas fa-water',
+               'forest': 'fas fa-leaf',
+               'sunset': 'fas fa-sun'
+           };
+
+           const themeNames = {
+               'ocean': '海洋藍',
+               'forest': '森林綠',
+               'sunset': '日落橙'
+           };
+
+           themeIcon.className = themeIcons[nextTheme];
+           themeBtn.title = `當前主題：${themeNames[nextTheme]} - 點擊切換`;
+
+           // 保存主題設定
+           localStorage.setItem('selectedTheme', nextTheme);
+
+           // 顯示切換提示
+           showThemeNotification(themeNames[nextTheme]);
+       }
+
+       function showThemeNotification(themeName) {
+           // 創建通知元素
+           const notification = document.createElement('div');
+           notification.className = 'theme-notification';
+           notification.innerHTML = `
+               <i class="fas fa-palette"></i>
+               <span>已切換至 ${themeName} 主題</span>
+           `;
+
+           // 添加樣式
+           notification.style.cssText = `
+               position: fixed;
+               top: 100px;
+               right: 20px;
+               background: var(--primary-color);
+               color: white;
+               padding: 12px 20px;
+               border-radius: 8px;
+               box-shadow: var(--shadow-lg);
+               z-index: 9999;
+               display: flex;
+               align-items: center;
+               gap: 8px;
+               font-size: 14px;
+               font-weight: 500;
+               transform: translateX(100%);
+               transition: transform 0.3s ease;
+           `;
+
+           document.body.appendChild(notification);
+
+           // 顯示動畫
+           setTimeout(() => {
+               notification.style.transform = 'translateX(0)';
+           }, 100);
+
+           // 自動隱藏
+           setTimeout(() => {
+               notification.style.transform = 'translateX(100%)';
+               setTimeout(() => {
+                   document.body.removeChild(notification);
+               }, 300);
+           }, 2000);
+       }
+
+       function initTheme() {
+           // 載入保存的主題
+           const savedTheme = localStorage.getItem('selectedTheme') || 'ocean';
+           document.documentElement.setAttribute('data-theme', savedTheme);
+
+           // 更新按鈕狀態
+           const themeIcon = document.getElementById('themeIcon');
+           const themeBtn = document.getElementById('themeToggleBtn');
+
+           const themeIcons = {
+               'ocean': 'fas fa-water',
+               'forest': 'fas fa-leaf',
+               'sunset': 'fas fa-sun'
+           };
+
+           const themeNames = {
+               'ocean': '海洋藍',
+               'forest': '森林綠',
+               'sunset': '日落橙'
+           };
+
+           if (themeIcon && themeBtn) {
+               themeIcon.className = themeIcons[savedTheme];
+               themeBtn.title = `當前主題：${themeNames[savedTheme]} - 點擊切換`;
+           }
+       }
+
+       // 定期更新 sidebar 統計 - 暫時禁用
+       // setInterval(function() { ... }, 30000);
+
+       // 頁面載入完成後執行初始化
+       document.addEventListener('DOMContentLoaded', function() {
+           console.log('Page loaded successfully');
+
+           try {
+               // 初始化主題
+               initTheme();
+               console.log('Theme initialized');
+           } catch (error) {
+               console.error('Error initializing theme:', error);
+           }
+       });
     </script>
-    
+
     {% block extra_js %}{% endblock %}
-</body>
+  </body>
 </html>

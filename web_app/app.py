@@ -1001,12 +1001,18 @@ def donate_page():
 
 
 if __name__ == '__main__':
+    # 從環境變數獲取主機地址，預設為 0.0.0.0 以支援外部訪問
+    host = os.environ.get('HOST', '0.0.0.0')
+    port = int(os.environ.get('PORT', 5000))
+    
     print("🚀 jobseeker 網頁應用啟動中...")
-    print("📱 訪問 http://localhost:5000 開始使用")
-    print("📊 API 文檔: http://localhost:5000/api/sites")
+    print(f"📱 本地訪問: http://localhost:{port}")
+    print(f"📱 網路訪問: http://192.168.1.181:{port}")
+    print(f"📊 API 文檔: http://localhost:{port}/api/sites")
+    print(f"🔧 監聽地址: {host}:{port}")
     
     app.run(
-        host='0.0.0.0',
-        port=int(os.environ.get('PORT', 5000)),
+        host=host,
+        port=port,
         debug=app.config['DEBUG']
     )

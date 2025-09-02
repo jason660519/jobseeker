@@ -1,547 +1,807 @@
-{% extends "base.html" %}
-
-{% block title %}jobseeker - 智能職位搜尋平台{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}jobseeker - 智能職位搜尋平台{%
+endblock %} {% block content %}
 <div class="container-fluid px-4">
-    <!-- 歡迎區塊 -->
-    <div class="welcome-section text-center mb-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <h1 class="display-4 fw-bold mb-4">
-                    <i class="fas fa-search text-primary me-3"></i>
-                    找到您的理想工作
-                </h1>
-                <p class="lead text-muted mb-4">
-                    使用 AI 驅動的智能搜尋引擎，從多個求職平台為您找到最適合的職位機會
-                </p>
-                
-                <!-- 統計數據 -->
-                <div class="row g-4 mb-5">
-                    <div class="col-md-3 col-6">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 class="stat-number">9</h3>
-                                <p class="stat-label">支援平台</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 class="stat-number">50+</h3>
-                                <p class="stat-label">國家地區</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 class="stat-number">AI</h3>
-                                <p class="stat-label">智能路由</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 class="stat-number">24/7</h3>
-                                <p class="stat-label">即時搜尋</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<!-- 搜尋表單 -->
-<div id="searchSection" class="search-section">
+  <!-- 歡迎區塊 -->
+  <div class="welcome-section text-center mb-5">
     <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="card search-card">
-                <div class="card-header">
-                    <h4 class="mb-0">
-                        <i class="fas fa-search me-2 text-primary"></i>
-                        智能職位搜尋
-                    </h4>
-                    <p class="text-muted mb-0 mt-2">輸入您的需求，AI將為您找到最適合的工作機會</p>
-                </div>
-                <div class="card-body">
-                    <form id="searchForm" method="POST" action="{{ url_for('search_jobs') }}">
-                        <div class="row g-4">
-                            <!-- 單一輸入：由 LLM 判斷意圖（職缺/地點/偏好） -->
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="query" name="query" 
-                                           placeholder="輸入想找的工作、地點或需求..." required>
-                                    <label for="query">
-                                        <i class="fas fa-briefcase me-2"></i>搜尋需求
-                                    </label>
-                                </div>
-                                <div class="form-text">例如：台北 前端工程師 遠端｜新加坡 資料科學｜AI 工程師</div>
-                            </div>
-                            
-                            <!-- 結果數量 -->
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <select class="form-select" id="results_wanted" name="results_wanted">
-                                        <option value="10">10 個結果</option>
-                                        <option value="25" selected>25 個結果</option>
-                                        <option value="50">50 個結果</option>
-                                        <option value="100">100 個結果</option>
-                                    </select>
-                                    <label for="results_wanted">
-                                        <i class="fas fa-list-ol me-2"></i>結果數量
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <!-- 發布時間 -->
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <select class="form-select" id="hours_old" name="hours_old">
-                                        <option value="">不限時間</option>
-                                        <option value="24">1 天內</option>
-                                        <option value="72">3 天內</option>
-                                        <option value="168" selected>7 天內</option>
-                                        <option value="336">14 天內</option>
-                                        <option value="720">30 天內</option>
-                                    </select>
-                                    <label for="hours_old">
-                                        <i class="fas fa-calendar-alt me-2"></i>發布時間
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- 搜尋按鈕 -->
-                        <div class="row mt-4">
-                            <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-primary btn-lg px-5 py-3">
-                                    <i class="fas fa-search me-2"></i>
-                                    開始搜尋職位
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+      <div class="col-lg-10">
+        <div class="hero-content">
+          <h1 class="display-4 fw-bold mb-4">
+            <i class="fas fa-search text-primary me-3"></i>
+            找到您的理想工作
+          </h1>
+          <p class="lead text-muted mb-4">
+            使用 AI 驅動的智能搜尋引擎，從多個求職平台為您找到最適合的職位機會
+          </p>
+          <div class="hero-features mb-4">
+            <span class="badge bg-primary me-2 mb-2">
+              <i class="fas fa-robot me-1"></i>AI 智能路由
+            </span>
+            <span class="badge bg-success me-2 mb-2">
+              <i class="fas fa-globe me-1"></i>9+ 平台支援
+            </span>
+            <span class="badge bg-info me-2 mb-2">
+              <i class="fas fa-bolt me-1"></i>即時搜尋
+            </span>
+          </div>
+        </div>
+
+        <!-- 統計數據 -->
+        <div class="row g-4 mb-5">
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-globe"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number">9</h3>
+                <p class="stat-label">支援平台</p>
+              </div>
             </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number">50+</h3>
+                <p class="stat-label">國家地區</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-robot"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number">AI</h3>
+                <p class="stat-label">智能路由</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-content">
+                <h3 class="stat-number">24/7</h3>
+                <p class="stat-label">即時搜尋</p>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- 載入中動畫 -->
-<div id="loadingSection" class="loading-container" style="display: none;">
+  <!-- 搜尋表單 -->
+  <div id="searchSection" class="search-section">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="card search-card">
+          <div class="card-header">
+            <h4 class="mb-0">
+              <i class="fas fa-search me-2 text-primary"></i>
+              智能職位搜尋
+            </h4>
+            <p class="text-muted mb-0 mt-2">
+              告訴我們您想要什麼工作，AI 會為您找到最適合的機會
+            </p>
+          </div>
+          <div class="card-body">
+            <form
+              id="searchForm"
+              method="POST"
+              action="{{ url_for('search_jobs') }}"
+              role="search"
+              aria-label="職位搜尋表單"
+            >
+              <!-- 主要搜尋區域 -->
+              <div class="search-main">
+                <div class="row g-3">
+                  <!-- 職位關鍵字 -->
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="jobTitle"
+                        name="jobTitle"
+                        placeholder="例如：軟體工程師、產品經理"
+                        aria-label="職位名稱"
+                      />
+                      <label for="jobTitle">
+                        <i class="fas fa-briefcase me-2"></i>職位名稱
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- 地點 -->
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="location"
+                        name="location"
+                        placeholder="例如：台北、新加坡、遠端"
+                        aria-label="工作地點"
+                      />
+                      <label for="location">
+                        <i class="fas fa-map-marker-alt me-2"></i>工作地點
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 搜尋關鍵字（隱藏，用於後端處理） -->
+                <input type="hidden" id="query" name="query" />
+
+                <!-- 快速選擇工作地點 -->
+                <div class="quick-locations mt-4">
+                  <div class="row g-2">
+                    <div class="col-12">
+                      <small class="text-muted mb-2 d-block">
+                        <i class="fas fa-map-marker-alt me-1"></i
+                        >快速選擇工作地點：
+                      </small>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <button
+                        type="button"
+                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
+                        data-location="台北"
+                      >
+                        台北
+                      </button>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <button
+                        type="button"
+                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
+                        data-location="新竹"
+                      >
+                        新竹
+                      </button>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <button
+                        type="button"
+                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
+                        data-location="台中"
+                      >
+                        台中
+                      </button>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <button
+                        type="button"
+                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
+                        data-location="高雄"
+                      >
+                        高雄
+                      </button>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <button
+                        type="button"
+                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
+                        data-location="新加坡"
+                      >
+                        新加坡
+                      </button>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <button
+                        type="button"
+                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
+                        data-location="遠端"
+                      >
+                        遠端工作
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 基本設定（直接顯示） -->
+                <div class="basic-settings mt-4">
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <label class="form-label">
+                        <i class="fas fa-list-ol me-1"></i>結果數量
+                      </label>
+                      <select
+                        class="form-select"
+                        id="results_wanted"
+                        name="results_wanted"
+                      >
+                        <option value="10">10 個結果</option>
+                        <option value="25" selected>25 個結果</option>
+                        <option value="50">50 個結果</option>
+                        <option value="100">100 個結果</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">
+                        <i class="fas fa-calendar-alt me-1"></i>發布時間
+                      </label>
+                      <select
+                        class="form-select"
+                        id="hours_old"
+                        name="hours_old"
+                      >
+                        <option value="">不限時間</option>
+                        <option value="24">1 天內</option>
+                        <option value="72">3 天內</option>
+                        <option value="168" selected>7 天內</option>
+                        <option value="336">14 天內</option>
+                        <option value="720">30 天內</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">
+                        <i class="fas fa-globe me-1"></i>搜尋平台
+                      </label>
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary w-100"
+                        onclick="showSiteSelector()"
+                      >
+                        <i class="fas fa-cog me-1"></i>選擇平台
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 搜尋按鈕 -->
+              <div class="row mt-4">
+                <div class="col-12 text-center">
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-lg px-5 py-3"
+                  >
+                    <i class="fas fa-search me-2"></i>
+                    開始搜尋職位
+                  </button>
+                  <div class="mt-2">
+                    <small class="text-muted">
+                      <i class="fas fa-shield-alt me-1"></i>
+                      搜尋過程安全且隱私保護
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 載入中動畫 -->
+  <div id="loadingSection" class="loading-container" style="display: none">
     <div class="loading-animation">
-        <div class="spinner"></div>
-        <div class="loading-text">
-            <h4>正在搜尋職位...</h4>
-            <p>我們正在為您搜尋最適合的工作機會</p>
-        </div>
+      <div class="spinner"></div>
+      <div class="loading-text">
+        <h4>正在搜尋職位...</h4>
+        <p>我們正在為您搜尋最適合的工作機會</p>
+      </div>
     </div>
-    
-    <div class="loading-progress">
-        <div class="progress-bar">
-            <div class="progress-fill" id="searchProgress" style="width: 0%"></div>
-        </div>
-        <div class="progress-steps">
-            <div class="step active" id="step1">分析查詢</div>
-            <div class="step" id="step2">選擇平台</div>
-            <div class="step" id="step3">搜尋職位</div>
-            <div class="step" id="step4">整理結果</div>
-        </div>
-    </div>
-</div>
 
-<!-- 搜尋結果區域 -->
-<div id="searchResults" style="display: none;">
+    <div class="loading-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" id="searchProgress" style="width: 0%"></div>
+      </div>
+      <div class="progress-steps">
+        <div class="step active" id="step1">分析查詢</div>
+        <div class="step" id="step2">選擇平台</div>
+        <div class="step" id="step3">搜尋職位</div>
+        <div class="step" id="step4">整理結果</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 搜尋結果區域 -->
+  <div id="searchResults" style="display: none">
     <!-- 結果統計 -->
     <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-md-3">
-                            <h3 class="text-primary mb-1" id="totalJobs">0</h3>
-                            <small class="text-muted">找到職位</small>
-                        </div>
-                        <div class="col-md-3">
-                            <h3 class="text-success mb-1" id="successfulAgents">0</h3>
-                            <small class="text-muted">成功平台</small>
-                        </div>
-                        <div class="col-md-3">
-                            <h3 class="text-info mb-1" id="confidenceScore">0%</h3>
-                            <small class="text-muted">信心指數</small>
-                        </div>
-                        <div class="col-md-3">
-                            <h3 class="text-warning mb-1" id="executionTime">0s</h3>
-                            <small class="text-muted">搜尋時間</small>
-                        </div>
-                    </div>
-                </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row text-center">
+              <div class="col-md-3">
+                <h3 class="text-primary mb-1" id="totalJobs">0</h3>
+                <small class="text-muted">找到職位</small>
+              </div>
+              <div class="col-md-3">
+                <h3 class="text-success mb-1" id="successfulAgents">0</h3>
+                <small class="text-muted">成功平台</small>
+              </div>
+              <div class="col-md-3">
+                <h3 class="text-info mb-1" id="confidenceScore">0%</h3>
+                <small class="text-muted">信心指數</small>
+              </div>
+              <div class="col-md-3">
+                <h3 class="text-warning mb-1" id="executionTime">0s</h3>
+                <small class="text-muted">搜尋時間</small>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-    
+
     <!-- 下載按鈕 -->
     <div class="row mb-4">
-        <div class="col-12 text-center">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-outline-success" id="downloadCsv">
-                    <i class="fas fa-file-csv me-1"></i>
-                    下載 CSV
-                </button>
-                <button type="button" class="btn btn-outline-info" id="downloadJson">
-                    <i class="fas fa-file-code me-1"></i>
-                    下載 JSON
-                </button>
-            </div>
+      <div class="col-12 text-center">
+        <div class="btn-group" role="group">
+          <button
+            type="button"
+            class="btn btn-outline-success"
+            id="downloadCsv"
+          >
+            <i class="fas fa-file-csv me-1"></i>
+            下載 CSV
+          </button>
+          <button type="button" class="btn btn-outline-info" id="downloadJson">
+            <i class="fas fa-file-code me-1"></i>
+            下載 JSON
+          </button>
         </div>
+      </div>
     </div>
-    
+
     <!-- 職位列表 -->
     <div class="row">
-        <div class="col-12">
-            <h3 class="mb-3">
-                <i class="fas fa-list me-2 text-primary"></i>
-                搜尋結果
-            </h3>
-            <div id="jobsList"></div>
-            
-            <!-- 載入更多按鈕 -->
-            <div class="text-center mt-4" id="loadMoreContainer" style="display: none;">
-                <button class="btn btn-outline-primary" id="loadMoreBtn">
-                    <i class="fas fa-plus me-1"></i>
-                    載入更多職位
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+      <div class="col-12">
+        <h3 class="mb-3">
+          <i class="fas fa-list me-2 text-primary"></i>
+          搜尋結果
+        </h3>
+        <div id="jobsList"></div>
 
-<!-- 功能介紹區塊 -->
-<div class="row mt-5" id="featuresSection">
+        <!-- 載入更多按鈕 -->
+        <div
+          class="text-center mt-4"
+          id="loadMoreContainer"
+          style="display: none"
+        >
+          <button class="btn btn-outline-primary" id="loadMoreBtn">
+            <i class="fas fa-plus me-1"></i>
+            載入更多職位
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 功能介紹區塊 -->
+  <div class="row mt-5" id="featuresSection">
     <div class="col-12">
-        <h2 class="text-center mb-5">
-            <i class="fas fa-star me-2 text-warning"></i>
-            為什麼選擇 jobseeker？
-        </h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
-                        <i class="fas fa-robot fa-3x text-primary mb-3"></i>
-                        <h5 class="card-title">AI 智能搜尋</h5>
-                        <p class="card-text">使用先進的 AI 技術，智能分析您的需求，從多個平台找到最相關的職位。</p>
-                    </div>
-                </div>
+      <h2 class="text-center mb-5">
+        <i class="fas fa-star me-2 text-warning"></i>
+        為什麼選擇 jobseeker？
+      </h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <i class="fas fa-robot fa-3x text-primary mb-3"></i>
+              <h5 class="card-title">AI 智能搜尋</h5>
+              <p class="card-text">
+                使用先進的 AI
+                技術，智能分析您的需求，從多個平台找到最相關的職位。
+              </p>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
-                        <i class="fas fa-globe fa-3x text-success mb-3"></i>
-                        <h5 class="card-title">全球覆蓋</h5>
-                        <p class="card-text">支援 50+ 個求職網站，覆蓋全球 100+ 個國家和地區，機會無處不在。</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 text-center">
-                    <div class="card-body">
-                        <i class="fas fa-bolt fa-3x text-warning mb-3"></i>
-                        <h5 class="card-title">快速高效</h5>
-                        <p class="card-text">一次搜尋，多平台結果，節省您寶貴的時間，提高求職效率。</p>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="col-md-4">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <i class="fas fa-globe fa-3x text-success mb-3"></i>
+              <h5 class="card-title">全球覆蓋</h5>
+              <p class="card-text">
+                支援 50+ 個求職網站，覆蓋全球 100+ 個國家和地區，機會無處不在。
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 text-center">
+            <div class="card-body">
+              <i class="fas fa-bolt fa-3x text-warning mb-3"></i>
+              <h5 class="card-title">快速高效</h5>
+              <p class="card-text">
+                一次搜尋，多平台結果，節省您寶貴的時間，提高求職效率。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-{% endblock %}
+  </div>
+  {% endblock %} {% block extra_js %}
+  <script>
+    $(document).ready(function () {
+      let currentSearchId = null;
+      let currentJobs = [];
+      let currentPage = 1;
+      const jobsPerPage = 10;
+      let serverHasNext = false;
 
-{% block extra_js %}
-<script>
-$(document).ready(function() {
-    let currentSearchId = null;
-    let currentJobs = [];
-    let currentPage = 1;
-    const jobsPerPage = 10;
-    let serverHasNext = false;
-    
-    // 若從 Header 帶入待執行搜尋，預填並自動搜尋
-    (function preloadFromHeader() {
+      // 若從 Header 帶入待執行搜尋，預填並自動搜尋
+      (function preloadFromHeader() {
         try {
-            const ps = localStorage.getItem('pendingSearch');
-            if (ps) {
-                const p = JSON.parse(ps);
-                if (p.query) $('#query').val(p.query);
-                if (p.selected_sites) {
-                    // 更新全域 selectedSites 並同步到表單
-                    if (typeof selectedSites !== 'undefined') {
-                        selectedSites = p.selected_sites.split(',').filter(Boolean);
-                    }
-                }
-                // 清掉暫存並執行搜尋
-                localStorage.removeItem('pendingSearch');
-                performSearch();
+          const ps = localStorage.getItem("pendingSearch");
+          if (ps) {
+            const p = JSON.parse(ps);
+            if (p.query) $("#query").val(p.query);
+            if (p.selected_sites) {
+              // 更新全域 selectedSites 並同步到表單
+              if (typeof selectedSites !== "undefined") {
+                selectedSites = p.selected_sites.split(",").filter(Boolean);
+              }
             }
+            // 清掉暫存並執行搜尋
+            localStorage.removeItem("pendingSearch");
+            performSearch();
+          }
         } catch (e) {}
-    })();
+      })();
 
-    // 搜尋表單提交
-    $('#searchForm').on('submit', function(e) {
+      // 快速選擇地點按鈕功能
+      $(".quick-location-btn").on("click", function () {
+        const location = $(this).data("location");
+        $("#location").val(location);
+
+        // 更新視覺狀態
+        $(".quick-location-btn").removeClass("active");
+        $(this).addClass("active");
+
+        // 自動組合搜尋關鍵字
+        updateSearchQuery();
+      });
+
+      // 監聽輸入框變化
+      $("#jobTitle, #location").on("input", function () {
+        updateSearchQuery();
+        $(".quick-location-btn").removeClass("active");
+      });
+
+      // 更新搜尋關鍵字
+      function updateSearchQuery() {
+        const jobTitle = $("#jobTitle").val().trim();
+        const location = $("#location").val().trim();
+
+        let query = "";
+        if (jobTitle && location) {
+          query = `${location} ${jobTitle}`;
+        } else if (jobTitle) {
+          query = jobTitle;
+        } else if (location) {
+          query = location;
+        }
+
+        $("#query").val(query);
+      }
+
+      // 搜尋表單提交
+      $("#searchForm").on("submit", function (e) {
         e.preventDefault();
+
+        // 確保搜尋關鍵字已更新
+        updateSearchQuery();
+
+        // 驗證輸入
+        const jobTitle = $("#jobTitle").val().trim();
+        const location = $("#location").val().trim();
+
+        if (!jobTitle && !location) {
+          showAlert("請至少輸入職位名稱或工作地點", "warning");
+          return;
+        }
+
         performSearch();
-    });
-    
-    // 下載按鈕事件
-    $('#downloadCsv').on('click', function() {
+      });
+
+      // 下載按鈕事件
+      $("#downloadCsv").on("click", function () {
         if (currentSearchId) {
-            window.open(`/download/${currentSearchId}/csv`, '_blank');
+          window.open(`/download/${currentSearchId}/csv`, "_blank");
         }
-    });
-    
-    $('#downloadJson').on('click', function() {
+      });
+
+      $("#downloadJson").on("click", function () {
         if (currentSearchId) {
-            window.open(`/download/${currentSearchId}/json`, '_blank');
+          window.open(`/download/${currentSearchId}/json`, "_blank");
         }
-    });
-    
-    // 載入更多職位（向後端請求下一頁）
-    $('#loadMoreBtn').on('click', function() {
+      });
+
+      // 載入更多職位（向後端請求下一頁）
+      $("#loadMoreBtn").on("click", function () {
         loadNextPage();
-    });
-    
-    /**
-     * 執行搜尋
-     */
-    function performSearch() {
+      });
+
+      /**
+       * 執行搜尋
+       */
+      function performSearch() {
         const formData = {
-            query: $('#query').val().trim(),
-            results_wanted: parseInt($('#results_wanted').val()),
-            hours_old: $('#hours_old').val() || null,
-            selected_sites: (typeof selectedSites !== 'undefined' && Array.isArray(selectedSites) ? selectedSites.join(',') : '')
+          query: $("#query").val().trim(),
+          results_wanted: parseInt($("#results_wanted").val()),
+          hours_old: $("#hours_old").val() || null,
+          selected_sites:
+            typeof selectedSites !== "undefined" && Array.isArray(selectedSites)
+              ? selectedSites.join(",")
+              : "",
         };
         // 伺服器端分頁參數
         formData.page = 1;
         formData.per_page = jobsPerPage;
-        
+
         // 驗證輸入
         if (!formData.query) {
-            showAlert('請輸入搜尋關鍵字', 'warning');
-            return;
+          showAlert("請輸入搜尋關鍵字", "warning");
+          return;
         }
-        
+
         // 顯示載入動畫
         showLoading();
-        
+
         // 模擬進度條
         simulateProgress();
-        
+
         // 發送搜尋請求
         $.ajax({
-            url: '/search',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            timeout: 120000, // 2分鐘超時
-            success: function(response) {
-                hideLoading();
-                
-                if (response.success) {
-                    currentSearchId = response.search_id;
-                    try { localStorage.setItem('latestSearchId', String(currentSearchId)); } catch (e) {}
-                    currentJobs = response.jobs || [];
-                    currentPage = (response.pagination && response.pagination.page) ? response.pagination.page : 1;
-                    serverHasNext = !!(response.pagination && response.pagination.has_next);
+          url: "/search",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(formData),
+          timeout: 120000, // 2分鐘超時
+          success: function (response) {
+            hideLoading();
 
-                    displaySearchResults(response);
-                    // 渲染第一頁
-                    $('#jobsList').empty();
-                    renderJobs(currentJobs);
-                    updateLoadMore();
-                } else {
-                    showAlert(response.error || '搜尋失敗', 'danger');
-                }
-            },
-            error: function(xhr, status, error) {
-                hideLoading();
-                
-                let errorMessage = '搜尋過程中發生錯誤';
-                if (status === 'timeout') {
-                    errorMessage = '搜尋超時，請稍後再試';
-                } else if (xhr.responseJSON && xhr.responseJSON.error) {
-                    errorMessage = xhr.responseJSON.error;
-                }
-                
-                showAlert(errorMessage, 'danger');
+            if (response.success) {
+              currentSearchId = response.search_id;
+              try {
+                localStorage.setItem("latestSearchId", String(currentSearchId));
+              } catch (e) {}
+              currentJobs = response.jobs || [];
+              currentPage =
+                response.pagination && response.pagination.page
+                  ? response.pagination.page
+                  : 1;
+              serverHasNext = !!(
+                response.pagination && response.pagination.has_next
+              );
+
+              displaySearchResults(response);
+              // 渲染第一頁
+              $("#jobsList").empty();
+              renderJobs(currentJobs);
+              updateLoadMore();
+            } else {
+              showAlert(response.error || "搜尋失敗", "danger");
             }
+          },
+          error: function (xhr, status, error) {
+            hideLoading();
+
+            let errorMessage = "搜尋過程中發生錯誤";
+            if (status === "timeout") {
+              errorMessage = "搜尋超時，請稍後再試";
+            } else if (xhr.responseJSON && xhr.responseJSON.error) {
+              errorMessage = xhr.responseJSON.error;
+            }
+
+            showAlert(errorMessage, "danger");
+          },
         });
-    }
-    
-    /**
-     * 顯示載入動畫
-     */
-    function showLoading() {
-        $('#searchResults').hide();
-        $('#featuresSection').hide();
-        $('#loadingSection').show();
-        $('html, body').animate({
-            scrollTop: $('#loadingSection').offset().top - 100
-        }, 500);
-    }
-    
-    /**
-     * 隱藏載入動畫
-     */
-    function hideLoading() {
-        $('#loadingSection').hide();
-        $('#searchProgress').css('width', '0%');
+      }
+
+      /**
+       * 顯示載入動畫
+       */
+      function showLoading() {
+        $("#searchResults").hide();
+        $("#featuresSection").hide();
+        $("#loadingSection").show();
+        $("html, body").animate(
+          {
+            scrollTop: $("#loadingSection").offset().top - 100,
+          },
+          500
+        );
+      }
+
+      /**
+       * 隱藏載入動畫
+       */
+      function hideLoading() {
+        $("#loadingSection").hide();
+        $("#searchProgress").css("width", "0%");
         // 重置所有步驟
-        $('.step').removeClass('active');
-        $('#step1').addClass('active');
-    }
-    
-    /**
-     * 模擬進度條動畫
-     */
-    function simulateProgress() {
+        $(".step").removeClass("active");
+        $("#step1").addClass("active");
+      }
+
+      /**
+       * 模擬進度條動畫
+       */
+      function simulateProgress() {
         let progress = 0;
         let currentStep = 1;
-        const steps = ['step1', 'step2', 'step3', 'step4'];
-        
-        const interval = setInterval(function() {
-            progress += Math.random() * 20;
-            
-            // 更新步驟
-            if (progress > 25 && currentStep < 2) {
-                currentStep = 2;
-                $('.step').removeClass('active');
-                $('#step2').addClass('active');
-            } else if (progress > 50 && currentStep < 3) {
-                currentStep = 3;
-                $('.step').removeClass('active');
-                $('#step3').addClass('active');
-            } else if (progress > 75 && currentStep < 4) {
-                currentStep = 4;
-                $('.step').removeClass('active');
-                $('#step4').addClass('active');
-            }
-            
-            if (progress > 90) {
-                progress = 90;
-                clearInterval(interval);
-            }
-            $('#searchProgress').css('width', progress + '%');
+        const steps = ["step1", "step2", "step3", "step4"];
+
+        const interval = setInterval(function () {
+          progress += Math.random() * 20;
+
+          // 更新步驟
+          if (progress > 25 && currentStep < 2) {
+            currentStep = 2;
+            $(".step").removeClass("active");
+            $("#step2").addClass("active");
+          } else if (progress > 50 && currentStep < 3) {
+            currentStep = 3;
+            $(".step").removeClass("active");
+            $("#step3").addClass("active");
+          } else if (progress > 75 && currentStep < 4) {
+            currentStep = 4;
+            $(".step").removeClass("active");
+            $("#step4").addClass("active");
+          }
+
+          if (progress > 90) {
+            progress = 90;
+            clearInterval(interval);
+          }
+          $("#searchProgress").css("width", progress + "%");
         }, 300);
-    }
-    
-    /**
-     * 顯示搜尋結果
-     */
-    function displaySearchResults(response) {
+      }
+
+      /**
+       * 顯示搜尋結果
+       */
+      function displaySearchResults(response) {
         // 更新統計資訊
-        $('#totalJobs').text(response.total_jobs.toLocaleString());
-        $('#successfulAgents').text(response.routing_info.successful_agents.length);
-        $('#confidenceScore').text(Math.round(response.routing_info.confidence_score * 100) + '%');
-        $('#executionTime').text(response.routing_info.execution_time ? response.routing_info.execution_time.toFixed(1) + 's' : 'N/A');
-        
+        $("#totalJobs").text(response.total_jobs.toLocaleString());
+        $("#successfulAgents").text(
+          response.routing_info.successful_agents.length
+        );
+        $("#confidenceScore").text(
+          Math.round(response.routing_info.confidence_score * 100) + "%"
+        );
+        $("#executionTime").text(
+          response.routing_info.execution_time
+            ? response.routing_info.execution_time.toFixed(1) + "s"
+            : "N/A"
+        );
+
         // 清空職位列表
-        $('#jobsList').empty();
-        
+        $("#jobsList").empty();
+
         // 顯示結果區域
-        $('#searchResults').show().addClass('fade-in');
-        
+        $("#searchResults").show().addClass("fade-in");
+
         // 滾動到結果區域
-        $('html, body').animate({
-            scrollTop: $('#searchResults').offset().top - 100
-        }, 500);
-        
+        $("html, body").animate(
+          {
+            scrollTop: $("#searchResults").offset().top - 100,
+          },
+          500
+        );
+
         // 顯示成功訊息
         if (response.total_jobs > 0) {
-            showAlert(`成功找到 ${response.total_jobs} 個職位！`, 'success');
+          showAlert(`成功找到 ${response.total_jobs} 個職位！`, "success");
         } else {
-            showAlert(response.message || '未找到符合條件的職位', 'info');
+          showAlert(response.message || "未找到符合條件的職位", "info");
         }
-    }
-    
-    /**
-     * 渲染職位卡片
-     */
-    function renderJobs(jobs) {
-        jobs.forEach(function(job) {
-            const jobCard = createJobCard(job);
-            $('#jobsList').append(jobCard);
+      }
+
+      /**
+       * 渲染職位卡片
+       */
+      function renderJobs(jobs) {
+        jobs.forEach(function (job) {
+          const jobCard = createJobCard(job);
+          $("#jobsList").append(jobCard);
         });
-    }
+      }
 
-    function updateLoadMore() {
+      function updateLoadMore() {
         if (serverHasNext) {
-            $('#loadMoreContainer').show();
+          $("#loadMoreContainer").show();
         } else {
-            $('#loadMoreContainer').hide();
+          $("#loadMoreContainer").hide();
         }
-    }
+      }
 
-    function loadNextPage() {
+      function loadNextPage() {
         if (!currentSearchId) return;
         const nextPage = currentPage + 1;
         $.ajax({
-            url: `/api/search/${currentSearchId}?page=${nextPage}&per_page=${jobsPerPage}`,
-            method: 'GET',
-            cache: false,
-            success: function(resp) {
-                if (resp && resp.success) {
-                    const jobs = resp.jobs || [];
-                    renderJobs(jobs);
-                    currentPage = (resp.pagination && resp.pagination.page) ? resp.pagination.page : nextPage;
-                    serverHasNext = !!(resp.pagination && resp.pagination.has_next);
-                    updateLoadMore();
-                }
-            },
-            error: function() { /* 可加入錯誤提示 */ }
+          url: `/api/search/${currentSearchId}?page=${nextPage}&per_page=${jobsPerPage}`,
+          method: "GET",
+          cache: false,
+          success: function (resp) {
+            if (resp && resp.success) {
+              const jobs = resp.jobs || [];
+              renderJobs(jobs);
+              currentPage =
+                resp.pagination && resp.pagination.page
+                  ? resp.pagination.page
+                  : nextPage;
+              serverHasNext = !!(resp.pagination && resp.pagination.has_next);
+              updateLoadMore();
+            }
+          },
+          error: function () {
+            /* 可加入錯誤提示 */
+          },
         });
-    }
-    
-    /**
-     * 創建職位卡片
-     */
-    function createJobCard(job) {
-        const salaryText = formatSalary(job.salary_min, job.salary_max, job.salary_currency);
+      }
+
+      /**
+       * 創建職位卡片
+       */
+      function createJobCard(job) {
+        const salaryText = formatSalary(
+          job.salary_min,
+          job.salary_max,
+          job.salary_currency
+        );
         const dateText = formatDate(job.date_posted);
-        
+
         return `
             <div class="job-card-enhanced fade-in">
                 <div class="job-header">
                     <div class="job-title-section">
                         <h5 class="job-title mb-2">
-                            ${job.job_url ? `<a href="${job.job_url}" target="_blank" class="text-decoration-none">${escapeHtml(job.title)}</a>` : escapeHtml(job.title)}
+                            ${
+                              job.job_url
+                                ? `<a href="${
+                                    job.job_url
+                                  }" target="_blank" class="text-decoration-none">${escapeHtml(
+                                    job.title
+                                  )}</a>`
+                                : escapeHtml(job.title)
+                            }
                         </h5>
                         <div class="job-badges">
-                            <span class="badge bg-primary">${escapeHtml(job.site)}</span>
-                            ${job.job_type ? `<span class="badge bg-info">${escapeHtml(job.job_type)}</span>` : ''}
-                            ${job.is_remote ? '<span class="badge bg-success">遠端工作</span>' : ''}
+                            <span class="badge bg-primary">${escapeHtml(
+                              job.site
+                            )}</span>
+                            ${
+                              job.job_type
+                                ? `<span class="badge bg-info">${escapeHtml(
+                                    job.job_type
+                                  )}</span>`
+                                : ""
+                            }
+                            ${
+                              job.is_remote
+                                ? '<span class="badge bg-success">遠端工作</span>'
+                                : ""
+                            }
                         </div>
                     </div>
-                    ${salaryText ? `
+                    ${
+                      salaryText
+                        ? `
                         <div class="job-salary">
                             <span class="salary-amount">${salaryText}</span>
-                            <span class="salary-period">${job.salary_currency || ''}</span>
+                            <span class="salary-period">${
+                              job.salary_currency || ""
+                            }</span>
                         </div>
-                    ` : ''}
+                    `
+                        : ""
+                    }
                 </div>
                 
                 <div class="job-company mb-2">
@@ -554,20 +814,30 @@ $(document).ready(function() {
                     ${escapeHtml(job.location)}
                 </div>
                 
-                ${job.description ? `
+                ${
+                  job.description
+                    ? `
                     <div class="job-description mb-3">
-                        <p class="text-muted mb-0">${escapeHtml(job.description)}</p>
+                        <p class="text-muted mb-0">${escapeHtml(
+                          job.description
+                        )}</p>
                     </div>
-                ` : ''}
+                `
+                    : ""
+                }
                 
                 <div class="job-footer d-flex justify-content-between align-items-center">
                     <div class="job-meta">
-                        ${dateText ? `
+                        ${
+                          dateText
+                            ? `
                             <span class="meta-item">
                                 <i class="fas fa-calendar me-1"></i>
                                 ${dateText}
                             </span>
-                        ` : ''}
+                        `
+                            : ""
+                        }
                     </div>
                     <div class="job-actions">
                         <button class="btn btn-outline-danger btn-sm me-2" 
@@ -575,148 +845,170 @@ $(document).ready(function() {
                             data-company="${escapeHtml(job.company)}"
                             data-location="${escapeHtml(job.location)}"
                             data-site="${escapeHtml(job.site)}"
-                            data-job_url="${job.job_url ? job.job_url : ''}"
-                            data-job_url_direct="${job.job_url_direct ? job.job_url_direct : ''}"
+                            data-job_url="${job.job_url ? job.job_url : ""}"
+                            data-job_url_direct="${
+                              job.job_url_direct ? job.job_url_direct : ""
+                            }"
                             onclick="saveFavoriteFromDataset(this)">
                             <i class="fas fa-heart me-1"></i>收藏
                         </button>
-                        ${job.job_url ? `
+                        ${
+                          job.job_url
+                            ? `
                             <a href="${job.job_url}" target="_blank" class="btn btn-outline-primary btn-sm me-2">
                                 <i class="fas fa-external-link-alt me-1"></i>
                                 查看詳情
                             </a>
-                        ` : ''}
-                        ${job.job_url_direct ? `
+                        `
+                            : ""
+                        }
+                        ${
+                          job.job_url_direct
+                            ? `
                             <a href="${job.job_url_direct}" target="_blank" class="btn btn-primary btn-sm">
                                 <i class="fas fa-paper-plane me-1"></i>
                                 立即申請
                             </a>
-                        ` : ''}
+                        `
+                            : ""
+                        }
                     </div>
                 </div>
             </div>
         `;
-    }
-    
-    /**
-     * 格式化薪資
-     */
-    function formatSalary(min, max, currency) {
+      }
+
+      /**
+       * 格式化薪資
+       */
+      function formatSalary(min, max, currency) {
         if (!min && !max) return null;
-        
-        const currencySymbol = currency || '';
-        
+
+        const currencySymbol = currency || "";
+
         if (min && max) {
-            return `${currencySymbol}${min.toLocaleString()} - ${currencySymbol}${max.toLocaleString()}`;
+          return `${currencySymbol}${min.toLocaleString()} - ${currencySymbol}${max.toLocaleString()}`;
         } else if (min) {
-            return `${currencySymbol}${min.toLocaleString()}+`;
+          return `${currencySymbol}${min.toLocaleString()}+`;
         } else if (max) {
-            return `最高 ${currencySymbol}${max.toLocaleString()}`;
+          return `最高 ${currencySymbol}${max.toLocaleString()}`;
         }
-        
+
         return null;
-    }
-    
-    /**
-     * 格式化日期
-     */
-    function formatDate(dateStr) {
+      }
+
+      /**
+       * 格式化日期
+       */
+      function formatDate(dateStr) {
         if (!dateStr) return null;
-        
+
         try {
-            const date = new Date(dateStr);
-            const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
-            if (diffDays === 1) {
-                return '1 天前';
-            } else if (diffDays < 7) {
-                return `${diffDays} 天前`;
-            } else {
-                return date.toLocaleDateString('zh-TW');
-            }
+          const date = new Date(dateStr);
+          const now = new Date();
+          const diffTime = Math.abs(now - date);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          if (diffDays === 1) {
+            return "1 天前";
+          } else if (diffDays < 7) {
+            return `${diffDays} 天前`;
+          } else {
+            return date.toLocaleDateString("zh-TW");
+          }
         } catch (e) {
-            return dateStr;
+          return dateStr;
         }
-    }
-    
-    /**
-     * HTML 轉義
-     */
-    function escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
+      }
+
+      /**
+       * HTML 轉義
+       */
+      function escapeHtml(text) {
+        if (!text) return "";
+        const div = document.createElement("div");
         div.textContent = text;
         return div.innerHTML;
-    }
-    
-    /**
-     * 顯示警告訊息
-     */
-    function showAlert(message, type) {
+      }
+
+      /**
+       * 顯示警告訊息
+       */
+      function showAlert(message, type) {
         const alertHtml = `
             <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'danger' ? 'times-circle' : 'info-circle'} me-2"></i>
+                <i class="fas fa-${
+                  type === "success"
+                    ? "check-circle"
+                    : type === "warning"
+                    ? "exclamation-triangle"
+                    : type === "danger"
+                    ? "times-circle"
+                    : "info-circle"
+                } me-2"></i>
                 ${message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         `;
-        
+
         // 移除現有警告
-        $('.alert').remove();
-        
+        $(".alert").remove();
+
         // 添加新警告（插入主要內容容器，避免 container/container-fluid 差異）
-        $('.main-content').first().prepend(alertHtml);
-        
+        $(".main-content").first().prepend(alertHtml);
+
         // 滾動到頂部
-        $('html, body').animate({ scrollTop: 0 }, 300);
-        
+        $("html, body").animate({ scrollTop: 0 }, 300);
+
         // 自動隱藏成功訊息
-        if (type === 'success') {
-            setTimeout(function() {
-                $('.alert-success').fadeOut();
-            }, 5000);
+        if (type === "success") {
+          setTimeout(function () {
+            $(".alert-success").fadeOut();
+          }, 5000);
         }
-    }
+      }
 
-    // 收藏功能
-    window.saveFavorite = function(jobObj){
+      // 收藏功能
+      window.saveFavorite = function (jobObj) {
         try {
-            fetch('/api/favorites', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(jobObj)
-            }).then(r => {
-                if (r.status === 401) {
-                    showAlert('請先登入以使用收藏功能', 'warning');
-                    return null;
-                }
-                return r.json();
-            }).then(j => {
-                if (!j) return;
-                if (j.success) {
-                    showAlert('已加入收藏', 'success');
-                } else {
-                    showAlert(j.error || '收藏失敗', 'danger');
-                }
-            }).catch(() => showAlert('收藏失敗', 'danger'));
+          fetch("/api/favorites", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(jobObj),
+          })
+            .then((r) => {
+              if (r.status === 401) {
+                showAlert("請先登入以使用收藏功能", "warning");
+                return null;
+              }
+              return r.json();
+            })
+            .then((j) => {
+              if (!j) return;
+              if (j.success) {
+                showAlert("已加入收藏", "success");
+              } else {
+                showAlert(j.error || "收藏失敗", "danger");
+              }
+            })
+            .catch(() => showAlert("收藏失敗", "danger"));
         } catch (e) {
-            showAlert('收藏失敗', 'danger');
+          showAlert("收藏失敗", "danger");
         }
-    }
+      };
 
-    window.saveFavoriteFromDataset = function(el){
+      window.saveFavoriteFromDataset = function (el) {
         const jobObj = {
-            title: el.getAttribute('data-title') || '',
-            company: el.getAttribute('data-company') || '',
-            location: el.getAttribute('data-location') || '',
-            site: el.getAttribute('data-site') || '',
-            job_url: el.getAttribute('data-job_url') || '',
-            job_url_direct: el.getAttribute('data-job_url_direct') || ''
+          title: el.getAttribute("data-title") || "",
+          company: el.getAttribute("data-company") || "",
+          location: el.getAttribute("data-location") || "",
+          site: el.getAttribute("data-site") || "",
+          job_url: el.getAttribute("data-job_url") || "",
+          job_url_direct: el.getAttribute("data-job_url_direct") || "",
         };
         window.saveFavorite(jobObj);
-    }
-});
-</script>
-{% endblock %}
+      };
+    });
+  </script>
+  {% endblock %}
+</div>
