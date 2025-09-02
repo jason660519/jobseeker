@@ -226,11 +226,9 @@
         /* 導航列搜尋欄樣式 */
         .navbar { position: relative; }
         .nav-search {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: min(720px, 85vw);
+            flex: 1;
             max-width: 720px;
+            margin: 0 1rem;
         }
         .nav-search .form-control {
             border: 1px solid rgba(255,255,255,0.6);
@@ -252,9 +250,44 @@
             border-color: #ef4444;
             color: #fff;
         }
-        /* 小尺寸調整：不要擋到品牌與漢堡鍵 */
+        
+        /* 響應式設計 */
+        @media (max-width: 991.98px) {
+            .nav-search {
+                margin: 0.5rem 0.5rem;
+                max-width: none;
+            }
+        }
+        
+        @media (max-width: 767.98px) {
+            .nav-search {
+                margin: 0.5rem 0.25rem;
+            }
+            .nav-search .btn {
+                padding: 0.375rem 0.5rem;
+                font-size: 0.875rem;
+            }
+            .nav-search .form-control {
+                font-size: 0.875rem;
+            }
+        }
+        
         @media (max-width: 575.98px) {
-            .nav-search { width: 90vw; }
+            .nav-search {
+                margin: 0.25rem;
+            }
+            .nav-search .btn {
+                padding: 0.25rem 0.375rem;
+                font-size: 0.75rem;
+            }
+            .nav-search .form-control {
+                font-size: 0.75rem;
+                padding: 0.375rem 0.5rem;
+            }
+            /* 隱藏語音按鈕文字，只顯示圖標 */
+            #navMicBtn {
+                min-width: auto;
+            }
         }
         
         .form-control, .form-select {
@@ -734,17 +767,18 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar" aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- 搜尋欄 - 在所有螢幕尺寸都顯示 -->
+            <div class="nav-search mx-auto my-2 my-lg-0">
+                <form id="navbarSearchForm" class="d-flex" onsubmit="triggerHeaderSearch(event)">
+                    <div class="input-group" id="navSearchGroup">
+                        <input type="search" class="form-control" id="navQuery" placeholder="輸入想找的工作、地點或需求..." aria-label="搜尋職缺">
+                        <button class="btn btn-outline-light" id="navMicBtn" type="button" title="語音輸入" onclick="toggleVoiceInput()" aria-pressed="false"><i class="fas fa-microphone"></i></button>
+                        <button class="btn btn-light" type="submit"><i class="fas fa-search me-1"></i>搜尋</button>
+                    </div>
+                </form>
+            </div>
+            
             <div class="collapse navbar-collapse" id="topNavbar">
-                <!-- 中間置中的搜尋欄（單一輸入） -->
-                <div class="nav-search mx-auto my-2 my-lg-0 w-100">
-                    <form id="navbarSearchForm" class="d-flex" onsubmit="triggerHeaderSearch(event)">
-                        <div class="input-group" id="navSearchGroup">
-                            <input type="search" class="form-control" id="navQuery" placeholder="輸入想找的工作、地點或需求..." aria-label="搜尋職缺">
-                            <button class="btn btn-outline-light" id="navMicBtn" type="button" title="語音輸入" onclick="toggleVoiceInput()" aria-pressed="false"><i class="fas fa-microphone"></i></button>
-                            <button class="btn btn-light" type="submit"><i class="fas fa-search me-1"></i>搜尋</button>
-                        </div>
-                    </form>
-                </div>
 
                 <!-- 右側功能選單 -->
                 <ul class="navbar-nav ms-auto align-items-lg-center">

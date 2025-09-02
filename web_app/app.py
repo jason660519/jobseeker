@@ -594,7 +594,7 @@ def run_synthetic_tests() -> int:
         t0 = time.time()
         try:
             r = client.get('/')
-            if r.status_code == 200 and b'智能職位搜尋' in r.data:
+            if r.status_code == 200 and '智能職位搜尋'.encode('utf-8') in r.data:
                 passed += 1; record('homepage', 'pass', t0)
             else:
                 failed += 1; record('homepage', 'fail', t0, f"status={r.status_code}")
