@@ -1,0 +1,529 @@
+{% extends "base.html" %}
+
+{% block title %}捐贈支持 - jobseeker{% endblock %}
+
+{% block extra_css %}
+<style>
+    .donate-hero {
+        background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        color: white;
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+    }
+    
+    .support-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 2px solid transparent;
+    }
+    
+    .support-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border-color: #ff6b6b;
+    }
+    
+    .support-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 2rem;
+        color: white;
+    }
+    
+    .icon-heart { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); }
+    .icon-coffee { background: linear-gradient(135deg, #8b4513 0%, #d2691e 100%); }
+    .icon-star { background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); }
+    .icon-code { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .icon-share { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+    .icon-bug { background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%); }
+    
+    .donate-btn {
+        background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 1rem 2.5rem;
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        font-size: 1.1rem;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .donate-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        color: white;
+    }
+    
+    .amount-btn {
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        font-weight: 600;
+    }
+    
+    .amount-btn:hover,
+    .amount-btn.active {
+        background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        border-color: #ff6b6b;
+        color: white;
+    }
+    
+    .supporter-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+    }
+    
+    .supporter-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        margin: 0 auto 1rem;
+        font-size: 1.2rem;
+    }
+    
+    .progress-bar-custom {
+        background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+        border-radius: 10px;
+    }
+    
+    .goal-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .goal-amount {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .payment-method {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    
+    .payment-method:hover,
+    .payment-method.active {
+        border-color: #ff6b6b;
+        background: #fff5f5;
+    }
+    
+    .testimonial {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        border-left: 4px solid #ff6b6b;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 捐贈標題區 -->
+<div class="donate-hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">
+            <i class="fas fa-heart me-3"></i>
+            支持 jobseeker
+        </h1>
+        <p class="lead mb-4">
+            您的支持讓我們能夠持續改進和維護這個開源項目
+        </p>
+        <p class="mb-0">
+            <i class="fas fa-users me-2"></i>
+            已有 <strong>1,234</strong> 位支持者 • 籌得 <strong>$12,450</strong>
+        </p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 目標進度 -->
+    <div class="goal-card">
+        <h3 class="mb-3"><i class="fas fa-target me-2"></i>2024 年度目標</h3>
+        <div class="goal-amount">$15,000</div>
+        <p class="mb-3">用於服務器維護、新功能開發和社群支持</p>
+        <div class="progress mb-3" style="height: 15px;">
+            <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 83%" aria-valuenow="83" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <p class="mb-0">已完成 83% • 還需要 $2,550</p>
+    </div>
+    
+    <!-- 支持方式 -->
+    <h2 class="text-center mb-5"><i class="fas fa-hands-helping me-2"></i>支持我們的方式</h2>
+    
+    <div class="row mb-5">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="support-card">
+                <div class="support-icon icon-heart">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h4 class="text-center mb-3">一次性捐贈</h4>
+                <p class="text-muted text-center mb-4">
+                    通過一次性捐贈來支持項目的持續發展
+                </p>
+                <a href="#donate-section" class="donate-btn">
+                    <i class="fas fa-donate me-2"></i>立即捐贈
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="support-card">
+                <div class="support-icon icon-coffee">
+                    <i class="fas fa-coffee"></i>
+                </div>
+                <h4 class="text-center mb-3">請我喝咖啡</h4>
+                <p class="text-muted text-center mb-4">
+                    小額支持，為開發者提供咖啡因動力
+                </p>
+                <a href="#" class="donate-btn" onclick="selectAmount(5)">
+                    <i class="fas fa-coffee me-2"></i>$5 咖啡
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="support-card">
+                <div class="support-icon icon-star">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h4 class="text-center mb-3">GitHub Star</h4>
+                <p class="text-muted text-center mb-4">
+                    免費但很有價值的支持方式，提高項目知名度
+                </p>
+                <a href="https://github.com/jason660519/jobseeker" target="_blank" class="donate-btn">
+                    <i class="fab fa-github me-2"></i>給個 Star
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="support-card">
+                <div class="support-icon icon-code">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h4 class="text-center mb-3">貢獻代碼</h4>
+                <p class="text-muted text-center mb-4">
+                    提交 Pull Request，直接參與項目開發
+                </p>
+                <a href="https://github.com/jason660519/jobseeker/blob/main/CONTRIBUTING.md" target="_blank" class="donate-btn">
+                    <i class="fas fa-code-branch me-2"></i>參與開發
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="support-card">
+                <div class="support-icon icon-share">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <h4 class="text-center mb-3">分享推廣</h4>
+                <p class="text-muted text-center mb-4">
+                    在社交媒體上分享，讓更多人知道這個項目
+                </p>
+                <a href="#" class="donate-btn" onclick="shareProject()">
+                    <i class="fas fa-share-alt me-2"></i>分享項目
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="support-card">
+                <div class="support-icon icon-bug">
+                    <i class="fas fa-bug"></i>
+                </div>
+                <h4 class="text-center mb-3">回報問題</h4>
+                <p class="text-muted text-center mb-4">
+                    回報 Bug 或提出功能建議，幫助改善項目
+                </p>
+                <a href="https://github.com/jason660519/jobseeker/issues" target="_blank" class="donate-btn">
+                    <i class="fas fa-exclamation-triangle me-2"></i>回報問題
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 捐贈區域 -->
+    <div id="donate-section" class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="support-card">
+                <h3 class="text-center mb-4"><i class="fas fa-credit-card me-2"></i>選擇捐贈金額</h3>
+                
+                <!-- 金額選擇 -->
+                <div class="row mb-4">
+                    <div class="col-4">
+                        <div class="amount-btn" onclick="selectAmount(5)">
+                            $5
+                            <div class="small text-muted">一杯咖啡</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="amount-btn" onclick="selectAmount(15)">
+                            $15
+                            <div class="small text-muted">一頓午餐</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="amount-btn" onclick="selectAmount(50)">
+                            $50
+                            <div class="small text-muted">支持開發</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-4">
+                        <div class="amount-btn" onclick="selectAmount(100)">
+                            $100
+                            <div class="small text-muted">企業支持</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="amount-btn" onclick="selectAmount(250)">
+                            $250
+                            <div class="small text-muted">贊助商</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="amount-btn" onclick="selectCustomAmount()">
+                            自訂
+                            <div class="small text-muted">其他金額</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 自訂金額輸入 -->
+                <div id="custom-amount" class="mb-4" style="display: none;">
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" id="customAmountInput" placeholder="輸入金額" min="1">
+                    </div>
+                </div>
+                
+                <!-- 支付方式 -->
+                <h5 class="mb-3">選擇支付方式</h5>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="payment-method" onclick="selectPayment('paypal')">
+                            <i class="fab fa-paypal fa-2x text-primary mb-2"></i>
+                            <div>PayPal</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="payment-method" onclick="selectPayment('stripe')">
+                            <i class="fab fa-stripe fa-2x text-info mb-2"></i>
+                            <div>信用卡</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="payment-method" onclick="selectPayment('crypto')">
+                            <i class="fab fa-bitcoin fa-2x text-warning mb-2"></i>
+                            <div>加密貨幣</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 捐贈按鈕 -->
+                <button class="donate-btn" onclick="processDonation()">
+                    <i class="fas fa-heart me-2"></i>捐贈 $<span id="selected-amount">5</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 支持者感謝 -->
+    <h2 class="text-center mb-4"><i class="fas fa-users me-2"></i>感謝我們的支持者</h2>
+    
+    <div class="row mb-5">
+        <div class="col-md-3 mb-3">
+            <div class="supporter-card">
+                <div class="supporter-avatar">JD</div>
+                <h6>John Doe</h6>
+                <p class="text-muted small mb-0">$100 • 企業贊助商</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="supporter-card">
+                <div class="supporter-avatar">AS</div>
+                <h6>Alice Smith</h6>
+                <p class="text-muted small mb-0">$50 • 開發者</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="supporter-card">
+                <div class="supporter-avatar">BJ</div>
+                <h6>Bob Johnson</h6>
+                <p class="text-muted small mb-0">$25 • 使用者</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="supporter-card">
+                <div class="supporter-avatar">+</div>
+                <h6>還有 1,230 位</h6>
+                <p class="text-muted small mb-0">感謝所有支持者</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 使用者回饋 -->
+    <h2 class="text-center mb-4"><i class="fas fa-comments me-2"></i>使用者回饋</h2>
+    
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="testimonial">
+                <p class="mb-3">"jobseeker 大大提升了我的求職效率，能夠同時搜尋多個網站真的很方便！"</p>
+                <div class="d-flex align-items-center">
+                    <div class="supporter-avatar me-3" style="width: 40px; height: 40px; font-size: 1rem;">LW</div>
+                    <div>
+                        <h6 class="mb-0">李小明</h6>
+                        <small class="text-muted">軟體工程師</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 mb-4">
+            <div class="testimonial">
+                <p class="mb-3">"作為 HR，這個工具幫助我了解市場上的職位趨勢，非常實用！"</p>
+                <div class="d-flex align-items-center">
+                    <div class="supporter-avatar me-3" style="width: 40px; height: 40px; font-size: 1rem;">CL</div>
+                    <div>
+                        <h6 class="mb-0">陳小華</h6>
+                        <small class="text-muted">人資主管</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedAmount = 5;
+let selectedPayment = null;
+
+function selectAmount(amount) {
+    selectedAmount = amount;
+    document.getElementById('selected-amount').textContent = amount;
+    
+    // 移除所有 active 類別
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // 添加 active 類別到選中的按鈕
+    event.target.closest('.amount-btn').classList.add('active');
+    
+    // 隱藏自訂金額輸入
+    document.getElementById('custom-amount').style.display = 'none';
+}
+
+function selectCustomAmount() {
+    // 移除所有 active 類別
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // 添加 active 類別到自訂按鈕
+    event.target.closest('.amount-btn').classList.add('active');
+    
+    // 顯示自訂金額輸入
+    document.getElementById('custom-amount').style.display = 'block';
+    
+    // 監聽輸入變化
+    const input = document.getElementById('customAmountInput');
+    input.addEventListener('input', function() {
+        if (this.value && this.value > 0) {
+            selectedAmount = parseInt(this.value);
+            document.getElementById('selected-amount').textContent = selectedAmount;
+        }
+    });
+}
+
+function selectPayment(method) {
+    selectedPayment = method;
+    
+    // 移除所有 active 類別
+    document.querySelectorAll('.payment-method').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // 添加 active 類別到選中的支付方式
+    event.target.closest('.payment-method').classList.add('active');
+}
+
+function processDonation() {
+    if (!selectedPayment) {
+        alert('請選擇支付方式');
+        return;
+    }
+    
+    if (selectedAmount <= 0) {
+        alert('請選擇有效的捐贈金額');
+        return;
+    }
+    
+    // 這裡可以整合真實的支付處理
+    alert(`感謝您的 $${selectedAmount} 捐贈！\n支付方式: ${selectedPayment}\n\n這是一個演示版本，實際部署時會整合真實的支付系統。`);
+}
+
+function shareProject() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'jobseeker - 智能職位搜尋工具',
+            text: '發現這個很棒的開源職位搜尋工具！',
+            url: window.location.origin
+        });
+    } else {
+        // 備用方案：複製連結
+        navigator.clipboard.writeText(window.location.origin).then(() => {
+            alert('項目連結已複製到剪貼簿！');
+        });
+    }
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 預設選擇第一個金額
+    document.querySelector('.amount-btn').classList.add('active');
+});
+</script>
+{% endblock %}

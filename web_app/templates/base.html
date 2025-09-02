@@ -53,6 +53,7 @@
             background-color: var(--light-bg);
             color: var(--text-primary);
             line-height: 1.6;
+            padding-top: 76px; /* 為固定導航欄預留空間 */
         }
         
         .navbar {
@@ -60,6 +61,12 @@
             box-shadow: var(--shadow-lg);
             padding: 1rem 0;
             backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            width: 100%;
         }
         
         .navbar-brand {
@@ -74,7 +81,7 @@
         }
         
         .main-container {
-            min-height: calc(100vh - 76px);
+            min-height: 100vh;
         }
         
         /* 側邊欄樣式 */
@@ -125,7 +132,7 @@
         .main-content {
             padding: 2rem;
             background: var(--light-bg);
-            min-height: calc(100vh - 76px);
+            min-height: 100vh;
         }
         
         /* 頁尾樣式 */
@@ -161,6 +168,8 @@
                 transition: left 0.3s ease;
                 background: white;
                 box-shadow: var(--shadow-xl);
+                top: 76px;
+                height: calc(100vh - 76px);
             }
             
             .sidebar.show {
@@ -783,13 +792,18 @@
                 <!-- 右側功能選單 -->
                 <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{{ url_for('demo_results') }}">
-                            <i class="fas fa-chart-bar me-1"></i> Demo
+                        <a class="nav-link text-white" href="{{ url_for('docs_page') }}">
+                            <i class="fas fa-book me-1"></i> Doc
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">
-                            <i class="fas fa-info-circle me-1"></i> 關於我們
+                        <a class="nav-link text-white" href="{{ url_for('downloads_page') }}">
+                            <i class="fas fa-download me-1"></i> Downloads
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('donate_page') }}">
+                            <i class="fas fa-heart me-1"></i> Donate
                         </a>
                     </li>
                     <li class="nav-item">
@@ -932,12 +946,18 @@
                     <ul class="list-unstyled mb-0">
                         <li class="mb-1"><a href="{{ url_for('index') }}" class="text-muted">首頁搜尋</a></li>
                         <li class="mb-1"><a href="{{ url_for('demo_results') }}" class="text-muted">測試結果</a></li>
+                        <li class="mb-1"><a href="{{ url_for('docs_page') }}" class="text-muted">Doc</a></li>
+                        <li class="mb-1"><a href="{{ url_for('donate_page') }}" class="text-muted">Donate</a></li>
                         <li class="mb-1"><a href="/api/sites" class="text-muted">API 清單</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 text-md-end text-center">
                     <h5 class="mb-2">聯絡我們</h5>
-                    <p class="mb-1"><i class="fas fa-envelope me-2"></i><a class="text-muted" href="mailto:jason660519@gmail.com">jason660519@gmail.com</a></p>
+                    <p class="mb-1">
+                        <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#contactModal">
+                            <i class="fas fa-envelope me-2"></i>聯絡我們
+                        </a>
+                    </p>
                     <button class="btn btn-outline-light btn-sm" onclick="window.scrollTo({top:0, behavior:'smooth'})">
                         <i class="fas fa-arrow-up me-1"></i> 回到頂部
                     </button>
@@ -1047,28 +1067,7 @@
         </div>
     </div>
 
-    <!-- 關於我們 Modal -->
-    <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="aboutModalLabel"><i class="fas fa-info-circle me-2"></i>關於 jobseeker</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="mb-2">jobseeker 是一個 AI 驅動的智能職位搜尋平台，整合多個求職網站，幫助您快速找到適合的工作機會。</p>
-                    <ul class="text-muted small mb-0">
-                        <li>支援多平台：LinkedIn、Indeed、Glassdoor、ZipRecruiter、Seek 等</li>
-                        <li>智慧路由：依據關鍵字與地區自動選擇最佳來源</li>
-                        <li>資料匯出：CSV / JSON 一鍵下載</li>
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <a class="btn btn-primary" href="{{ url_for('index') }}#searchSection"><i class="fas fa-magnifying-glass me-1"></i> 立即開始搜尋</a>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- 聯絡我們 Modal -->
     <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">

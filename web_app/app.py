@@ -973,6 +973,33 @@ def get_site_description(site: Site) -> str:
     return descriptions.get(site.value, f'{site.value.title()} 求職網站')
 
 
+@app.route('/docs')
+def docs_page():
+    """
+    文檔頁面
+    顯示 jobseeker 的使用文檔和 API 說明
+    """
+    return render_template('docs.html')
+
+
+@app.route('/downloads')
+def downloads_page():
+    """
+    下載頁面
+    提供各種工具和資源的下載
+    """
+    return render_template('downloads.html')
+
+
+@app.route('/donate')
+def donate_page():
+    """
+    捐贈頁面
+    支持專案發展的捐贈資訊
+    """
+    return render_template('donate.html')
+
+
 if __name__ == '__main__':
     print("🚀 jobseeker 網頁應用啟動中...")
     print("📱 訪問 http://localhost:5000 開始使用")
