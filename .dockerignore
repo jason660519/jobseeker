@@ -306,6 +306,16 @@ credentials.json
 *.json
 *.xml
 
+# 例外：保留 Web App 靜態/樣本檔
+!web_app/static/*.csv
+!web_app/static/*.json
+!web_app/*.csv
+
+# 例外：保留安裝必要檔
+!README.md
+!LICENSE
+!pyproject.toml
+
 # 日誌檔案
 *.log
 logs/

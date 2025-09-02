@@ -222,6 +222,30 @@
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
         }
+
+        /* 導航列搜尋欄樣式 */
+        .navbar { position: relative; }
+        .nav-search {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(720px, 85vw);
+            max-width: 720px;
+        }
+        .nav-search .form-control {
+            border: 1px solid rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+        .nav-search .form-control::placeholder { color: rgba(255,255,255,0.85); }
+        .nav-search .form-control:focus {
+            background: rgba(255,255,255,0.9);
+            color: var(--text-primary);
+        }
+        /* 小尺寸調整：不要擋到品牌與漢堡鍵 */
+        @media (max-width: 575.98px) {
+            .nav-search { width: 90vw; }
+        }
         
         .form-control, .form-select {
             border: 2px solid var(--border-color);
@@ -688,7 +712,7 @@
 </head>
 <body>
     <!-- 導航欄 -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url_for('index') }}">
                 <i class="fas fa-briefcase"></i>
@@ -697,15 +721,39 @@
             <button class="btn btn-outline-light sidebar-toggle d-md-none" type="button" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link text-white" href="#about">
-                    <i class="fas fa-info-circle me-1"></i>
-                    關於我們
-                </a>
-                <a class="nav-link text-white" href="#contact">
-                    <i class="fas fa-envelope me-1"></i>
-                    聯絡我們
-                </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar" aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="topNavbar">
+                <!-- 中間置中的搜尋欄（單一輸入） -->
+                <div class="nav-search mx-auto my-2 my-lg-0 w-100">
+                    <form id="navbarSearchForm" class="d-flex" onsubmit="triggerHeaderSearch(event)">
+                        <div class="input-group">
+                            <input type="search" class="form-control" id="navQuery" placeholder="輸入想找的工作、地點或需求..." aria-label="搜尋職缺">
+                            <button class="btn btn-outline-light" type="button" title="語音輸入" onclick="startVoiceInput()"><i class="fas fa-microphone"></i></button>
+                            <button class="btn btn-light" type="submit"><i class="fas fa-search me-1"></i>搜尋</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 右側功能選單 -->
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('demo_results') }}">
+                            <i class="fas fa-chart-bar me-1"></i> Demo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">
+                            <i class="fas fa-info-circle me-1"></i> 關於我們
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#contactModal">
+                            <i class="fas fa-envelope me-1"></i> 聯絡我們
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -726,7 +774,7 @@
                                 <i class="fas fa-home"></i>
                                 首頁搜尋
                             </a></li>
-                            <li><a href="/demo" class="{% if request.endpoint == 'demo' %}active{% endif %}">
+                            <li><a href="{{ url_for('demo_results') }}" class="{% if request.endpoint == 'demo_results' %}active{% endif %}">
                                 <i class="fas fa-chart-bar"></i>
                                 測試結果
                             </a></li>
@@ -793,51 +841,37 @@
         </div>
     </div>
     
-    <!-- 頁腳 -->
+    <!-- 頁腳（精簡版） -->
     <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5><i class="fas fa-briefcase me-2"></i>jobseeker</h5>
-                    <p class="text-muted">智能職位搜尋平台，使用 AI 技術為您找到最適合的工作機會。</p>
-                    <div class="d-flex gap-3">
-                        <a href="https://github.com/jason660519/jobseeker" target="_blank">
-                            <i class="fab fa-github fa-lg"></i>
-                        </a>
+        <div class="container py-4">
+            <div class="row gy-4">
+                <div class="col-md-4 text-md-start text-center">
+                    <h5 class="mb-2"><i class="fas fa-briefcase me-2"></i>jobseeker</h5>
+                    <p class="text-muted mb-2">AI 智能職位搜尋平台，快速整合多站點結果。</p>
+                    <div class="d-flex gap-3 justify-content-md-start justify-content-center">
+                        <a href="https://github.com/jason660519/jobseeker" target="_blank" class="text-muted"><i class="fab fa-github fa-lg"></i></a>
                     </div>
                 </div>
-                <div class="col-md-2 mb-4">
-                    <h5>功能</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{{ url_for('index') }}">智能搜尋</a></li>
-                        <li><a href="/demo">測試結果</a></li>
-                        <li><a href="#">API 文檔</a></li>
+                <div class="col-md-4 text-md-center text-center">
+                    <h5 class="mb-2">快速連結</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-1"><a href="{{ url_for('index') }}" class="text-muted">首頁搜尋</a></li>
+                        <li class="mb-1"><a href="{{ url_for('demo_results') }}" class="text-muted">測試結果</a></li>
+                        <li class="mb-1"><a href="/api/sites" class="text-muted">API 清單</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <h5>支援平台</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">LinkedIn</a></li>
-                        <li><a href="#">Indeed</a></li>
-                        <li><a href="#">Glassdoor</a></li>
-                        <li><a href="#">更多平台</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <h5>聯絡我們</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-envelope me-2"></i>jason660519@gmail.com</li>
-                    </ul>
+                <div class="col-md-4 text-md-end text-center">
+                    <h5 class="mb-2">聯絡我們</h5>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i><a class="text-muted" href="mailto:jason660519@gmail.com">jason660519@gmail.com</a></p>
+                    <button class="btn btn-outline-light btn-sm" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                        <i class="fas fa-arrow-up me-1"></i> 回到頂部
+                    </button>
                 </div>
             </div>
             <hr class="my-4" style="border-color: #475569;">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="mb-0 text-muted">&copy; 2024 jobseeker. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0 text-muted">Powered by AI & Machine Learning</p>
-                </div>
+            <div class="d-flex justify-content-between flex-column flex-md-row text-muted small">
+                <span>&copy; 2025 jobseeker. All rights reserved.</span>
+                <span>Powered by AI Routing</span>
             </div>
         </div>
     </footer>
@@ -917,6 +951,50 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" onclick="applySiteSelection()">確認選擇</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 關於我們 Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aboutModalLabel"><i class="fas fa-info-circle me-2"></i>關於 jobseeker</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2">jobseeker 是一個 AI 驅動的智能職位搜尋平台，整合多個求職網站，幫助您快速找到適合的工作機會。</p>
+                    <ul class="text-muted small mb-0">
+                        <li>支援多平台：LinkedIn、Indeed、Glassdoor、ZipRecruiter、Seek 等</li>
+                        <li>智慧路由：依據關鍵字與地區自動選擇最佳來源</li>
+                        <li>資料匯出：CSV / JSON 一鍵下載</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" href="{{ url_for('index') }}#searchSection"><i class="fas fa-magnifying-glass me-1"></i> 立即開始搜尋</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 聯絡我們 Modal -->
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel"><i class="fas fa-envelope me-2"></i>聯絡我們</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2">有任何建議或合作需求，歡迎與我們聯繫：</p>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i><a href="mailto:jason660519@gmail.com">jason660519@gmail.com</a></p>
+                    <p class="mb-0"><i class="fab fa-github me-2"></i><a href="https://github.com/jason660519/jobseeker" target="_blank">GitHub 專案</a></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    <a class="btn btn-primary" href="{{ url_for('demo_results') }}"><i class="fas fa-chart-bar me-1"></i> 查看 Demo</a>
                 </div>
             </div>
         </div>
@@ -1035,6 +1113,54 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateSearchFormSites();
         });
+
+        // Header 搜尋提交：將參數暫存並跳到首頁觸發搜尋
+        function triggerHeaderSearch(e) {
+            if (e) e.preventDefault();
+            const q = document.getElementById('navQuery')?.value?.trim() || '';
+            if (!q) {
+                // 簡單提示
+                alert('請輸入搜尋關鍵字');
+                return false;
+            }
+            const payload = {
+                query: q,
+                // 從現有站點選擇器帶入（若有）
+                selected_sites: (Array.isArray(selectedSites) && selectedSites.length) ? selectedSites.join(',') : ''
+            };
+            try { localStorage.setItem('pendingSearch', JSON.stringify(payload)); } catch (err) {}
+            // 導向首頁並捲到搜尋
+            window.location.href = '{{ url_for('index') }}#searchSection';
+            return false;
+        }
+
+        // 語音輸入：Web Speech API（Chrome 等支援）
+        let recognitionInstance = null;
+        function startVoiceInput() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert('此瀏覽器不支援語音輸入');
+                return;
+            }
+            if (!recognitionInstance) {
+                recognitionInstance = new SpeechRecognition();
+                recognitionInstance.lang = 'zh-TW';
+                recognitionInstance.interimResults = false;
+                recognitionInstance.maxAlternatives = 1;
+                recognitionInstance.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript || '';
+                    const input = document.getElementById('navQuery');
+                    if (input) {
+                        input.value = transcript;
+                        // 自動觸發搜尋
+                        triggerHeaderSearch();
+                    }
+                };
+                recognitionInstance.onerror = () => {};
+                recognitionInstance.onend = () => {};
+            }
+            recognitionInstance.start();
+        }
     </script>
     
     {% block extra_js %}{% endblock %}

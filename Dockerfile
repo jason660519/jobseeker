@@ -2,7 +2,7 @@
 # 多階段建置，支援開發、測試和生產環境
 
 # ==================== 基礎映像 ====================
-FROM python:3.9-slim as base
+FROM python:3.11-slim AS base
 
 # 設置環境變數
 ENV PYTHONUNBUFFERED=1 \
@@ -11,10 +11,9 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     DEBIAN_FRONTEND=noninteractive
 
-# 安裝系統依賴
-RUN apt-get update && apt-get install -y \
+# 安裝系統依賴（盡量精簡）
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    wget \
     git \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
@@ -25,29 +24,25 @@ RUN groupadd -r jobseeker && useradd -r -g jobseeker jobseeker
 # 設置工作目錄
 WORKDIR /app
 
-# 複製需求檔案
-COPY requirements.txt .
-
-# 安裝 Python 依賴
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+# 升級 pip
+RUN pip install --upgrade pip
 
 # ==================== 開發環境 ====================
-FROM base as development
+FROM base AS development
 
-# 安裝開發和測試依賴
-COPY requirements-dev.txt requirements-test.txt ./
-RUN pip install -r requirements-dev.txt && \
-    pip install -r requirements-test.txt
+# 安裝開發工具與依賴
+RUN pip install jupyter ipython notebook jupyterlab black pre-commit
 
-# 安裝額外的開發工具
-RUN pip install \
-    jupyter \
-    ipython \
-    notebook \
-    jupyterlab
+# 複製並安裝套件（可即時開發）
+COPY pyproject.toml README.md LICENSE ./
+COPY jobseeker/ ./jobseeker/
+RUN pip install -e .
 
-# 複製專案檔案
+# 可選：網頁應用依賴，便於一起開發
+COPY web_app/requirements.txt ./web_reqs.txt
+RUN pip install -r web_reqs.txt && rm -f web_reqs.txt
+
+# 複製其餘專案檔案
 COPY . .
 
 # 設置權限
@@ -56,20 +51,23 @@ RUN chown -R jobseeker:jobseeker /app
 # 切換到應用用戶
 USER jobseeker
 
-# 暴露端口（用於 Jupyter 等）
-EXPOSE 8888 8000
+# 暴露端口（Jupyter/Docs/Flask）
+EXPOSE 8888 8000 5000
 
-# 預設命令
-CMD ["python", "-c", "print('jobseeker 開發環境已準備就緒！'); import jobseeker; print(f'jobseeker 版本: {jobseeker.__version__ if hasattr(jobseeker, \"__version__\") else \"開發版\"}')"]
+# 預設命令（保持容器常駐，方便進入）
+CMD ["bash", "-lc", "echo 'jobseeker 開發環境已準備就緒'; tail -f /dev/null"]
 
 # ==================== 測試環境 ====================
-FROM base as testing
+FROM base AS testing
 
-# 安裝測試依賴
-COPY requirements-test.txt .
-RUN pip install -r requirements-test.txt
+# 安裝測試依賴與套件本身
+COPY tests/requirements-test.txt ./requirements-test.txt
+RUN pip install -r requirements-test.txt && rm -f requirements-test.txt
+COPY pyproject.toml README.md LICENSE ./
+COPY jobseeker/ ./jobseeker/
+RUN pip install -e .
 
-# 複製專案檔案
+# 複製專案（測試檔案等）
 COPY . .
 
 # 設置測試環境變數
@@ -92,13 +90,11 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 CMD ["python", "test_runner.py", "--all"]
 
 # ==================== 生產環境 ====================
-FROM base as production
+FROM base AS production
 
-# 只複製必要的檔案
+# 只複製必要的檔案並安裝
+COPY pyproject.toml README.md LICENSE ./
 COPY jobseeker/ ./jobseeker/
-COPY setup.py README.md LICENSE ./
-
-# 安裝套件
 RUN pip install .
 
 # 設置權限
@@ -115,15 +111,10 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 CMD ["python", "-c", "import jobseeker; print('jobseeker 生產環境已準備就緒！')"]
 
 # ==================== 輕量級生產環境 ====================
-FROM python:3.9-alpine as production-alpine
+FROM python:3.11-alpine AS production-alpine
 
 # 安裝系統依賴
-RUN apk add --no-cache \
-    gcc \
-    musl-dev \
-    libffi-dev \
-    openssl-dev \
-    curl
+RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev curl
 
 # 設置環境變數
 ENV PYTHONUNBUFFERED=1 \
@@ -131,36 +122,48 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
 # 創建應用用戶
-RUN addgroup -g 1000 jobseeker && \
-    adduser -D -s /bin/sh -u 1000 -G jobseeker jobseeker
+RUN addgroup -g 1000 jobseeker && adduser -D -s /bin/sh -u 1000 -G jobseeker jobseeker
 
 # 設置工作目錄
 WORKDIR /app
 
-# 複製需求檔案並安裝依賴
-COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
-
-# 複製應用程式碼
-COPY jobseeker/ ./jobseeker/
-COPY setup.py README.md ./
-
 # 安裝套件
-RUN pip install .
+COPY pyproject.toml README.md ./
+COPY jobseeker/ ./jobseeker/
+RUN pip install --upgrade pip && pip install .
 
-# 設置權限
+# 設置權限與用戶
 RUN chown -R jobseeker:jobseeker /app
-
-# 切換到應用用戶
 USER jobseeker
 
 # 健康檢查
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import jobseeker" || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD python -c "import jobseeker" || exit 1
 
 # 預設命令
 CMD ["python", "-c", "import jobseeker; print('jobseeker Alpine 版本運行正常！')"]
+
+# ==================== Web App（Flask/Gunicorn） ====================
+FROM base AS webapp
+
+# 安裝核心套件與網頁依賴
+COPY pyproject.toml README.md LICENSE ./
+COPY jobseeker/ ./jobseeker/
+RUN pip install .
+
+COPY web_app/requirements.txt ./web_requirements.txt
+RUN pip install -r web_requirements.txt && rm -f web_requirements.txt
+
+# 複製 Web App 原始碼
+COPY web_app/ /app/web_app/
+
+WORKDIR /app/web_app
+EXPOSE 5000
+ENV FLASK_ENV=production \
+    FLASK_DEBUG=false \
+    PORT=5000
+
+# 預設以 Gunicorn 啟動 Flask 應用
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "app:app"]
 
 # ==================== 多架構支援 ====================
 # 使用 buildx 建置多架構映像：

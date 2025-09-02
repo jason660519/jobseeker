@@ -27,7 +27,7 @@ from typing import Dict, List, Optional, Any
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from flask import Flask, render_template, request, jsonify, send_file, flash, redirect, url_for
+from flask import Flask, render_template, request, jsonify, send_file, flash, redirect, url_for, make_response
 from flask_cors import CORS
 import pandas as pd
 
@@ -35,6 +35,7 @@ import pandas as pd
 try:
     from jobseeker.route_manager import smart_scrape_jobs
     from jobseeker.model import Site, Country
+    from jobseeker.query_parser import parse_user_query_smart
 except ImportError as e:
     print(f"警告: 無法導入 jobseeker 模組: {e}")
     print("請確保已正確安裝 jobseeker 套件")
@@ -85,9 +86,9 @@ def search_jobs():
         else:
             data = request.form.to_dict()
         
-        # 提取搜尋參數
+        # 提取搜尋參數（單欄輸入，地點可由解析得出）
         user_query = data.get('query', '').strip()
-        location = data.get('location', '').strip()
+        location = data.get('location', '').strip() if data.get('location') is not None else ''
         results_wanted = int(data.get('results_wanted', 20))
         hours_old = data.get('hours_old')
         selected_sites = data.get('selected_sites', '')
@@ -102,6 +103,12 @@ def search_jobs():
         if per_page < 1 or per_page > 100:
             per_page = 20
         
+        # 解析單欄查詢（LLM-ready 規則式解析）
+        parsed = parse_user_query_smart(user_query)
+
+        # 若未顯式提供地點，使用解析到的地點
+        derived_location = location if location else (parsed.location or '')
+
         # 處理選擇的網站
         site_name = None
         if selected_sites:
@@ -111,6 +118,9 @@ def search_jobs():
                 # 如果只選擇了一個網站，使用該網站
                 site_name = sites_list[0]
             # 如果選擇了多個網站，保持 site_name 為 None（搜尋所有網站）
+        elif parsed.site_hints and len(parsed.site_hints) == 1:
+            # 使用查詢中的單一站點提示
+            site_name = parsed.site_hints[0]
         
         # 驗證輸入
         if not user_query:
@@ -138,18 +148,19 @@ def search_jobs():
         search_id = str(uuid.uuid4())
         
         # 執行智能搜尋
-        print(f"開始搜尋: {user_query}")
+        print(f"開始搜尋: {parsed.search_term}")
         if site_name:
             print(f"指定搜尋網站: {site_name}")
         else:
             print(f"選擇的網站: {selected_sites if selected_sites else '所有網站'}")
             
         result = smart_scrape_jobs(
-            user_query=user_query,
-            location=location if location else None,
+            user_query=parsed.search_term,
+            location=derived_location if derived_location else None,
             results_wanted=results_wanted,
             hours_old=hours_old,
-            site_name=site_name
+            site_name=site_name,
+            is_remote=parsed.is_remote
         )
         
         # 處理搜尋結果
@@ -163,6 +174,14 @@ def search_jobs():
                 'routing_info': {
                     'successful_agents': [agent.value for agent in result.successful_agents],
                     'confidence_score': result.routing_decision.confidence_score
+                },
+                'pagination': {
+                    'page': page,
+                    'per_page': per_page,
+                    'total': 0,
+                    'total_pages': 0,
+                    'has_next': False,
+                    'has_prev': False
                 }
             })
         
@@ -194,16 +213,23 @@ def search_jobs():
         search_results_cache[search_id] = {
             'result': result,
             'timestamp': datetime.now(),
-            'query': user_query,
-            'location': location
+            'query': parsed.search_term,
+            'location': derived_location
         }
         
-        # 返回成功響應
+        # 伺服器端分頁切片
+        total = len(jobs_list)
+        total_pages = (total + per_page - 1) // per_page if per_page else 1
+        start = (page - 1) * per_page
+        end = start + per_page
+        page_jobs = jobs_list[start:end]
+
+        # 返回成功響應（含分頁資訊）
         return jsonify({
             'success': True,
             'search_id': search_id,
             'total_jobs': result.total_jobs,
-            'jobs': jobs_list,
+            'jobs': page_jobs,
             'routing_info': {
                 'successful_agents': [agent.value for agent in result.successful_agents],
                 'failed_agents': [agent.value for agent in result.failed_agents],
@@ -215,6 +241,14 @@ def search_jobs():
                 'location': location,
                 'results_wanted': results_wanted,
                 'hours_old': hours_old
+            },
+            'pagination': {
+                'page': page,
+                'per_page': per_page,
+                'total': total,
+                'total_pages': total_pages,
+                'has_next': page < total_pages,
+                'has_prev': page > 1
             }
         })
         
@@ -321,7 +355,11 @@ def demo_results():
     """
     展示測試結果頁面
     """
-    return render_template('demo_results.html')
+    # 禁止快取，確保顯示最新資料
+    resp = make_response(render_template('demo_results.html'))
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    resp.headers['Pragma'] = 'no-cache'
+    return resp
 
 
 @app.route('/api/sites')
@@ -345,6 +383,108 @@ def get_supported_sites():
             'success': False,
             'error': str(e)
         }), 500
+
+
+@app.route('/api/search/<search_id>')
+def get_search_result(search_id: str):
+    """
+    取得指定搜尋 ID 的結果（用於 Demo/結果頁動態顯示）
+    """
+    try:
+        if search_id not in search_results_cache:
+            return jsonify({'success': False, 'error': '搜尋結果不存在或已過期'}), 404
+
+        cached = search_results_cache[search_id]
+        result = cached['result']
+
+        # 可選分頁參數
+        try:
+            page = int(request.args.get('page', 0))
+        except Exception:
+            page = 0
+        try:
+            per_page = int(request.args.get('per_page', 0))
+        except Exception:
+            per_page = 0
+
+        jobs_list = []
+        if result.combined_jobs_data is not None:
+            df_clean = result.combined_jobs_data.fillna('')
+            for _, row in df_clean.iterrows():
+                jobs_list.append({
+                    'title': str(row.get('title', '')),
+                    'company': str(row.get('company', '')),
+                    'location': str(row.get('location', '')),
+                    'description': str(row.get('description', ''))[:500] + ('...' if len(str(row.get('description', ''))) > 500 else ''),
+                    'salary_min': float(row['salary_min']) if pd.notna(row.get('salary_min')) else None,
+                    'salary_max': float(row['salary_max']) if pd.notna(row.get('salary_max')) else None,
+                    'salary_currency': str(row.get('salary_currency', '')),
+                    'date_posted': str(row.get('date_posted', '')),
+                    'job_url': str(row.get('job_url', '')),
+                    'job_url_direct': str(row.get('job_url_direct', '')),
+                    'site': str(row.get('site', '')),
+                    'job_type': str(row.get('job_type', '')),
+                    'is_remote': bool(row.get('is_remote', False))
+                })
+
+        # 分頁切片（若提供 page/per_page）
+        total = len(jobs_list)
+        if page and per_page:
+            if page < 1:
+                page = 1
+            if per_page < 1:
+                per_page = 10
+            total_pages = (total + per_page - 1) // per_page
+            start = (page - 1) * per_page
+            end = start + per_page
+            page_jobs = jobs_list[start:end]
+        else:
+            total_pages = 1
+            page_jobs = jobs_list
+            page = 1
+            per_page = total or 1
+
+        return jsonify({
+            'success': True,
+            'search_id': search_id,
+            'timestamp': cached['timestamp'].isoformat(),
+            'query': cached.get('query'),
+            'location': cached.get('location'),
+            'total_jobs': result.total_jobs,
+            'routing_info': {
+                'successful_agents': [agent.value for agent in result.successful_agents],
+                'failed_agents': [agent.value for agent in result.failed_agents],
+                'confidence_score': result.routing_decision.confidence_score,
+                'execution_time': result.total_execution_time
+            },
+            'jobs': page_jobs,
+            'pagination': {
+                'page': page,
+                'per_page': per_page,
+                'total': total,
+                'total_pages': total_pages,
+                'has_next': page < total_pages,
+                'has_prev': page > 1
+            }
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/search/latest')
+def get_latest_search_result():
+    """
+    取得最近一次搜尋結果摘要
+    """
+    try:
+        if not search_results_cache:
+            return jsonify({'success': False, 'error': '尚無搜尋記錄'}), 404
+
+        # 找出最新的搜尋
+        latest_id = max(search_results_cache.items(), key=lambda kv: kv[1]['timestamp'])[0]
+        return get_search_result(latest_id)
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @app.route('/api/countries')
@@ -467,7 +607,7 @@ def get_site_description(site: Site) -> str:
         'linkedin': '專業人脈網站，適合白領和管理職位',
         'glassdoor': '提供公司評價和薪資資訊',
         'seek': '澳洲和紐西蘭最大的求職網站',
-        'ziprecruiter': '美國知名求職網站，AI 智能匹配',
+        'zip_recruiter': '美國知名求職網站，AI 智能匹配',
         'google': 'Google 職位搜尋，整合多個平台',
         'naukri': '印度最大的求職網站',
         'bayt': '中東地區領先的求職平台',

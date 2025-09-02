@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobSeeker 測試結果展示</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+{% extends "base.html" %}
+
+{% block title %}JobSeeker 測試結果展示{% endblock %}
+
+{% block extra_css %}
     <style>
         .hero-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -95,8 +92,55 @@
             overflow-x: auto;
         }
     </style>
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
+    <!-- 最新搜尋結果（動態） -->
+    <section class="py-4">
+        <div class="container">
+            <div id="latestSearchContainer" class="card stats-card p-4" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1"><i class="fas fa-clock me-2"></i>最新搜尋結果</h4>
+                        <div class="text-muted small" id="latestSearchMeta"></div>
+                    </div>
+                    <div class="text-end">
+                        <div class="stat-number" id="latestTotalJobs">0</div>
+                        <div class="stat-label">找到職位</div>
+                    </div>
+                </div>
+                <div class="row text-center mt-3">
+                    <div class="col-4">
+                        <div class="fw-bold text-success" id="latestSuccessfulAgents">0</div>
+                        <small class="text-muted">成功平台</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-info" id="latestConfidence">0%</div>
+                        <small class="text-muted">信心指數</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold text-warning" id="latestExecTime">0s</div>
+                        <small class="text-muted">搜尋時間</small>
+                    </div>
+                </div>
+                <div class="text-center mt-3" id="latestDownloadBtns" style="display:none;">
+                    <a id="latestCsv" class="btn btn-outline-success btn-sm me-2" href="#" target="_blank"><i class="fas fa-file-csv me-1"></i>下載 CSV</a>
+                    <a id="latestJson" class="btn btn-outline-info btn-sm" href="#" target="_blank"><i class="fas fa-file-code me-1"></i>下載 JSON</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 最新職缺列表 -->
+    <section class="py-3">
+        <div class="container">
+            <h4 class="mb-3"><i class="fas fa-list me-2"></i>最新職缺（前 10 筆）</h4>
+            <div id="latestJobsList"></div>
+            <div class="text-center mt-3">
+                <a href="{{ url_for('index') }}#searchSection" class="btn btn-outline-primary"><i class="fas fa-arrow-right me-1"></i> 前往首頁查看全部結果</a>
+            </div>
+        </div>
+    </section>
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
@@ -525,20 +569,20 @@
             <p class="lead mb-5">下載完整的測試報告和 CSV 格式範例</p>
             
             <div class="row justify-content-center">
-                <div class="col-md-4 mb-3">
-                    <button class="download-btn btn w-100" onclick="downloadFile('web_test_report.json')">
+                <div class="col-md-4 mb-3" id="btnStaticWebTest">
+                    <button class="download-btn btn w-100" onclick="downloadFile('{{ url_for('static', filename='web_test_report.json') }}')">
                         <i class="fas fa-file-code me-2"></i>
                         測試報告 (JSON)
                     </button>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <button class="download-btn btn w-100" onclick="downloadFile('csv_validation_report.json')">
+                <div class="col-md-4 mb-3" id="btnStaticCSVReport">
+                    <button class="download-btn btn w-100" onclick="downloadFile('{{ url_for('static', filename='csv_validation_report.json') }}')">
                         <i class="fas fa-file-check me-2"></i>
                         CSV 驗證報告
                     </button>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <button class="download-btn btn w-100" onclick="downloadFile('csv_format_sample.csv')">
+                <div class="col-md-4 mb-3" id="btnStaticSample">
+                    <button class="download-btn btn w-100" onclick="downloadFile('{{ url_for('static', filename='csv_format_sample.csv') }}')">
                         <i class="fas fa-file-csv me-2"></i>
                         標準格式範例
                     </button>
@@ -547,30 +591,135 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p class="mb-0">
-                <i class="fas fa-code me-2"></i>
-                JobSeeker 智能職位搜尋平台 - 自動化測試報告
-            </p>
-            <small class="text-muted">測試時間: 2025年1月2日</small>
-        </div>
-    </footer>
+{% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}
     <script>
+        // 檢查靜態檔存在與否，動態顯示/隱藏按鈕
+        function checkStatic(url, containerId) {
+            fetch(url, { method: 'HEAD', cache: 'no-store' })
+                .then(res => { if (!res.ok) throw new Error('not ok'); document.getElementById(containerId).style.display = ''; })
+                .catch(() => { const el = document.getElementById(containerId); if (el) el.style.display = 'none'; });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkStatic('{{ url_for('static', filename='web_test_report.json') }}', 'btnStaticWebTest');
+            checkStatic('{{ url_for('static', filename='csv_validation_report.json') }}', 'btnStaticCSVReport');
+            checkStatic('{{ url_for('static', filename='csv_format_sample.csv') }}', 'btnStaticSample');
+        });
+        // 讀取最新搜尋結果並渲染
+        (function() {
+            function renderLatest(data) {
+                const container = document.getElementById('latestSearchContainer');
+                if (!data || !data.success) return;
+                container.style.display = '';
+                const ts = new Date(data.timestamp);
+                document.getElementById('latestSearchMeta').textContent = `查詢：${data.query || ''} / 地點：${data.location || '未指定'} / 時間：${ts.toLocaleString('zh-TW')}`;
+                document.getElementById('latestTotalJobs').textContent = (data.total_jobs || 0).toLocaleString();
+                document.getElementById('latestSuccessfulAgents').textContent = (data.routing_info.successful_agents || []).length;
+                document.getElementById('latestConfidence').textContent = Math.round((data.routing_info.confidence_score || 0) * 100) + '%';
+                document.getElementById('latestExecTime').textContent = data.routing_info.execution_time ? data.routing_info.execution_time.toFixed(1) + 's' : 'N/A';
+
+                // 下載連結
+                const dl = document.getElementById('latestDownloadBtns');
+                const csv = document.getElementById('latestCsv');
+                const jsonBtn = document.getElementById('latestJson');
+                csv.href = `/download/${data.search_id}/csv`;
+                jsonBtn.href = `/download/${data.search_id}/json`;
+                dl.style.display = '';
+
+                // 載入前 10 筆職缺
+                fetch(`/api/search/${data.search_id}?page=1&per_page=10`, { cache: 'no-store' })
+                    .then(r => r.json())
+                    .then(j => {
+                        if (j && j.success) {
+                            const list = document.getElementById('latestJobsList');
+                            list.innerHTML = '';
+                            (j.jobs || []).forEach(job => list.appendChild(createJobCard(job)));
+                        }
+                    })
+                    .catch(() => {});
+            }
+
+            function fetchById(id) {
+                fetch(`/api/search/${id}`, { cache: 'no-store' })
+                    .then(r => r.json())
+                    .then(j => { if (j.success) renderLatest(j); else fetchLatest(); })
+                    .catch(() => fetchLatest());
+            }
+
+            function fetchLatest() {
+                fetch('/api/search/latest', { cache: 'no-store' })
+                    .then(r => r.json())
+                    .then(j => { if (j.success) renderLatest(j); })
+                    .catch(() => {});
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                try {
+                    const id = localStorage.getItem('latestSearchId');
+                    if (id) fetchById(id); else fetchLatest();
+                } catch (e) {
+                    fetchLatest();
+                }
+            });
+        })();
+
         function scrollToSection(sectionId) {
             document.getElementById(sectionId).scrollIntoView({
                 behavior: 'smooth'
             });
         }
         
-        function downloadFile(filename) {
+        function el(tag, attrs = {}, html = '') {
+            const d = document.createElement(tag);
+            Object.entries(attrs).forEach(([k,v]) => d.setAttribute(k, v));
+            if (html) d.innerHTML = html;
+            return d;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function createJobCard(job) {
+            const wrapper = el('div', { class: 'job-card-enhanced fade-in mb-3' });
+            const title = job.title ? job.title : '';
+            const titleHtml = job.job_url ? `<a href="${job.job_url}" target="_blank" class="text-decoration-none">${escapeHtml(title)}</a>` : escapeHtml(title);
+            const company = job.company ? escapeHtml(job.company) : '';
+            const location = job.location ? escapeHtml(job.location) : '';
+            const badges = [job.site ? `<span class=\"badge bg-primary\">${escapeHtml(job.site)}</span>` : '', job.job_type ? `<span class=\"badge bg-info\">${escapeHtml(job.job_type)}</span>` : '', job.is_remote ? '<span class="badge bg-success">遠端</span>' : ''].filter(Boolean).join(' ');
+
+            wrapper.innerHTML = `
+                <div class="job-header">
+                    <div class="job-title-section">
+                        <h5 class="job-title mb-2">${titleHtml}</h5>
+                        <div class="job-badges">${badges}</div>
+                    </div>
+                </div>
+                <div class="job-company mb-2"><i class="fas fa-building me-2 text-primary"></i><strong>${company}</strong></div>
+                <div class="job-location mb-2"><i class="fas fa-map-marker-alt me-2 text-secondary"></i>${location}</div>
+                ${job.description ? `<div class="text-muted small">${escapeHtml(job.description)}</div>` : ''}
+                <div class="job-footer d-flex justify-content-between align-items-center mt-2">
+                    <div></div>
+                    <div class="job-actions">
+                        ${job.job_url ? `<a href="${job.job_url}" target="_blank" class="btn btn-outline-primary btn-sm">查看詳情</a>` : ''}
+                        ${job.job_url_direct ? `<a href="${job.job_url_direct}" target="_blank" class="btn btn-primary btn-sm ms-2">立即申請</a>` : ''}
+                    </div>
+                </div>
+            `;
+            return wrapper;
+        }
+
+        function downloadFile(url) {
             // 創建下載連結
             const link = document.createElement('a');
-            link.href = filename;
-            link.download = filename;
+            const ts = Date.now();
+            link.href = url + (url.includes('?') ? `&t=${ts}` : `?t=${ts}`);
+            link.download = '';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -598,5 +747,4 @@
             });
         });
     </script>
-</body>
-</html>
+{% endblock %}

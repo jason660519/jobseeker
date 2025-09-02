@@ -75,6 +75,8 @@ class RouteManager:
         AgentType.BDJOBS: "bdjobs",
         AgentType.GOOGLE: "google",
     }
+    # 反向映射：站點字串 -> 代理類型
+    SITE_TO_AGENT_MAPPING = {v: k for k, v in AGENT_TO_SITE_MAPPING.items()}
     
     def __init__(self, config_path: Optional[str] = None, max_workers: int = 3):
         """
@@ -95,6 +97,7 @@ class RouteManager:
         results_wanted: int = 15,
         hours_old: Optional[int] = None,
         country_indeed: str = 'usa',
+        site_name: Optional[str] = None,
         **kwargs
     ) -> AggregatedResult:
         """
@@ -113,6 +116,88 @@ class RouteManager:
         """
         start_time = time.time()
         
+        # 0. 使用者強制單站搜尋（跳過智能路由）
+        if site_name:
+            start_time = time.time()
+            try:
+                # 直接呼叫原始爬取函數
+                jobs_df = original_scrape_jobs(
+                    site_name=[site_name],
+                    search_term=user_query,
+                    location=location,
+                    results_wanted=results_wanted,
+                    hours_old=hours_old,
+                    country_indeed=country_indeed,
+                    **kwargs
+                )
+
+                exec_time = time.time() - start_time
+                job_count = len(jobs_df) if jobs_df is not None else 0
+
+                agent = self.SITE_TO_AGENT_MAPPING.get(site_name, AgentType.GOOGLE)
+
+                routing_decision = RoutingDecision(
+                    selected_agents=[agent],
+                    confidence_score=1.0,
+                    reasoning=f"User selected single site: {site_name}",
+                    geographic_match=None,
+                    industry_match=None,
+                    fallback_agents=[]
+                )
+
+                exec_result = RouteExecutionResult(
+                    agent=agent,
+                    success=job_count > 0,
+                    job_count=job_count,
+                    execution_time=exec_time,
+                    error_message=None,
+                    jobs_data=jobs_df,
+                )
+
+                aggregated = AggregatedResult(
+                    total_jobs=job_count,
+                    successful_agents=[agent] if job_count > 0 else [],
+                    failed_agents=[] if job_count > 0 else [agent],
+                    execution_results=[exec_result],
+                    total_execution_time=exec_time,
+                    routing_decision=routing_decision,
+                    combined_jobs_data=jobs_df,
+                )
+
+                self._log_execution_summary(aggregated)
+                return aggregated
+
+            except Exception as e:
+                exec_time = time.time() - start_time
+                agent = self.SITE_TO_AGENT_MAPPING.get(site_name, AgentType.GOOGLE)
+                routing_decision = RoutingDecision(
+                    selected_agents=[agent],
+                    confidence_score=0.5,
+                    reasoning=f"Forced site failed: {site_name}. Error: {e}",
+                    geographic_match=None,
+                    industry_match=None,
+                    fallback_agents=[],
+                )
+                exec_result = RouteExecutionResult(
+                    agent=agent,
+                    success=False,
+                    job_count=0,
+                    execution_time=exec_time,
+                    error_message=str(e),
+                    jobs_data=None,
+                )
+                aggregated = AggregatedResult(
+                    total_jobs=0,
+                    successful_agents=[],
+                    failed_agents=[agent],
+                    execution_results=[exec_result],
+                    total_execution_time=exec_time,
+                    routing_decision=routing_decision,
+                    combined_jobs_data=None,
+                )
+                self._log_execution_summary(aggregated)
+                return aggregated
+
         # 1. 智能路由決策
         full_query = f"{user_query} {location or ''}" if location else user_query
         routing_decision = self.router.analyze_query(full_query)
@@ -484,6 +569,7 @@ def smart_scrape_jobs(
     results_wanted: int = 15,
     hours_old: Optional[int] = None,
     country_indeed: str = 'usa',
+    site_name: Optional[str] = None,
     **kwargs
 ) -> AggregatedResult:
     """
@@ -507,6 +593,7 @@ def smart_scrape_jobs(
         results_wanted=results_wanted,
         hours_old=hours_old,
         country_indeed=country_indeed,
+        site_name=site_name,
         **kwargs
     )
 

@@ -179,6 +179,13 @@ export HOST=0.0.0.0                   # 伺服器主機
 # jobseeker 配置
 export JOBSEEKER_TIMEOUT=120          # 搜尋超時時間（秒）
 export JOBSEEKER_MAX_RESULTS=100      # 最大搜尋結果數
+
+# LLM 解析（可選）
+export ENABLE_LLM_PARSER=true         # 啟用單欄查詢的 LLM 解析
+export LLM_PROVIDER=openai            # 目前支援 openai
+export OPENAI_API_KEY=sk-...          # 你的 OpenAI API 金鑰
+export OPENAI_BASE_URL=https://api.openai.com/v1  # 非必要，預設如左
+export LLM_MODEL=gpt-4o-mini          # 建議小模型以獲得低延遲
 ```
 
 ### 自定義配置檔案

@@ -68,7 +68,7 @@
     </div>
 
 <!-- 搜尋表單 -->
-<div class="search-section">
+<div id="searchSection" class="search-section">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div class="card search-card">
@@ -82,28 +82,16 @@
                 <div class="card-body">
                     <form id="searchForm" method="POST" action="{{ url_for('search_jobs') }}">
                         <div class="row g-4">
-                            <!-- 職位關鍵字 -->
-                            <div class="col-md-6">
+                            <!-- 單一輸入：由 LLM 判斷意圖（職缺/地點/偏好） -->
+                            <div class="col-12">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="query" name="query" 
-                                           placeholder="職位關鍵字" required>
+                                           placeholder="輸入想找的工作、地點或需求..." required>
                                     <label for="query">
-                                        <i class="fas fa-briefcase me-2"></i>職位關鍵字
+                                        <i class="fas fa-briefcase me-2"></i>搜尋需求
                                     </label>
                                 </div>
-                                <div class="form-text">例如：軟體工程師、產品經理、AI工程師</div>
-                            </div>
-                            
-                            <!-- 工作地點 -->
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="location" name="location" 
-                                           placeholder="工作地點">
-                                    <label for="location">
-                                        <i class="fas fa-map-marker-alt me-2"></i>工作地點
-                                    </label>
-                                </div>
-                                <div class="form-text">例如：台北、新竹、遠端工作、新加坡</div>
+                                <div class="form-text">例如：台北 前端工程師 遠端｜新加坡 資料科學｜AI 工程師</div>
                             </div>
                             
                             <!-- 結果數量 -->
@@ -273,7 +261,7 @@
             <div class="col-md-4">
                 <div class="card h-100 text-center">
                     <div class="card-body">
-                        <i class="fas fa-lightning-bolt fa-3x text-warning mb-3"></i>
+                        <i class="fas fa-bolt fa-3x text-warning mb-3"></i>
                         <h5 class="card-title">快速高效</h5>
                         <p class="card-text">一次搜尋，多平台結果，節省您寶貴的時間，提高求職效率。</p>
                     </div>
@@ -289,9 +277,30 @@
 $(document).ready(function() {
     let currentSearchId = null;
     let currentJobs = [];
-    let displayedJobs = 0;
+    let currentPage = 1;
     const jobsPerPage = 10;
+    let serverHasNext = false;
     
+    // 若從 Header 帶入待執行搜尋，預填並自動搜尋
+    (function preloadFromHeader() {
+        try {
+            const ps = localStorage.getItem('pendingSearch');
+            if (ps) {
+                const p = JSON.parse(ps);
+                if (p.query) $('#query').val(p.query);
+                if (p.selected_sites) {
+                    // 更新全域 selectedSites 並同步到表單
+                    if (typeof selectedSites !== 'undefined') {
+                        selectedSites = p.selected_sites.split(',').filter(Boolean);
+                    }
+                }
+                // 清掉暫存並執行搜尋
+                localStorage.removeItem('pendingSearch');
+                performSearch();
+            }
+        } catch (e) {}
+    })();
+
     // 搜尋表單提交
     $('#searchForm').on('submit', function(e) {
         e.preventDefault();
@@ -311,9 +320,9 @@ $(document).ready(function() {
         }
     });
     
-    // 載入更多職位
+    // 載入更多職位（向後端請求下一頁）
     $('#loadMoreBtn').on('click', function() {
-        displayMoreJobs();
+        loadNextPage();
     });
     
     /**
@@ -322,10 +331,13 @@ $(document).ready(function() {
     function performSearch() {
         const formData = {
             query: $('#query').val().trim(),
-            location: $('#location').val().trim(),
             results_wanted: parseInt($('#results_wanted').val()),
-            hours_old: $('#hours_old').val() || null
+            hours_old: $('#hours_old').val() || null,
+            selected_sites: (typeof selectedSites !== 'undefined' && Array.isArray(selectedSites) ? selectedSites.join(',') : '')
         };
+        // 伺服器端分頁參數
+        formData.page = 1;
+        formData.per_page = jobsPerPage;
         
         // 驗證輸入
         if (!formData.query) {
@@ -351,11 +363,16 @@ $(document).ready(function() {
                 
                 if (response.success) {
                     currentSearchId = response.search_id;
+                    try { localStorage.setItem('latestSearchId', String(currentSearchId)); } catch (e) {}
                     currentJobs = response.jobs || [];
-                    displayedJobs = 0;
-                    
+                    currentPage = (response.pagination && response.pagination.page) ? response.pagination.page : 1;
+                    serverHasNext = !!(response.pagination && response.pagination.has_next);
+
                     displaySearchResults(response);
-                    displayMoreJobs();
+                    // 渲染第一頁
+                    $('#jobsList').empty();
+                    renderJobs(currentJobs);
+                    updateLoadMore();
                 } else {
                     showAlert(response.error || '搜尋失敗', 'danger');
                 }
@@ -462,25 +479,41 @@ $(document).ready(function() {
     }
     
     /**
-     * 顯示更多職位
+     * 渲染職位卡片
      */
-    function displayMoreJobs() {
-        const endIndex = Math.min(displayedJobs + jobsPerPage, currentJobs.length);
-        const jobsToShow = currentJobs.slice(displayedJobs, endIndex);
-        
-        jobsToShow.forEach(function(job) {
+    function renderJobs(jobs) {
+        jobs.forEach(function(job) {
             const jobCard = createJobCard(job);
             $('#jobsList').append(jobCard);
         });
-        
-        displayedJobs = endIndex;
-        
-        // 更新載入更多按鈕
-        if (displayedJobs < currentJobs.length) {
+    }
+
+    function updateLoadMore() {
+        if (serverHasNext) {
             $('#loadMoreContainer').show();
         } else {
             $('#loadMoreContainer').hide();
         }
+    }
+
+    function loadNextPage() {
+        if (!currentSearchId) return;
+        const nextPage = currentPage + 1;
+        $.ajax({
+            url: `/api/search/${currentSearchId}?page=${nextPage}&per_page=${jobsPerPage}`,
+            method: 'GET',
+            cache: false,
+            success: function(resp) {
+                if (resp && resp.success) {
+                    const jobs = resp.jobs || [];
+                    renderJobs(jobs);
+                    currentPage = (resp.pagination && resp.pagination.page) ? resp.pagination.page : nextPage;
+                    serverHasNext = !!(resp.pagination && resp.pagination.has_next);
+                    updateLoadMore();
+                }
+            },
+            error: function() { /* 可加入錯誤提示 */ }
+        });
     }
     
     /**
@@ -623,8 +656,8 @@ $(document).ready(function() {
         // 移除現有警告
         $('.alert').remove();
         
-        // 添加新警告
-        $('.container').prepend(alertHtml);
+        // 添加新警告（插入主要內容容器，避免 container/container-fluid 差異）
+        $('.main-content').first().prepend(alertHtml);
         
         // 滾動到頂部
         $('html, body').animate({ scrollTop: 0 }, 300);

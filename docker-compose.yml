@@ -1,10 +1,38 @@
 ﻿# jobseeker Docker Compose 配置
 # 提供開發、測試和生產環境的容器化解決方案
 
-version: '3.8'
 
 # ==================== 服務定義 ====================
 services:
+  
+  # Web 應用（Flask + Gunicorn）
+  jobseeker-web:
+    build:
+      context: .
+      target: webapp
+      dockerfile: Dockerfile
+    container_name: jobseeker-web
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=false
+      - PORT=5000
+    volumes:
+      # 下載檔案持久化
+      - ./web_app/downloads:/app/web_app/downloads
+    networks:
+      - jobseeker-network
+    profiles:
+      - web
+      - prod
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
   
   # 開發環境
   jobseeker-dev:
