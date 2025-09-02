@@ -7,10 +7,11 @@ Flask-SQLAlchemy>=3.1.1
 
 # 數據處理
 pandas>=2.0.0
-numpy>=1.24.0
+numpy==1.26.3
 
 # HTTP 請求
 requests>=2.31.0
+beautifulsoup4>=4.12.2
 
 # 環境變數管理
 python-dotenv>=1.0.0
@@ -24,9 +25,11 @@ orjson>=3.9.0
 # 生產環境 WSGI 伺服器
 gunicorn>=21.2.0
 
-# 開發工具（可選）
-watchdog>=3.0.0  # 檔案監控
+# jobseeker 核心依賴
+pydantic>=2.3.0
+tls-client>=1.0.1
+markdownify>=1.1.0
+regex>=2024.4.28
 
-# jobseeker 核心套件（本地安裝）
-# 注意：需要先安裝 jobseeker 套件
-# pip install -e .
+# 開發工具（可選）
+watchdog>=3.0.0

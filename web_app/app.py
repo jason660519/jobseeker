@@ -24,7 +24,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 
 # 添加專案根目錄到 Python 路徑
+# 支援本地開發和 Railway 部署環境
 project_root = Path(__file__).parent.parent
+if project_root.name == 'web_app':  # Railway 部署時的情況
+    project_root = project_root.parent
 sys.path.insert(0, str(project_root))
 
 from flask import Flask, render_template, request, jsonify, send_file, flash, redirect, url_for, make_response

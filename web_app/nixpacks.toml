@@ -1,0 +1,39 @@
+# nixpacks.toml - Railway 部署配置
+# 這個檔案告訴 Railway 如何構建和啟動你的 Flask 應用
+
+[start]
+# 使用 Gunicorn 作為生產伺服器啟動應用
+# app:app 指向 app.py 檔案中的 app 變數
+cmd = "gunicorn app:app --bind 0.0.0.0:$PORT"
+
+[variables]
+# 設定 Python 版本
+PYTHON_VERSION = "3.10"
+
+# Flask 環境變數
+FLASK_ENV = "production"
+FLASK_APP = "app.py"
+
+# 設定工作目錄
+WORKDIR = "/app"
+
+[phases.setup]
+# 安裝系統依賴（如果需要的話）
+cmds = [
+    "apt-get update",
+    "apt-get install -y build-essential"
+]
+
+[phases.install]
+# 安裝 Python 依賴
+cmds = [
+    "pip install --upgrade pip",
+    "pip install -r requirements.txt",
+    "pip install -e .."
+]
+
+[phases.build]
+# 構建階段（如果有需要編譯的內容）
+cmds = [
+    "echo 'Build phase completed'"
+]
