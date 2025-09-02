@@ -14,6 +14,8 @@ from jobseeker.indeed import Indeed
 from jobseeker.linkedin import LinkedIn
 from jobseeker.naukri import Naukri
 from jobseeker.seek import SeekScraper
+from jobseeker.tw104 import Taiwan104Scraper
+from jobseeker.tw1111 import Taiwan1111Scraper
 from jobseeker.model import JobType, Location, JobResponse, Country
 from jobseeker.model import SalarySource, ScraperInput, Site
 from jobseeker.util import (
@@ -76,6 +78,8 @@ def scrape_jobs(
         Site.NAUKRI: Naukri,
         Site.BDJOBS: BDJobs,
         Site.SEEK: SeekScraper,  # Add Seek to the scraper mapping
+        Site.T104: Taiwan104Scraper,  # Taiwan 104
+        Site.JOB_1111: Taiwan1111Scraper,  # Taiwan 1111
     }
     
     # 獲取增強版爬蟲映射並覆蓋基礎映射

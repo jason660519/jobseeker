@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}我的收藏 - jobseeker{% endblock %}
+{% block content %}
+<div class="container">
+  <h3 class="mb-3"><i class="fas fa-heart me-2 text-danger"></i>我的收藏</h3>
+  {% if favorites %}
+    <div class="row">
+      <div class="col-12">
+        {% for f in favorites %}
+          <div class="job-card-enhanced mb-3">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h5 class="mb-1">{{ f.title }}</h5>
+                <div class="text-muted mb-1"><i class="fas fa-building me-2"></i>{{ f.company }}</div>
+                <div class="text-muted"><i class="fas fa-map-marker-alt me-2"></i>{{ f.location }}</div>
+                <div class="mt-2"><span class="badge bg-primary">{{ f.site }}</span></div>
+              </div>
+              <div class="text-end">
+                {% if f.job_url %}
+                  <a class="btn btn-outline-primary btn-sm mb-2" href="{{ f.job_url }}" target="_blank"><i class="fas fa-external-link-alt me-1"></i>查看</a><br>
+                {% endif %}
+                {% if f.job_url_direct %}
+                  <a class="btn btn-primary btn-sm" href="{{ f.job_url_direct }}" target="_blank"><i class="fas fa-paper-plane me-1"></i>申請</a>
+                {% endif %}
+              </div>
+            </div>
+            <div class="mt-2 text-end">
+              <button class="btn btn-outline-danger btn-sm" onclick="removeFav({{ f.id }})"><i class="fas fa-trash me-1"></i>移除</button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info">尚未收藏任何職缺</div>
+  {% endif %}
+</div>
+
+<script>
+function removeFav(id){
+  fetch(`/api/favorites/${id}`, {method:'DELETE'}).then(r=>r.json()).then(j=>{
+    if(j.success){ location.reload(); }
+  });
+}
+</script>
+{% endblock %}
+

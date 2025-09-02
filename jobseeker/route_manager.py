@@ -74,6 +74,8 @@ class RouteManager:
         AgentType.BAYT: "bayt",
         AgentType.BDJOBS: "bdjobs",
         AgentType.GOOGLE: "google",
+        AgentType.T104: "104",
+        AgentType.JOB1111: "1111",
     }
     # 反向映射：站點字串 -> 代理類型
     SITE_TO_AGENT_MAPPING = {v: k for k, v in AGENT_TO_SITE_MAPPING.items()}

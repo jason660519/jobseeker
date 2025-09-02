@@ -41,6 +41,14 @@ help:
 	@echo "  make docker-build   - 建置 Docker 映像"
 	@echo "  make docker-test    - 在 Docker 中執行測試"
 	@echo ""
+	@echo "Web App (Compose):"
+	@echo "  make web-build      - 建置 webapp 服務映像"
+	@echo "  make web-up         - 啟動 webapp 服務 (背景)"
+	@echo "  make web-logs       - 查看 webapp 日誌"
+	@echo "  make web-restart    - 重新建置並啟動 webapp"
+	@echo "  make web-down       - 停止所有服務"
+	@echo "  make web-clean      - 停止並清理卷與孤兒容器"
+	@echo ""
 
 # ==================== 安裝和設置 ====================
 
@@ -146,6 +154,32 @@ docker-build:
 docker-test:
 	@echo "🐳 在 Docker 中執行測試..."
 	docker run --rm -v $(PWD):/app -w /app jobseeker:latest python test_runner.py --all
+
+# ==================== Web App (Compose) ====================
+
+web-build:
+	@echo "🧱 建置 webapp 服務映像..."
+	docker compose --profile web build jobseeker-web
+
+web-up:
+	@echo "🚀 啟動 webapp 服務..."
+	docker compose --profile web up -d jobseeker-web
+	@echo "🔗 http://localhost:5000"
+
+web-logs:
+	@echo "📜 webapp 日誌... (Ctrl+C 結束)"
+	docker compose logs -f jobseeker-web
+
+web-restart: web-build web-up
+	@echo "✅ webapp 已重新建置並啟動"
+
+web-down:
+	@echo "🛑 停止所有服務..."
+	docker compose down
+
+web-clean:
+	@echo "🧹 停止並清理卷..."
+	docker compose down -v --remove-orphans
 
 # ==================== 開發工具 ====================
 

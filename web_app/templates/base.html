@@ -242,6 +242,16 @@
             background: rgba(255,255,255,0.9);
             color: var(--text-primary);
         }
+        /* 錄音狀態視覺化 */
+        #navSearchGroup.recording {
+            box-shadow: 0 0 0 3px rgba(239,68,68,0.4);
+            border-radius: 8px;
+        }
+        #navMicBtn.mic-active {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: #fff;
+        }
         /* 小尺寸調整：不要擋到品牌與漢堡鍵 */
         @media (max-width: 575.98px) {
             .nav-search { width: 90vw; }
@@ -728,9 +738,9 @@
                 <!-- 中間置中的搜尋欄（單一輸入） -->
                 <div class="nav-search mx-auto my-2 my-lg-0 w-100">
                     <form id="navbarSearchForm" class="d-flex" onsubmit="triggerHeaderSearch(event)">
-                        <div class="input-group">
+                        <div class="input-group" id="navSearchGroup">
                             <input type="search" class="form-control" id="navQuery" placeholder="輸入想找的工作、地點或需求..." aria-label="搜尋職缺">
-                            <button class="btn btn-outline-light" type="button" title="語音輸入" onclick="startVoiceInput()"><i class="fas fa-microphone"></i></button>
+                            <button class="btn btn-outline-light" id="navMicBtn" type="button" title="語音輸入" onclick="toggleVoiceInput()" aria-pressed="false"><i class="fas fa-microphone"></i></button>
                             <button class="btn btn-light" type="submit"><i class="fas fa-search me-1"></i>搜尋</button>
                         </div>
                     </form>
@@ -753,6 +763,37 @@
                             <i class="fas fa-envelope me-1"></i> 聯絡我們
                         </a>
                     </li>
+                    {% if is_admin %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('admin_tests_page') }}">
+                            <i class="fas fa-clipboard-check me-1"></i> 測試報告
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if current_user.is_authenticated and (true) %}{% endif %}
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('favorites_page') }}">
+                            <i class="fas fa-heart me-1"></i> 我的收藏
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt me-1"></i> 登出
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i> 登入
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('register') }}">
+                            <i class="fas fa-user-plus me-1"></i> 註冊
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -934,6 +975,22 @@
                                 <input class="form-check-input" type="checkbox" value="google" id="site_google">
                                 <label class="form-check-label" for="site_google">
                                     <i class="fab fa-google text-primary me-2"></i>Google Jobs
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="104" id="site_104">
+                                <label class="form-check-label" for="site_104">
+                                    <i class="fas fa-building text-primary me-2"></i>104 人力
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1111" id="site_1111">
+                                <label class="form-check-label" for="site_1111">
+                                    <i class="fas fa-building text-primary me-2"></i>1111 人力
                                 </label>
                             </div>
                         </div>
@@ -1134,9 +1191,23 @@
             return false;
         }
 
-        // 語音輸入：Web Speech API（Chrome 等支援）
+        // 語音輸入（Web Speech API）
         let recognitionInstance = null;
-        function startVoiceInput() {
+        let isRecording = false;
+        function setMicUI(active) {
+            const btn = document.getElementById('navMicBtn');
+            const grp = document.getElementById('navSearchGroup');
+            if (btn) btn.classList.toggle('mic-active', !!active);
+            if (btn) btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+            if (grp) grp.classList.toggle('recording', !!active);
+        }
+        function stopVoiceInput() {
+            try { if (recognitionInstance) recognitionInstance.stop(); } catch (e) {}
+            isRecording = false;
+            setMicUI(false);
+        }
+        function toggleVoiceInput() {
+            if (isRecording) { stopVoiceInput(); return; }
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
                 alert('此瀏覽器不支援語音輸入');
@@ -1156,10 +1227,11 @@
                         triggerHeaderSearch();
                     }
                 };
-                recognitionInstance.onerror = () => {};
-                recognitionInstance.onend = () => {};
+                recognitionInstance.onerror = () => { isRecording = false; setMicUI(false); };
+                recognitionInstance.onend = () => { isRecording = false; setMicUI(false); };
+                recognitionInstance.onstart = () => { isRecording = true; setMicUI(true); };
             }
-            recognitionInstance.start();
+            try { recognitionInstance.start(); } catch (e) {}
         }
     </script>
     

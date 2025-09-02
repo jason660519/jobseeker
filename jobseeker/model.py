@@ -294,6 +294,8 @@ class Site(Enum):
     NAUKRI = "naukri"
     BDJOBS = "bdjobs"
     SEEK = "seek"  # Add Seek support
+    T104 = "104"  # Taiwan 104 Job Bank
+    JOB_1111 = "1111"  # Taiwan 1111 Job Bank
 
 
 class SalarySource(Enum):

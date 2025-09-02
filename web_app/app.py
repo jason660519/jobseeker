@@ -28,6 +28,10 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from flask import Flask, render_template, request, jsonify, send_file, flash, redirect, url_for, make_response
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+import time
 from flask_cors import CORS
 import pandas as pd
 
@@ -53,15 +57,116 @@ app.config.update(
     MAX_CONTENT_LENGTH=16 * 1024 * 1024,  # 16MB 最大上傳大小
     UPLOAD_FOLDER=project_root / 'web_app' / 'downloads',
     TEMPLATES_AUTO_RELOAD=True,
-    DEBUG=os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    DEBUG=os.environ.get('FLASK_DEBUG', 'False').lower() == 'true',
+    SQLALCHEMY_DATABASE_URI=f"sqlite:///{project_root / 'web_app' / 'db' / 'app.db'}",
+    SQLALCHEMY_TRACK_MODIFICATIONS=False
 )
 
 # 確保下載目錄存在
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(project_root / 'web_app' / 'db', exist_ok=True)
 
 # 全域變數儲存搜尋結果
 search_results_cache = {}
 
+db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def set_password(self, password: str):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        return check_password_hash(self.password_hash, password)
+
+
+class Favorite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    title = db.Column(db.String(512))
+    company = db.Column(db.String(512))
+    location = db.Column(db.String(512))
+    site = db.Column(db.String(64))
+    job_url = db.Column(db.String(1024))
+    job_url_direct = db.Column(db.String(1024))
+    saved_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref=db.backref('favorites', lazy=True))
+
+
+class TestRun(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    started_at = db.Column(db.DateTime, default=datetime.utcnow)
+    finished_at = db.Column(db.DateTime, nullable=True)
+    total = db.Column(db.Integer, default=0)
+    passed = db.Column(db.Integer, default=0)
+    failed = db.Column(db.Integer, default=0)
+    skipped = db.Column(db.Integer, default=0)
+    duration_sec = db.Column(db.Float, default=0.0)
+
+
+class TestCaseResult(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    run_id = db.Column(db.Integer, db.ForeignKey('test_run.id'), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.String(16), nullable=False)  # pass/fail/skip
+    duration_ms = db.Column(db.Integer, default=0)
+    message = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    run = db.relationship('TestRun', backref=db.backref('cases', lazy=True))
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    # API 請求返回 401 JSON，其餘導向登入頁
+    if request.path.startswith('/api/'):
+        return jsonify({'success': False, 'error': '未登入'}), 401
+    flash('請先登入', 'warning')
+    return redirect(url_for('login', next=request.url))
+
+
+def is_admin_user() -> bool:
+    if not current_user.is_authenticated:
+        return False
+    admin_emails = os.environ.get('ADMIN_EMAILS', '')
+    allow = [e.strip().lower() for e in admin_emails.split(',') if e.strip()]
+    if not allow:
+        # Default: no admins unless explicitly configured
+        return False
+    return current_user.email.lower() in allow
+
+
+def admin_required(fn):
+    from functools import wraps
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return unauthorized()
+        if not is_admin_user():
+            flash('需要管理員權限', 'error')
+            return redirect(url_for('index'))
+        return fn(*args, **kwargs)
+    return wrapper
+
+# 初始化資料庫
+with app.app_context():
+    db.create_all()
+
+@app.context_processor
+def inject_global_flags():
+    return {'is_admin': is_admin_user()}
 
 @app.route('/')
 def index():
@@ -108,6 +213,15 @@ def search_jobs():
 
         # 若未顯式提供地點，使用解析到的地點
         derived_location = location if location else (parsed.location or '')
+
+        # 嘗試推斷國家（供 Indeed/Glassdoor 等域名選擇）
+        derived_country = None
+        try:
+            if parsed.location:
+                # Country.from_string 支援英文關鍵詞，如 'australia','uk','usa','taiwan'
+                derived_country = Country.from_string(parsed.location).value[0]
+        except Exception:
+            derived_country = None
 
         # 處理選擇的網站
         site_name = None
@@ -160,7 +274,8 @@ def search_jobs():
             results_wanted=results_wanted,
             hours_old=hours_old,
             site_name=site_name,
-            is_remote=parsed.is_remote
+            is_remote=parsed.is_remote,
+            country_indeed=derived_country or 'usa'
         )
         
         # 處理搜尋結果
@@ -208,7 +323,30 @@ def search_jobs():
                     'is_remote': bool(row.get('is_remote', False))
                 }
                 jobs_list.append(job_dict)
-        
+
+        # 可選：嚴格國家過濾（避免「澳洲」出現其他國家）
+        strict_filter = os.environ.get('STRICT_COUNTRY_FILTER', 'false').lower() == 'true'
+        if strict_filter and (derived_country or derived_location):
+            country_tokens = set()
+            if derived_country:
+                country_tokens.add(derived_country.lower())
+            # 常見同義詞
+            synonyms = {
+                'australia': ['australia', '澳洲', '澳大利亞', '澳大利亚'],
+                'taiwan': ['taiwan', '台灣', '臺灣'],
+                'hong kong': ['hong kong', '香港'],
+                'singapore': ['singapore', '新加坡'],
+                'japan': ['japan', '日本'],
+                'usa': ['usa', 'united states', 'america', '美國', '美国'],
+                'uk': ['uk', 'united kingdom', 'england', '英國', '英国'],
+                'new zealand': ['new zealand', '紐西蘭', '新西蘭'],
+                'canada': ['canada', '加拿大']
+            }
+            if derived_country and derived_country.lower() in synonyms:
+                country_tokens.update(synonyms[derived_country.lower()])
+            # 粗略過濾
+            jobs_list = [j for j in jobs_list if any(tok in (j.get('location','').lower()) for tok in country_tokens)]
+
         # 快取搜尋結果
         search_results_cache[search_id] = {
             'result': result,
@@ -223,12 +361,12 @@ def search_jobs():
         start = (page - 1) * per_page
         end = start + per_page
         page_jobs = jobs_list[start:end]
-
+        
         # 返回成功響應（含分頁資訊）
         return jsonify({
             'success': True,
             'search_id': search_id,
-            'total_jobs': result.total_jobs,
+            'total_jobs': total,
             'jobs': page_jobs,
             'routing_info': {
                 'successful_agents': [agent.value for agent in result.successful_agents],
@@ -360,6 +498,222 @@ def demo_results():
     resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     resp.headers['Pragma'] = 'no-cache'
     return resp
+
+
+# ============ Auth Pages ============
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+        user = User.query.filter_by(email=email).first()
+        if user and user.check_password(password):
+            login_user(user)
+            flash('登入成功', 'success')
+            next_url = request.args.get('next') or url_for('index')
+            return redirect(next_url)
+        flash('帳號或密碼錯誤', 'error')
+    return render_template('login.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+        if not email or not password:
+            flash('請輸入完整資料', 'error')
+            return render_template('register.html')
+        if User.query.filter_by(email=email).first():
+            flash('此 Email 已被註冊', 'error')
+            return render_template('register.html')
+        user = User(email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+        flash('註冊成功，已自動登入', 'success')
+        return redirect(url_for('index'))
+    return render_template('register.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('您已登出', 'info')
+    return redirect(url_for('index'))
+
+
+@app.route('/favorites')
+@login_required
+def favorites_page():
+    favs = Favorite.query.filter_by(user_id=current_user.id).order_by(Favorite.saved_at.desc()).all()
+    return render_template('favorites.html', favorites=favs)
+
+
+# ============ Admin: Synthetic Test Runner ============
+
+def run_synthetic_tests() -> int:
+    """Run a suite of lightweight synthetic tests via Flask test_client.
+    Returns run_id.
+    """
+    run = TestRun()
+    db.session.add(run)
+    db.session.commit()
+
+    def record(name: str, status: str, start_t: float, message: str = ""):
+        case = TestCaseResult(
+            run_id=run.id,
+            name=name,
+            status=status,
+            duration_ms=int((time.time() - start_t) * 1000),
+            message=message[:2000]
+        )
+        db.session.add(case)
+        db.session.commit()
+
+    total = passed = failed = skipped = 0
+
+    with app.test_client() as client:
+        # Health
+        total += 1
+        t0 = time.time()
+        try:
+            r = client.get('/health')
+            if r.status_code == 200 and r.json.get('status') == 'healthy':
+                passed += 1; record('health', 'pass', t0)
+            else:
+                failed += 1; record('health', 'fail', t0, f"status={r.status_code}")
+        except Exception as e:
+            failed += 1; record('health', 'fail', t0, str(e))
+
+        # Homepage
+        total += 1
+        t0 = time.time()
+        try:
+            r = client.get('/')
+            if r.status_code == 200 and b'智能職位搜尋' in r.data:
+                passed += 1; record('homepage', 'pass', t0)
+            else:
+                failed += 1; record('homepage', 'fail', t0, f"status={r.status_code}")
+        except Exception as e:
+            failed += 1; record('homepage', 'fail', t0, str(e))
+
+        # Search (may return zero jobs; still pass if success flag)
+        total += 1
+        t0 = time.time()
+        try:
+            payload = {"query": "台北 AI 工程師", "results_wanted": 5, "hours_old": 168, "page": 1, "per_page": 5}
+            r = client.post('/search', json=payload)
+            if r.status_code == 200 and r.json.get('success'):
+                passed += 1; record('search_basic', 'pass', t0, f"jobs={len(r.json.get('jobs', []))}")
+                search_id = r.json.get('search_id')
+                # Download JSON if jobs present
+                if search_id and r.json.get('total_jobs', 0) > 0:
+                    total += 1
+                    t1 = time.time()
+                    r2 = client.get(f"/download/{search_id}/json")
+                    if r2.status_code == 200 and r2.mimetype == 'application/json':
+                        passed += 1; record('download_json', 'pass', t1)
+                    else:
+                        failed += 1; record('download_json', 'fail', t1, f"status={r2.status_code}")
+                else:
+                    # Skip download if no results
+                    total += 1; skipped += 1; record('download_json', 'skip', t0, 'no results')
+            else:
+                failed += 1; record('search_basic', 'fail', t0, f"status={r.status_code}")
+        except Exception as e:
+            failed += 1; record('search_basic', 'fail', t0, str(e))
+
+        # Auth flow + favorites
+        total += 1
+        t0 = time.time()
+        try:
+            email = f"test+{int(time.time())}@example.com"
+            r = client.post('/register', data={'email': email, 'password': 'P@ssw0rd!'}, follow_redirects=True)
+            if r.status_code == 200:
+                fav_payload = {
+                    'title': 'Synthetic Tester', 'company': 'JobSeeker', 'location': '台北',
+                    'site': 'linkedin', 'job_url': 'https://example.com', 'job_url_direct': ''
+                }
+                r2 = client.post('/api/favorites', json=fav_payload)
+                if r2.status_code == 200 and r2.json.get('success'):
+                    passed += 1; record('auth_favorite', 'pass', t0)
+                else:
+                    failed += 1; record('auth_favorite', 'fail', t0, f"status={r2.status_code}")
+            else:
+                failed += 1; record('auth_favorite', 'fail', t0, f"status={r.status_code}")
+        except Exception as e:
+            failed += 1; record('auth_favorite', 'fail', t0, str(e))
+
+    run.total = total
+    run.passed = passed
+    run.failed = failed
+    run.skipped = skipped
+    run.finished_at = datetime.utcnow()
+    run.duration_sec = (run.finished_at - run.started_at).total_seconds()
+    db.session.commit()
+    return run.id
+
+
+@app.route('/admin/tests')
+@login_required
+@admin_required
+def admin_tests_page():
+    runs = TestRun.query.order_by(TestRun.id.desc()).limit(10).all()
+    return render_template('admin_tests.html', runs=runs)
+
+
+@app.route('/api/admin/run-tests', methods=['POST'])
+@login_required
+@admin_required
+def api_admin_run_tests():
+    run_id = run_synthetic_tests()
+    return jsonify({'success': True, 'run_id': run_id})
+@app.route('/api/favorites', methods=['GET', 'POST'])
+@login_required
+def favorites_api():
+    if request.method == 'POST':
+        data = request.get_json(force=True)
+        fav = Favorite(
+            user_id=current_user.id,
+            title=data.get('title'),
+            company=data.get('company'),
+            location=data.get('location'),
+            site=data.get('site'),
+            job_url=data.get('job_url'),
+            job_url_direct=data.get('job_url_direct')
+        )
+        db.session.add(fav)
+        db.session.commit()
+        return jsonify({'success': True, 'id': fav.id})
+    # GET
+    favs = Favorite.query.filter_by(user_id=current_user.id).order_by(Favorite.saved_at.desc()).all()
+    return jsonify({'success': True, 'favorites': [
+        {
+            'id': f.id,
+            'title': f.title,
+            'company': f.company,
+            'location': f.location,
+            'site': f.site,
+            'job_url': f.job_url,
+            'job_url_direct': f.job_url_direct,
+            'saved_at': f.saved_at.isoformat()
+        } for f in favs
+    ]})
+
+
+@app.route('/api/favorites/<int:fav_id>', methods=['DELETE'])
+@login_required
+def delete_favorite(fav_id):
+    fav = Favorite.query.filter_by(id=fav_id, user_id=current_user.id).first()
+    if not fav:
+        return jsonify({'success': False, 'error': '找不到收藏'}), 404
+    db.session.delete(fav)
+    db.session.commit()
+    return jsonify({'success': True})
 
 
 @app.route('/api/sites')
@@ -611,7 +965,9 @@ def get_site_description(site: Site) -> str:
         'google': 'Google 職位搜尋，整合多個平台',
         'naukri': '印度最大的求職網站',
         'bayt': '中東地區領先的求職平台',
-        'bdjobs': '孟加拉國本地求職網站'
+        'bdjobs': '孟加拉國本地求職網站',
+        '104': '台灣 104 人力銀行，本地在地平台',
+        '1111': '台灣 1111 人力銀行，本地在地平台'
     }
     
     return descriptions.get(site.value, f'{site.value.title()} 求職網站')

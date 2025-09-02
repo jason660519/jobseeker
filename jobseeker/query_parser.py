@@ -56,6 +56,49 @@ CITY_HINTS = {
     "香港", "hong kong", "新加坡", "singapore", "東京", "tokyo", "大阪", "osaka",
 }
 
+# Common location synonyms mapping to Country enum's canonical key string (value[0])
+LOC_SYNONYMS: Dict[str, str] = {
+    # Australia
+    "澳洲": "australia",
+    "澳大利亞": "australia",
+    "澳大利亚": "australia",
+    # Taiwan
+    "台灣": "taiwan",
+    "臺灣": "taiwan",
+    # Hong Kong / Singapore / Japan
+    "香港": "hong kong",
+    "新加坡": "singapore",
+    "日本": "japan",
+    # USA / UK / Canada / NZ
+    "美國": "usa",
+    "美国": "usa",
+    "英國": "uk",
+    "英国": "uk",
+    "加拿大": "canada",
+    "紐西蘭": "new zealand",
+    "新西蘭": "new zealand",
+}
+
+
+def canonicalize_location(text: str) -> Optional[str]:
+    """Return a canonical country string if a known synonym appears in text."""
+    if not text:
+        return None
+    t = text.strip()
+    lower = t.lower()
+    # direct english match
+    for c in Country:
+        names = c.value[0].split(",")
+        for name in names:
+            name = name.strip()
+            if name and name in lower:
+                return name
+    # chinese synonyms
+    for k, v in LOC_SYNONYMS.items():
+        if k in t or k in lower:
+            return v
+    return None
+
 
 def _normalize_text(s: str) -> str:
     return s.strip()
@@ -84,6 +127,11 @@ def parse_user_query(query: str) -> ParsedQuery:
             if name in lower:
                 country_names.append(name)
 
+    # Add synonyms if present
+    for k, v in LOC_SYNONYMS.items():
+        if k in qnorm or k in lower:
+            country_names.append(v)
+
     # City-based hints
     city_hits: List[str] = []
     for name in CITY_HINTS:
@@ -104,6 +152,11 @@ def parse_user_query(query: str) -> ParsedQuery:
         location = city_hits[0]
     elif country_names:
         location = country_names[0]
+
+    # Canonicalize location if possible
+    cano = canonicalize_location(location or qnorm)
+    if cano:
+        location = cano
 
     # Build a cleaned search term: remove obvious markers
     cleaned = qnorm
@@ -203,6 +256,10 @@ def parse_user_query_llm(query: str) -> Optional[ParsedQuery]:
         location = obj.get("location")
         if location is not None:
             location = str(location).strip() or None
+            # canonicalize LLM-provided location
+            cano = canonicalize_location(location)
+            if cano:
+                location = cano
         is_remote = bool(obj.get("is_remote", False))
         site_hints_raw = obj.get("site_hints") or []
         site_hints: List[str] = []

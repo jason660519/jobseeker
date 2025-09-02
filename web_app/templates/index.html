@@ -570,6 +570,16 @@ $(document).ready(function() {
                         ` : ''}
                     </div>
                     <div class="job-actions">
+                        <button class="btn btn-outline-danger btn-sm me-2" 
+                            data-title="${escapeHtml(job.title)}"
+                            data-company="${escapeHtml(job.company)}"
+                            data-location="${escapeHtml(job.location)}"
+                            data-site="${escapeHtml(job.site)}"
+                            data-job_url="${job.job_url ? job.job_url : ''}"
+                            data-job_url_direct="${job.job_url_direct ? job.job_url_direct : ''}"
+                            onclick="saveFavoriteFromDataset(this)">
+                            <i class="fas fa-heart me-1"></i>收藏
+                        </button>
                         ${job.job_url ? `
                             <a href="${job.job_url}" target="_blank" class="btn btn-outline-primary btn-sm me-2">
                                 <i class="fas fa-external-link-alt me-1"></i>
@@ -668,6 +678,44 @@ $(document).ready(function() {
                 $('.alert-success').fadeOut();
             }, 5000);
         }
+    }
+
+    // 收藏功能
+    window.saveFavorite = function(jobObj){
+        try {
+            fetch('/api/favorites', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jobObj)
+            }).then(r => {
+                if (r.status === 401) {
+                    showAlert('請先登入以使用收藏功能', 'warning');
+                    return null;
+                }
+                return r.json();
+            }).then(j => {
+                if (!j) return;
+                if (j.success) {
+                    showAlert('已加入收藏', 'success');
+                } else {
+                    showAlert(j.error || '收藏失敗', 'danger');
+                }
+            }).catch(() => showAlert('收藏失敗', 'danger'));
+        } catch (e) {
+            showAlert('收藏失敗', 'danger');
+        }
+    }
+
+    window.saveFavoriteFromDataset = function(el){
+        const jobObj = {
+            title: el.getAttribute('data-title') || '',
+            company: el.getAttribute('data-company') || '',
+            location: el.getAttribute('data-location') || '',
+            site: el.getAttribute('data-site') || '',
+            job_url: el.getAttribute('data-job_url') || '',
+            job_url_direct: el.getAttribute('data-job_url_direct') || ''
+        };
+        window.saveFavorite(jobObj);
     }
 });
 </script>

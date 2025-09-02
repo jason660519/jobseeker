@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}測試報告 - jobseeker{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0"><i class="fas fa-clipboard-check me-2 text-primary"></i>自動化測試報告</h3>
+    <button class="btn btn-primary" onclick="runTests()"><i class="fas fa-play me-1"></i>執行測試</button>
+  </div>
+
+  {% if runs %}
+  {% for run in runs %}
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div>
+        <strong>Run #{{ run.id }}</strong>
+        <span class="text-muted ms-2">{{ run.started_at }}</span>
+      </div>
+      <div>
+        <span class="badge bg-success me-1">Pass {{ run.passed }}</span>
+        <span class="badge bg-danger me-1">Fail {{ run.failed }}</span>
+        <span class="badge bg-secondary me-2">Skip {{ run.skipped }}</span>
+        <span class="text-muted">{{ '%.2f'|format(run.duration_sec or 0) }}s</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead>
+            <tr><th>測試案例</th><th>結果</th><th>耗時</th><th>訊息</th></tr>
+          </thead>
+          <tbody>
+            {% for c in run.cases %}
+            <tr>
+              <td>{{ c.name }}</td>
+              <td>
+                {% if c.status == 'pass' %}
+                  <span class="badge bg-success">通過</span>
+                {% elif c.status == 'fail' %}
+                  <span class="badge bg-danger">失敗</span>
+                {% else %}
+                  <span class="badge bg-secondary">略過</span>
+                {% endif %}
+              </td>
+              <td>{{ c.duration_ms }} ms</td>
+              <td class="small text-muted">{{ c.message }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+    <div class="alert alert-info">尚未有測試紀錄，請點選「執行測試」。</div>
+  {% endif %}
+</div>
+
+<script>
+function runTests(){
+  fetch('/api/admin/run-tests', {method:'POST'}).then(r=>r.json()).then(j=>{
+    if (j.success){ location.reload(); }
+  });
+}
+</script>
+{% endblock %}
+

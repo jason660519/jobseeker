@@ -37,6 +37,8 @@ class AgentType(Enum):
     BAYT = "bayt"  # 中東專業
     BDJOBS = "bdjobs"  # 孟加拉專業
     GOOGLE = "google"  # 全球聚合
+    T104 = "104"  # 台灣 104 人力銀行
+    JOB1111 = "1111"  # 台灣 1111 人力銀行
 
 @dataclass
 class GeographicRegion:
@@ -209,6 +211,17 @@ class IntelligentRouter:
                 ],
                 primary_agents=[AgentType.INDEED, AgentType.LINKEDIN],
                 secondary_agents=[AgentType.GOOGLE]
+            ),
+
+            # 台灣（專門區域，偏好在地平台）
+            GeographicRegion(
+                name="Taiwan",
+                countries=["taiwan", "台灣", "臺灣"],
+                states_provinces=["taipei", "台北", "新北", "台中", "台南", "高雄", "桃園", "新竹"],
+                cities=["taipei", "台北", "新北", "台中", "台南", "高雄", "桃園", "新竹"],
+                keywords=["台灣", "臺灣", "taiwan", "ntd", "twd"],
+                primary_agents=[AgentType.T104, AgentType.JOB1111],
+                secondary_agents=[AgentType.LINKEDIN, AgentType.INDEED, AgentType.GOOGLE]
             ),
             
             # 歐洲
