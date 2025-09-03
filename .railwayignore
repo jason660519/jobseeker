@@ -1,13 +1,16 @@
 # Railway deployment configuration
 # This file tells Railway which files to ignore during deployment
 
-# Force Railway to use nixpacks.toml instead of Dockerfile
-# (Dockerfile has been renamed to Dockerfile.local)
-
-# Development files
-Dockerfile.local
+# Force Railway to use nixpacks.toml instead of Docker
+# Ignore all Docker-related files to prevent Railway from using Docker
+Dockerfile*
 docker-compose.yml
+docker-compose.yaml
 .dockerignore
+
+# Force nixpacks usage by ignoring Docker files
+# Railway will then use nixpacks.toml as the next priority
+# Note: Dockerfile.railway is kept as backup but ignored for now
 
 # Test files and directories
 tests/
