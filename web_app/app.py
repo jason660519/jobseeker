@@ -234,6 +234,10 @@ def search_jobs():
             if len(sites_list) == 1:
                 # 如果只選擇了一個網站，使用該網站
                 site_name = sites_list[0]
+            elif len(sites_list) > 1:
+                # 如果選擇了多個網站，使用智能路由但限制在選擇的網站內
+                print(f"多平台搜尋: {sites_list}")
+                # 保持 site_name 為 None，讓智能路由處理，但會通過 selected_sites 限制
             # 如果選擇了多個網站，保持 site_name 為 None（搜尋所有網站）
         elif parsed.site_hints and len(parsed.site_hints) == 1:
             # 使用查詢中的單一站點提示

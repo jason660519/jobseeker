@@ -406,7 +406,7 @@ endblock %} {% block content %}
           query: $("#query").val().trim(),
           results_wanted: 25, // 默認25個結果
           hours_old: null, // 不限時間
-          selected_sites: "", // 搜尋所有平台
+          selected_sites: "indeed,linkedin,google,ziprecruiter,seek,104,1111", // 強制搜尋多個平台
         };
         // 伺服器端分頁參數
         formData.page = 1;

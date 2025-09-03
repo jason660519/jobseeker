@@ -709,11 +709,19 @@ class IntelligentRouter:
                 reasoning_parts.append(f"本地搜索 ({distance_info.get('distance_km', 0):.1f}km)")
                 confidence_score += 0.1
         
-        # 4. 如果沒有地理匹配，使用全球代理（排除 Glassdoor）
+        # 4. 如果沒有地理匹配，使用更全面的全球代理
         if not geographic_match:
-            global_agents = [AgentType.INDEED, AgentType.LINKEDIN, AgentType.GOOGLE]
+            global_agents = [
+                AgentType.INDEED, 
+                AgentType.LINKEDIN, 
+                AgentType.GOOGLE,
+                AgentType.ZIPRECRUITER,
+                AgentType.SEEK,
+                AgentType.T104,
+                AgentType.JOB1111
+            ]
             selected_agents.update(global_agents)
-            reasoning_parts.append("使用全球代理（排除 Glassdoor）")
+            reasoning_parts.append("使用全面全球代理（包含地區性平台）")
         
         # 5. Glassdoor 地區限制檢查
         if AgentType.GLASSDOOR in selected_agents:
@@ -730,8 +738,16 @@ class IntelligentRouter:
         
         # 6. 確保至少有一些代理被選中
         if not selected_agents:
-            selected_agents = {AgentType.INDEED, AgentType.LINKEDIN, AgentType.GOOGLE}
-            reasoning_parts.append("默認代理選擇（排除 Glassdoor）")
+            selected_agents = {
+                AgentType.INDEED, 
+                AgentType.LINKEDIN, 
+                AgentType.GOOGLE,
+                AgentType.ZIPRECRUITER,
+                AgentType.SEEK,
+                AgentType.T104,
+                AgentType.JOB1111
+            }
+            reasoning_parts.append("默認全面代理選擇")
         
         # 7. 基於代理可靠性排序
         sorted_agents = self._sort_agents_by_reliability(list(selected_agents))
@@ -745,7 +761,7 @@ class IntelligentRouter:
                     fallback_agents.append(agent)
         
         # 9. 限制代理數量（避免過多並發請求）
-        max_agents = 4
+        max_agents = 6  # 增加最大代理數量
         if len(sorted_agents) > max_agents:
             sorted_agents = sorted_agents[:max_agents]
             reasoning_parts.append(f"限制為前 {max_agents} 個代理")
