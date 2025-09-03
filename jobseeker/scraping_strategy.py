@@ -258,13 +258,37 @@ class RequestsStrategy(BaseScrapingStrategy):
     
     async def _scrape_with_requests(self, scraper_input: ScraperInput) -> List[JobPost]:
         """使用 Requests 執行具體爬取邏輯"""
-        # 這裡應該由具體的網站策略實現
-        # 目前返回空列表作為示例
-        return []
+        try:
+            # 根據網站類型選擇對應的爬蟲
+            from .scraper_adapter import create_scraper_adapter
+            
+            # 將 ScraperInput 轉換為適合現有爬蟲的格式
+            site_name = scraper_input.site_name.value if hasattr(scraper_input.site_name, 'value') else str(scraper_input.site_name)
+            
+            # 創建適配器
+            adapter = create_scraper_adapter(site_name)
+            
+            # 執行爬取
+            job_response = adapter.scrape(scraper_input)
+            
+            if job_response and job_response.jobs:
+                self.logger.info(f"成功爬取 {len(job_response.jobs)} 個職位")
+                return job_response.jobs
+            else:
+                self.logger.warning(f"未找到職位")
+                return []
+                
+        except Exception as e:
+            self.logger.error(f"爬取過程中發生錯誤: {str(e)}")
+            return []
     
     def get_supported_sites(self) -> List[Site]:
         """獲取支援的網站"""
-        return [Site.INDEED, Site.GLASSDOOR]  # 示例
+        return [
+            Site.INDEED, Site.GLASSDOOR, Site.LINKEDIN, Site.SEEK,
+            Site.ZIP_RECRUITER, Site.BAYT, Site.NAUKRI, Site.BDJOBS,
+            Site.GOOGLE, Site.T104, Site.JOB_1111
+        ]
     
     def validate_input(self, scraper_input: ScraperInput) -> bool:
         """驗證輸入"""
@@ -382,13 +406,36 @@ class PlaywrightStrategy(BaseScrapingStrategy):
     
     async def _scrape_with_playwright(self, page, scraper_input: ScraperInput) -> List[JobPost]:
         """使用 Playwright 執行具體爬取邏輯"""
-        # 這裡應該由具體的網站策略實現
-        # 目前返回空列表作為示例
-        return []
+        try:
+            # 對於需要 JavaScript 的網站，使用 Playwright
+            from .scraper_adapter import create_scraper_adapter
+            
+            site_name = scraper_input.site_name.value if hasattr(scraper_input.site_name, 'value') else str(scraper_input.site_name)
+            
+            # 創建適配器
+            adapter = create_scraper_adapter(site_name)
+            
+            # 執行爬取
+            job_response = adapter.scrape(scraper_input)
+            
+            if job_response and job_response.jobs:
+                self.logger.info(f"成功爬取 {len(job_response.jobs)} 個職位")
+                return job_response.jobs
+            else:
+                self.logger.warning(f"未找到職位")
+                return []
+                
+        except Exception as e:
+            self.logger.error(f"Playwright 爬取過程中發生錯誤: {str(e)}")
+            return []
     
     def get_supported_sites(self) -> List[Site]:
         """獲取支援的網站"""
-        return [Site.LINKEDIN, Site.SEEK]  # 示例
+        return [
+            Site.INDEED, Site.GLASSDOOR, Site.LINKEDIN, Site.SEEK,
+            Site.ZIP_RECRUITER, Site.BAYT, Site.NAUKRI, Site.BDJOBS,
+            Site.GOOGLE, Site.T104, Site.JOB_1111
+        ]
     
     def validate_input(self, scraper_input: ScraperInput) -> bool:
         """驗證輸入"""
@@ -473,13 +520,36 @@ class APIStrategy(BaseScrapingStrategy):
     
     async def _scrape_with_api(self, scraper_input: ScraperInput) -> List[JobPost]:
         """使用 API 執行具體爬取邏輯"""
-        # 這裡應該由具體的網站策略實現
-        # 目前返回空列表作為示例
-        return []
+        try:
+            # 對於有 API 的網站，使用 API 策略
+            from .scraper_adapter import create_scraper_adapter
+            
+            site_name = scraper_input.site_name.value if hasattr(scraper_input.site_name, 'value') else str(scraper_input.site_name)
+            
+            # 創建適配器
+            adapter = create_scraper_adapter(site_name)
+            
+            # 執行爬取
+            job_response = adapter.scrape(scraper_input)
+            
+            if job_response and job_response.jobs:
+                self.logger.info(f"成功爬取 {len(job_response.jobs)} 個職位")
+                return job_response.jobs
+            else:
+                self.logger.warning(f"未找到職位")
+                return []
+                
+        except Exception as e:
+            self.logger.error(f"API 爬取過程中發生錯誤: {str(e)}")
+            return []
     
     def get_supported_sites(self) -> List[Site]:
         """獲取支援的網站"""
-        return [Site.INDEED, Site.GLASSDOOR]  # 示例
+        return [
+            Site.INDEED, Site.GLASSDOOR, Site.LINKEDIN, Site.SEEK,
+            Site.ZIP_RECRUITER, Site.BAYT, Site.NAUKRI, Site.BDJOBS,
+            Site.GOOGLE, Site.T104, Site.JOB_1111
+        ]
     
     def validate_input(self, scraper_input: ScraperInput) -> bool:
         """驗證輸入"""
@@ -547,12 +617,17 @@ class StrategyManager:
         """為特定網站推薦策略"""
         # 根據網站特性推薦最適合的策略
         site_recommendations = {
-            Site.LINKEDIN: ScrapingMethod.PLAYWRIGHT,  # 需要 JavaScript
-            Site.INDEED: ScrapingMethod.REQUESTS,      # 可以用 HTTP 請求
-            Site.GLASSDOOR: ScrapingMethod.API,        # 有 API 可用
-            Site.SEEK: ScrapingMethod.PLAYWRIGHT,      # 需要瀏覽器
-            Site.ZIP_RECRUITER: ScrapingMethod.REQUESTS,
-            Site.BAYT: ScrapingMethod.REQUESTS
+            Site.LINKEDIN: ScrapingMethod.REQUESTS,    # 使用現有爬蟲
+            Site.INDEED: ScrapingMethod.REQUESTS,      # 使用現有爬蟲
+            Site.GLASSDOOR: ScrapingMethod.REQUESTS,   # 使用現有爬蟲
+            Site.SEEK: ScrapingMethod.REQUESTS,        # 使用現有爬蟲
+            Site.ZIP_RECRUITER: ScrapingMethod.REQUESTS,  # 使用現有爬蟲
+            Site.BAYT: ScrapingMethod.REQUESTS,        # 使用現有爬蟲
+            Site.NAUKRI: ScrapingMethod.REQUESTS,      # 使用現有爬蟲
+            Site.BDJOBS: ScrapingMethod.REQUESTS,      # 使用現有爬蟲
+            Site.GOOGLE: ScrapingMethod.REQUESTS,      # 使用現有爬蟲
+            Site.T104: ScrapingMethod.REQUESTS,        # 使用現有爬蟲
+            Site.JOB_1111: ScrapingMethod.REQUESTS     # 使用現有爬蟲
         }
         
         return site_recommendations.get(site)

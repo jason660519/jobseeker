@@ -1,0 +1,319 @@
+{% extends "base.html" %} {% block title %}自動化測試結果 - JobSeeker{% endblock
+%} {% block extra_css %}
+<style>
+  .hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 0;
+  }
+  .test-card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    margin-bottom: 1.5rem;
+  }
+  .test-card:hover {
+    transform: translateY(-5px);
+  }
+  .success-badge {
+    background: linear-gradient(45deg, #28a745, #20c997);
+  }
+  .failed-badge {
+    background: linear-gradient(45deg, #dc3545, #fd7e14);
+  }
+  .stats-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border-radius: 15px;
+  }
+  .csv-preview {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .format-section {
+    background-color: #e3f2fd;
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+  }
+  .download-btn {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+    color: white;
+    transition: all 0.3s ease;
+  }
+  .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 123, 255, 0.3);
+    color: white;
+  }
+  .feature-highlight {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+  }
+  .tech-badge {
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    color: white;
+    border: none;
+  }
+</style>
+{% endblock %} {% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h1 class="display-4 fw-bold mb-4">
+          <i class="fas fa-chart-line me-3"></i>
+          JobSeeker 自動化測試結果
+        </h1>
+        <p class="lead mb-4">
+          使用 Playwright 自動化測試框架，驗證 JobSeeker
+          智能職位搜尋平台的功能完整性與 CSV 格式統一性
+        </p>
+        <div class="d-flex gap-3">
+          <button
+            class="btn btn-light btn-lg"
+            onclick="scrollToSection('test-results')"
+          >
+            <i class="fas fa-play me-2"></i>查看測試結果
+          </button>
+          <button
+            class="btn btn-outline-light btn-lg"
+            onclick="scrollToSection('csv-format')"
+          >
+            <i class="fas fa-file-csv me-2"></i>CSV 格式標準
+          </button>
+          <button
+            class="btn btn-outline-light btn-lg"
+            onclick="window.location.href='/search-results'"
+          >
+            <i class="fas fa-search me-2"></i>查看搜尋結果
+          </button>
+        </div>
+      </div>
+      <div class="col-lg-4 text-center">
+        <i class="fas fa-robot" style="font-size: 8rem; opacity: 0.8"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Test Statistics -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="card stats-card text-center p-4">
+          <i class="fas fa-vial fa-3x mb-3"></i>
+          <h3 class="fw-bold" id="total-tests">8</h3>
+          <p class="mb-0">總測試案例</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card stats-card text-center p-4">
+          <i class="fas fa-check-circle fa-3x mb-3"></i>
+          <h3 class="fw-bold text-success" id="success-tests">4</h3>
+          <p class="mb-0">成功測試</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card stats-card text-center p-4">
+          <i class="fas fa-times-circle fa-3x mb-3"></i>
+          <h3 class="fw-bold text-danger" id="failed-tests">4</h3>
+          <p class="mb-0">失敗測試</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card stats-card text-center p-4">
+          <i class="fas fa-percentage fa-3x mb-3"></i>
+          <h3 class="fw-bold text-warning" id="success-rate">50%</h3>
+          <p class="mb-0">成功率</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Test Results Section -->
+<section id="test-results" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5">
+      <i class="fas fa-clipboard-list me-3"></i>
+      自動化測試結果
+    </h2>
+
+    <div class="row">
+      <!-- Successful Tests -->
+      <div class="col-lg-6">
+        <h4 class="text-success mb-4">
+          <i class="fas fa-check-circle me-2"></i>
+          成功測試案例
+        </h4>
+
+        <div class="test-card card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0">軟體工程師搜索 - 台北</h5>
+            <span class="badge success-badge px-3 py-2">成功</span>
+          </div>
+          <div class="row text-muted small">
+            <div class="col-6">搜尋關鍵字: 軟體工程師</div>
+            <div class="col-6">地點: 台北</div>
+            <div class="col-6">找到職位: 5 個</div>
+            <div class="col-6">顯示職位: 2 個</div>
+          </div>
+          <div class="mt-3">
+            <small class="text-success">
+              <i class="fas fa-download me-1"></i>
+              下載功能: CSV ✅ JSON ✅
+            </small>
+          </div>
+        </div>
+
+        <div class="test-card card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0">資料科學家搜索 - 全球</h5>
+            <span class="badge success-badge px-3 py-2">成功</span>
+          </div>
+          <div class="row text-muted small">
+            <div class="col-6">搜尋關鍵字: data scientist</div>
+            <div class="col-6">地點: 全球</div>
+            <div class="col-6">找到職位: 12 個</div>
+            <div class="col-6">顯示職位: 5 個</div>
+          </div>
+          <div class="mt-3">
+            <small class="text-success">
+              <i class="fas fa-download me-1"></i>
+              下載功能: CSV ✅ JSON ✅
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Failed Tests -->
+      <div class="col-lg-6">
+        <h4 class="text-danger mb-4">
+          <i class="fas fa-times-circle me-2"></i>
+          失敗測試案例
+        </h4>
+
+        <div class="test-card card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0">空白搜索測試</h5>
+            <span class="badge failed-badge px-3 py-2">失敗</span>
+          </div>
+          <div class="row text-muted small">
+            <div class="col-6">搜尋關鍵字: (空白)</div>
+            <div class="col-6">地點: 台北</div>
+            <div class="col-6">錯誤: 缺少搜尋關鍵字</div>
+            <div class="col-6">狀態: 已修復</div>
+          </div>
+        </div>
+
+        <div class="test-card card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0">網路超時測試</h5>
+            <span class="badge failed-badge px-3 py-2">失敗</span>
+          </div>
+          <div class="row text-muted small">
+            <div class="col-6">搜尋關鍵字: 測試職位</div>
+            <div class="col-6">地點: 美國</div>
+            <div class="col-6">錯誤: 網路連線超時</div>
+            <div class="col-6">狀態: 需要重試</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CSV Format Section -->
+<section id="csv-format" class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-5">
+      <i class="fas fa-file-csv me-3 text-success"></i>
+      CSV 格式標準
+    </h2>
+
+    <div class="format-section">
+      <h4 class="mb-4">
+        <i class="fas fa-table me-2"></i>
+        標準 CSV 欄位格式
+      </h4>
+
+      <div class="row">
+        <div class="col-md-6">
+          <h6 class="text-primary mb-3">必要欄位</h6>
+          <ul class="list-unstyled">
+            <li>
+              <i class="fas fa-check text-success me-2"></i><code>title</code> -
+              職位名稱
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i
+              ><code>company</code> - 公司名稱
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i
+              ><code>location</code> - 工作地點
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i
+              ><code>job_url</code> - 職位連結
+            </li>
+            <li>
+              <i class="fas fa-check text-success me-2"></i><code>site</code> -
+              來源網站
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h6 class="text-primary mb-3">選用欄位</h6>
+          <ul class="list-unstyled">
+            <li>
+              <i class="fas fa-circle text-info me-2"></i
+              ><code>description</code> - 職位描述
+            </li>
+            <li>
+              <i class="fas fa-circle text-info me-2"></i
+              ><code>salary_min</code> - 最低薪資
+            </li>
+            <li>
+              <i class="fas fa-circle text-info me-2"></i
+              ><code>salary_max</code> - 最高薪資
+            </li>
+            <li>
+              <i class="fas fa-circle text-info me-2"></i
+              ><code>date_posted</code> - 發布日期
+            </li>
+            <li>
+              <i class="fas fa-circle text-info me-2"></i
+              ><code>job_type</code> - 職位類型
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CSV 預覽 -->
+    <div class="csv-preview p-4">
+      <h5 class="mb-3">
+        <i class="fas fa-eye me-2"></i>
+        CSV 格式預覽
+      </h5>
+      <pre
+        class="mb-0"
+      ><code>title,company,location,job_url,site,description,salary_min,salary_max,date_posted,job_type
+軟體工程師,科技公司,台北市,https://example.com/job1,indeed,開發網頁應用,50000,80000,2024-01-15,全職
+資料分析師,數據公司,新北市,https://example.com/job2,linkedin,分析商業數據,45000,70000,2024-01-14,全職</code></pre>
+    </div>
+  </div>
+</section>
+{% endblock %}

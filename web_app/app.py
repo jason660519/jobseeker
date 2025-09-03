@@ -1012,6 +1012,26 @@ def donate_page():
     return render_template('donate.html')
 
 
+@app.route('/search-results')
+def search_results():
+    """
+    展示搜尋結果頁面 - 只顯示用戶搜尋結果
+    """
+    # 禁止快取，確保顯示最新資料
+    resp = make_response(render_template('search_results.html'))
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    resp.headers['Pragma'] = 'no-cache'
+    return resp
+
+
+# 註冊增強版 API Blueprint
+try:
+    from .enhanced_api import enhanced_api_bp
+    app.register_blueprint(enhanced_api_bp)
+    print("✅ 增強版 API (v2) 已註冊")
+except ImportError as e:
+    print(f"⚠️ 無法註冊增強版 API: {e}")
+
 if __name__ == '__main__':
     # 從環境變數獲取主機地址，預設為 0.0.0.0 以支援外部訪問
     host = os.environ.get('HOST', '0.0.0.0')
