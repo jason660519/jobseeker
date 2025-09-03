@@ -55,6 +55,32 @@
           0 10px 10px -5px rgb(0 0 0 / 0.04);
       }
 
+      /* AI 搜尋進度動畫 */
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+
+      .search-steps .step {
+        transition: all 0.3s ease;
+      }
+
+      .search-steps .step.active .step-icon {
+        background-color: var(--primary-color) !important;
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+      }
+
+      .search-steps .step-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
       /* 主題變數定義 */
       [data-theme="ocean"] {
         --primary-color: #2563eb;
@@ -2364,19 +2390,576 @@
           if (e) e.preventDefault();
           const q = document.getElementById('navQuery')?.value?.trim() || '';
           if (!q) {
-              // 簡單提示
-              alert('請輸入搜尋關鍵字');
+              showHeaderAlert('請輸入搜尋關鍵字', 'warning');
               return false;
           }
-          const payload = {
-              query: q,
-              // 從現有站點選擇器帶入（若有）
-              selected_sites: (Array.isArray(selectedSites) && selectedSites.length) ? selectedSites.join(',') : ''
-          };
-          try { localStorage.setItem('pendingSearch', JSON.stringify(payload)); } catch (err) {}
-          // 導向首頁並捲到搜尋
-          window.location.href = '{{ url_for('index') }}#searchSection';
+          
+          // 顯示 AI 搜尋進度
+          showAISearchProgress(q);
+          
+          // 執行即時搜尋
+          performHeaderSearch(q);
           return false;
+      }
+
+      // 顯示 AI 搜尋進度
+      function showAISearchProgress(query) {
+          const modalHtml = `
+              <div class="modal fade" id="aiSearchModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-header bg-primary text-white">
+                              <h5 class="modal-title">
+                                  <i class="fas fa-robot me-2"></i>AI 正在為您搜尋工作
+                              </h5>
+                          </div>
+                          <div class="modal-body text-center py-4">
+                              <div class="ai-avatar mb-3">
+                                  <i class="fas fa-robot fa-3x text-primary" id="aiAvatar" style="transition: transform 0.3s ease; animation: pulse 2s infinite;"></i>
+                              </div>
+                              <h6 class="mb-3">正在搜尋: "${query}"</h6>
+                              
+                              <div class="progress mb-3" style="height: 8px;">
+                                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                                       id="searchProgress" role="progressbar" style="width: 0%"></div>
+                              </div>
+                              
+                              <div class="search-steps d-flex justify-content-center gap-3 mb-3">
+                                  <div class="step active d-flex flex-column align-items-center" id="step1">
+                                      <div class="step-icon bg-primary text-white rounded-circle p-2 mb-1" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                          <i class="fas fa-brain"></i>
+                                      </div>
+                                      <small>分析查詢</small>
+                                  </div>
+                                  <div class="step d-flex flex-column align-items-center" id="step2">
+                                      <div class="step-icon bg-secondary text-white rounded-circle p-2 mb-1" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                          <i class="fas fa-globe"></i>
+                                      </div>
+                                      <small>選擇平台</small>
+                                  </div>
+                                  <div class="step d-flex flex-column align-items-center" id="step3">
+                                      <div class="step-icon bg-secondary text-white rounded-circle p-2 mb-1" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                          <i class="fas fa-search"></i>
+                                      </div>
+                                      <small>搜尋職位</small>
+                                  </div>
+                                  <div class="step d-flex flex-column align-items-center" id="step4">
+                                      <div class="step-icon bg-secondary text-white rounded-circle p-2 mb-1" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                          <i class="fas fa-check"></i>
+                                      </div>
+                                      <small>整理結果</small>
+                                  </div>
+                              </div>
+                              
+                              <p class="text-muted mt-3 mb-0" id="searchStatus">AI 正在分析您的需求...</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          `;
+          
+          const existingModal = document.getElementById('aiSearchModal');
+          if (existingModal) existingModal.remove();
+          
+          document.body.insertAdjacentHTML('beforeend', modalHtml);
+          
+          const modal = new bootstrap.Modal(document.getElementById('aiSearchModal'));
+          modal.show();
+          
+          startSearchProgress();
+      }
+
+      function startSearchProgress() {
+          const progressBar = document.getElementById('searchProgress');
+          const steps = ['step1', 'step2', 'step3', 'step4'];
+          const statuses = [
+              'AI 正在分析您的需求...',
+              '正在選擇最佳搜尋平台...',
+              '正在搜尋相關職位...',
+              '正在整理和優化結果...'
+          ];
+          
+          let currentStep = 0;
+          const interval = setInterval(() => {
+              if (currentStep < steps.length) {
+                  const progress = ((currentStep + 1) / steps.length) * 100;
+                  progressBar.style.width = progress + '%';
+                  
+                  steps.forEach((step, index) => {
+                      const stepEl = document.getElementById(step);
+                      const iconEl = stepEl.querySelector('.step-icon');
+                      if (index <= currentStep) {
+                          stepEl.classList.add('active');
+                          iconEl.classList.remove('bg-secondary');
+                          iconEl.classList.add('bg-primary');
+                      } else {
+                          stepEl.classList.remove('active');
+                          iconEl.classList.remove('bg-primary');
+                          iconEl.classList.add('bg-secondary');
+                      }
+                  });
+                  
+                  document.getElementById('searchStatus').textContent = statuses[currentStep];
+                  currentStep++;
+              } else {
+                  clearInterval(interval);
+              }
+          }, 800);
+          
+          window.searchProgressInterval = interval;
+      }
+
+      function performHeaderSearch(query) {
+          const formData = {
+              query: query,
+              results_wanted: 25,
+              hours_old: null,
+              selected_sites: ""
+          };
+
+          fetch('/search', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData)
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (window.searchProgressInterval) {
+                  clearInterval(window.searchProgressInterval);
+              }
+              
+              const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
+              if (modal) modal.hide();
+              
+              showHeaderSearchResults(data, query);
+          })
+          .catch(error => {
+              console.error('搜尋錯誤:', error);
+              if (window.searchProgressInterval) {
+                  clearInterval(window.searchProgressInterval);
+              }
+              
+              const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
+              if (modal) modal.hide();
+              
+              showHeaderAlert('搜尋失敗，請稍後再試', 'danger');
+          });
+      }
+
+      function showHeaderSearchResults(data, query) {
+          if (!data.success || !data.jobs || data.jobs.length === 0) {
+              showHeaderAlert('未找到相關職位，請嘗試其他關鍵字', 'warning');
+              return;
+          }
+
+          const modalHtml = `
+              <div class="modal fade" id="headerResultsModal" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-xl">
+                      <div class="modal-content">
+                          <div class="modal-header bg-success text-white">
+                              <h5 class="modal-title">
+                                  <i class="fas fa-check-circle me-2"></i>
+                                  找到 ${data.jobs.length} 個相關職位
+                              </h5>
+                              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                          </div>
+                          <div class="modal-body">
+                              <div class="row mb-3">
+                                  <div class="col-md-6">
+                                      <strong>搜尋關鍵字:</strong> ${query}
+                                  </div>
+                                  <div class="col-md-6">
+                                      <strong>搜尋平台:</strong> 
+                                      ${data.routing_info ? data.routing_info.successful_platforms.map(p => `<span class="badge bg-success me-1">${p}</span>`).join('') : ''}
+                                  </div>
+                              </div>
+                              
+                              <div class="table-responsive">
+                                  <table class="table table-hover">
+                                      <thead>
+                                          <tr>
+                                              <th>職位</th>
+                                              <th>公司</th>
+                                              <th>地點</th>
+                                              <th>平台</th>
+                                              <th>操作</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          ${data.jobs.slice(0, 10).map(job => `
+                                              <tr>
+                                                  <td>${job.title || 'N/A'}</td>
+                                                  <td>${job.company || 'N/A'}</td>
+                                                  <td>${job.location || 'N/A'}</td>
+                                                  <td><span class="badge bg-info">${job.site || 'N/A'}</span></td>
+                                                  <td>
+                                                      ${job.job_url ? `<a href="${job.job_url}" target="_blank" class="btn btn-sm btn-outline-primary">查看</a>` : ''}
+                                                  </td>
+                                              </tr>
+                                          `).join('')}
+                                      </tbody>
+                                  </table>
+                              </div>
+                              
+                              ${data.jobs.length > 10 ? `<p class="text-muted text-center">顯示前10個結果，共找到 ${data.jobs.length} 個職位</p>` : ''}
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                              <button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for('index') }}'">
+                                  <i class="fas fa-search me-2"></i>查看更多結果
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          `;
+          
+          const existingModal = document.getElementById('headerResultsModal');
+          if (existingModal) existingModal.remove();
+          
+          document.body.insertAdjacentHTML('beforeend', modalHtml);
+          
+          const modal = new bootstrap.Modal(document.getElementById('headerResultsModal'));
+          modal.show();
+      }
+
+      function showHeaderAlert(message, type = 'info') {
+          const alertHtml = `
+              <div class="alert alert-${type} alert-dismissible fade show position-fixed" 
+                   style="top: 100px; right: 20px; z-index: 9999; min-width: 300px;" role="alert">
+                  <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'danger' ? 'times-circle' : 'info-circle'} me-2"></i>
+                  ${message}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+          `;
+          
+          document.body.insertAdjacentHTML('beforeend', alertHtml);
+          
+          setTimeout(() => {
+              const alert = document.querySelector('.alert');
+              if (alert) {
+                  const bsAlert = new bootstrap.Alert(alert);
+                  bsAlert.close();
+              }
+          }, 5000);
+      }
+
+      function showAISearchProgress(query) {
+          const modalHtml = `
+              <div class="modal fade" id="aiSearchModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-header bg-primary text-white">
+                              <h5 class="modal-title">
+                                  <i class="fas fa-robot me-2"></i>AI 正在為您搜尋工作
+                              </h5>
+                          </div>
+                          <div class="modal-body text-center py-4">
+                              <div class="ai-avatar mb-3">
+                                  <i class="fas fa-robot fa-3x text-primary" id="aiAvatar" style="animation: pulse 2s infinite;"></i>
+                              </div>
+                              <h6 class="mb-3">正在搜尋: "${query}"</h6>
+                              
+                              <div class="progress mb-3" style="height: 8px;">
+                                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                                       id="searchProgress" role="progressbar" style="width: 0%"></div>
+                              </div>
+                              
+                              <div class="search-steps d-flex justify-content-center gap-3 mb-3">
+                                  <div class="step active d-flex flex-column align-items-center" id="step1">
+                                      <div class="step-icon bg-primary text-white rounded-circle p-2 mb-1" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                          <i class="fas fa-brain"></i>
+                                      </div>
+                                      <small>分析查詢</small>
+                                  </div>
+                                  <div class="step d-flex flex-column align-items-center" id="step2">
+                                      <div class="step-icon bg-secondary text-white rounded-circle p-2 mb-1" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                          <i class="fas fa-globe"></i>
+                                      </div>
+                                      <small>選擇平台</small>
+                                  </div>
+                                  <div class="step d-flex flex-column align-items-center" id="step3">
+                                      <div class="step-icon bg-secondary text-white rounded-circle p-2 mb-1" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                          <i class="fas fa-search"></i>
+                                      </div>
+                                      <small>搜尋職位</small>
+                                  </div>
+                                  <div class="step d-flex flex-column align-items-center" id="step4">
+                                      <div class="step-icon bg-secondary text-white rounded-circle p-2 mb-1" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                          <i class="fas fa-check"></i>
+                                      </div>
+                                      <small>整理結果</small>
+                                  </div>
+                              </div>
+                              
+                              <p class="text-muted mt-3 mb-0" id="searchStatus">AI 正在分析您的需求...</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          `;
+          
+          const existingModal = document.getElementById('aiSearchModal');
+          if (existingModal) existingModal.remove();
+          
+          document.body.insertAdjacentHTML('beforeend', modalHtml);
+          
+          const modal = new bootstrap.Modal(document.getElementById('aiSearchModal'));
+          modal.show();
+          
+          startSearchProgress();
+      }
+
+      function startSearchProgress() {
+          const progressBar = document.getElementById('searchProgress');
+          const steps = ['step1', 'step2', 'step3', 'step4'];
+          const statuses = [
+              'AI 正在分析您的需求...',
+              '正在選擇最佳搜尋平台...',
+              '正在搜尋相關職位...',
+              '正在整理和優化結果...'
+          ];
+          
+          let currentStep = 0;
+          const interval = setInterval(() => {
+              if (currentStep < steps.length) {
+                  const progress = ((currentStep + 1) / steps.length) * 100;
+                  progressBar.style.width = progress + '%';
+                  
+                  steps.forEach((step, index) => {
+                      const stepEl = document.getElementById(step);
+                      const iconEl = stepEl.querySelector('.step-icon');
+                      if (index <= currentStep) {
+                          stepEl.classList.add('active');
+                          iconEl.classList.remove('bg-secondary');
+                          iconEl.classList.add('bg-primary');
+                      } else {
+                          stepEl.classList.remove('active');
+                          iconEl.classList.remove('bg-primary');
+                          iconEl.classList.add('bg-secondary');
+                      }
+                  });
+                  
+                  document.getElementById('searchStatus').textContent = statuses[currentStep];
+                  currentStep++;
+              } else {
+                  clearInterval(interval);
+              }
+          }, 800);
+          
+          window.searchProgressInterval = interval;
+      }
+
+      function performHeaderSearch(query) {
+          const formData = {
+              query: query,
+              results_wanted: 25,
+              hours_old: null,
+              selected_sites: ""
+          };
+
+          fetch('/search', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData)
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (window.searchProgressInterval) {
+                  clearInterval(window.searchProgressInterval);
+              }
+              
+              const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
+              if (modal) modal.hide();
+              
+              showHeaderSearchResults(data, query);
+          })
+          .catch(error => {
+              console.error('搜尋錯誤:', error);
+              if (window.searchProgressInterval) {
+                  clearInterval(window.searchProgressInterval);
+              }
+              
+              const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
+              if (modal) modal.hide();
+              
+              showHeaderAlert('搜尋失敗，請稍後再試', 'danger');
+          });
+      }
+
+      function showHeaderSearchResults(data, query) {
+          if (!data.success || !data.jobs || data.jobs.length === 0) {
+              showHeaderAlert('未找到相關職位，請嘗試其他關鍵字', 'warning');
+              return;
+          }
+
+          const modalHtml = `
+              <div class="modal fade" id="headerResultsModal" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-xl">
+                      <div class="modal-content">
+                          <div class="modal-header bg-success text-white">
+                              <h5 class="modal-title">
+                                  <i class="fas fa-check-circle me-2"></i>
+                                  找到 ${data.jobs.length} 個相關職位
+                              </h5>
+                              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                          </div>
+                          <div class="modal-body">
+                              <div class="row mb-3">
+                                  <div class="col-md-6">
+                                      <strong>搜尋關鍵字:</strong> ${query}
+                                  </div>
+                                  <div class="col-md-6">
+                                      <strong>搜尋平台:</strong> 
+                                      ${data.routing_info ? data.routing_info.successful_platforms.map(p => `<span class="badge bg-success me-1">${p}</span>`).join('') : ''}
+                                  </div>
+                              </div>
+                              
+                              <div class="table-responsive">
+                                  <table class="table table-hover">
+                                      <thead>
+                                          <tr>
+                                              <th>職位</th>
+                                              <th>公司</th>
+                                              <th>地點</th>
+                                              <th>平台</th>
+                                              <th>操作</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          ${data.jobs.slice(0, 10).map(job => `
+                                              <tr>
+                                                  <td>${job.title || 'N/A'}</td>
+                                                  <td>${job.company || 'N/A'}</td>
+                                                  <td>${job.location || 'N/A'}</td>
+                                                  <td><span class="badge bg-info">${job.site || 'N/A'}</span></td>
+                                                  <td>
+                                                      ${job.job_url ? `<a href="${job.job_url}" target="_blank" class="btn btn-sm btn-outline-primary">查看</a>` : ''}
+                                                  </td>
+                                              </tr>
+                                          `).join('')}
+                                      </tbody>
+                                  </table>
+                              </div>
+                              
+                              ${data.jobs.length > 10 ? `<p class="text-muted text-center">顯示前10個結果，共找到 ${data.jobs.length} 個職位</p>` : ''}
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                              <button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for('index') }}'">
+                                  <i class="fas fa-search me-2"></i>查看更多結果
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          `;
+          
+          const existingModal = document.getElementById('headerResultsModal');
+          if (existingModal) existingModal.remove();
+          
+          document.body.insertAdjacentHTML('beforeend', modalHtml);
+          
+          const modal = new bootstrap.Modal(document.getElementById('headerResultsModal'));
+          modal.show();
+      }
+
+      function showHeaderAlert(message, type = 'info') {
+          const alertHtml = `
+              <div class="alert alert-${type} alert-dismissible fade show position-fixed" 
+                   style="top: 100px; right: 20px; z-index: 9999; min-width: 300px;" role="alert">
+                  <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'danger' ? 'times-circle' : 'info-circle'} me-2"></i>
+                  ${message}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+          `;
+          
+          document.body.insertAdjacentHTML('beforeend', alertHtml);
+          
+          setTimeout(() => {
+              const alert = document.querySelector('.alert');
+              if (alert) {
+                  const bsAlert = new bootstrap.Alert(alert);
+                  bsAlert.close();
+              }
+          }, 5000);
+      }
+
+      function startSearchProgress() {
+          const progressBar = document.getElementById('searchProgress');
+          const steps = ['step1', 'step2', 'step3', 'step4'];
+          const statuses = [
+              'AI 正在分析您的需求...',
+              '正在選擇最佳搜尋平台...',
+              '正在搜尋相關職位...',
+              '正在整理和優化結果...'
+          ];
+          
+          let currentStep = 0;
+          const interval = setInterval(() => {
+              if (currentStep < steps.length) {
+                  const progress = ((currentStep + 1) / steps.length) * 100;
+                  progressBar.style.width = progress + '%';
+                  
+                  steps.forEach((step, index) => {
+                      const stepEl = document.getElementById(step);
+                      const iconEl = stepEl.querySelector('.step-icon');
+                      if (index <= currentStep) {
+                          stepEl.classList.add('active');
+                          iconEl.classList.remove('bg-secondary');
+                          iconEl.classList.add('bg-primary');
+                      } else {
+                          stepEl.classList.remove('active');
+                          iconEl.classList.remove('bg-primary');
+                          iconEl.classList.add('bg-secondary');
+                      }
+                  });
+                  
+                  document.getElementById('searchStatus').textContent = statuses[currentStep];
+                  currentStep++;
+              } else {
+                  clearInterval(interval);
+              }
+          }, 800);
+          
+          window.searchProgressInterval = interval;
+      }
+
+      function performHeaderSearch(query) {
+          const formData = {
+              query: query,
+              results_wanted: 25,
+              hours_old: null,
+              selected_sites: ""
+          };
+
+          fetch('/search', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData)
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (window.searchProgressInterval) {
+                  clearInterval(window.searchProgressInterval);
+              }
+              
+              const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
+              if (modal) modal.hide();
+              
+              showHeaderSearchResults(data, query);
+          })
+          .catch(error => {
+              console.error('搜尋錯誤:', error);
+              if (window.searchProgressInterval) {
+                  clearInterval(window.searchProgressInterval);
+              }
+              
+              const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
+              if (modal) modal.hide();
+              
+              showHeaderAlert('搜尋失敗，請稍後再試', 'danger');
+          });
       }
 
       // 語音輸入（Web Speech API）
