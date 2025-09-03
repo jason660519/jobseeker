@@ -1,31 +1,33 @@
-# 根目錄的 nixpacks.toml - 指向 web_app 目錄
-# 這個檔案告訴 Railway 從 web_app 目錄部署 Flask 應用
+# Railway deployment configuration for JobSpy Flask application
+# Optimized for Railway's Python environment
 
 [variables]
-# 設定工作目錄為 web_app
-WORKDIR = "/app/web_app"
+# Environment variables
+FLASK_ENV = "production"
+FLASK_DEBUG = "false"
+PYTHON_VERSION = "3.10"
 
 [phases.setup]
-# 安裝系統依賴
-cmds = ["apt-get update", "apt-get install -y build-essential curl git"]
+# System dependencies
+cmds = [
+    "apt-get update",
+    "apt-get install -y build-essential curl git"
+]
 
 [phases.install]
-# 安裝 Python 依賴
-# 先安裝根目錄的 jobseeker 套件，再安裝 web_app 的依賴
+# Install Python dependencies
 cmds = [
-    "pip install --upgrade pip",
-    "cd /app && pip install -e .",
-    "cd /app/web_app && pip install -r requirements.txt",
+    "pip3 install --upgrade pip setuptools wheel",
+    "pip3 install -e .",
+    "pip3 install -r web_app/requirements.txt"
 ]
 
 [phases.build]
-# 構建階段
+# Build phase
 cmds = [
-    "echo 'Build phase completed'",
-    "echo 'JobSpy web application ready for deployment'",
+    "echo 'JobSpy build completed successfully'"
 ]
 
 [start]
-# 使用 Gunicorn 作為生產伺服器啟動應用
-# 從 web_app 目錄啟動
-cmd = "cd /app/web_app && gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+# Start command for production
+cmd = "cd web_app && python3 -m gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --access-logfile - --error-logfile -"

@@ -1,14 +1,16 @@
-# Railway 配置文件
-# 這個文件告訴 Railway 如何構建和部署你的 Flask 應用
+# Railway configuration for JobSpy deployment
+# Optimized for Python Flask application
 
 [build]
-# 構建指令
+# Build configuration
 builder = "nixpacks"
 
 [deploy]
-# 部署設定
-startCommand = "cd web_app && gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+# Deployment settings
+startCommand = "cd web_app && python3 -m gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --access-logfile - --error-logfile -"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
 
 [environments.production]
-# 生產環境變數
-variables = { FLASK_ENV = "production", FLASK_DEBUG = "false" }
+# Production environment variables
+variables = { FLASK_ENV = "production", FLASK_DEBUG = "false", PYTHONPATH = "/app" }
