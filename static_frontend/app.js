@@ -5,8 +5,8 @@
 
 // 配置
 const CONFIG = {
-    // API 基礎 URL - 需要根據實際部署的後端地址修改
-    API_BASE_URL: 'https://your-backend.railway.app', // 替換為實際的後端 URL
+    // API 基礎 URL - 本地開發環境
+    API_BASE_URL: 'http://localhost:5000', // 本地後端地址
     
     // 分頁設置
     DEFAULT_PAGE_SIZE: 20,
