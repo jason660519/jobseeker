@@ -1,0 +1,65 @@
+# Railway deployment configuration
+# This file tells Railway which files to ignore during deployment
+
+# Force Railway to use nixpacks.toml instead of Dockerfile
+# (Dockerfile has been renamed to Dockerfile.local)
+
+# Development files
+Dockerfile.local
+docker-compose.yml
+.dockerignore
+
+# Test files and directories
+tests/
+tests_collection/
+*.log
+logs/
+
+# Development scripts
+scripts/
+examples/
+
+# Documentation (keep essential ones)
+docs/
+*.md
+!README.md
+
+# Data directories (too large for deployment)
+data/
+static_frontend/
+
+# Cache and temporary files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.coverage
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (use Railway's environment variables instead)
+.env
+.env.local
+.env.production
+
+# Build artifacts
+build/
+dist/
+*.egg-info/

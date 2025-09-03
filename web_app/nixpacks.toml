@@ -4,36 +4,35 @@
 [start]
 # 使用 Gunicorn 作為生產伺服器啟動應用
 # app:app 指向 app.py 檔案中的 app 變數
-cmd = "gunicorn app:app --bind 0.0.0.0:$PORT"
+cmd = "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
 
 [variables]
 # 設定 Python 版本
-PYTHON_VERSION = "3.10"
+PYTHON_VERSION = "3.11"
 
 # Flask 環境變數
 FLASK_ENV = "production"
 FLASK_APP = "app.py"
 
-# 設定工作目錄
-WORKDIR = "/app"
+# 設定工作目錄為 web_app
+WORKDIR = "/app/web_app"
 
 [phases.setup]
-# 安裝系統依賴（如果需要的話）
-cmds = [
-    "apt-get update",
-    "apt-get install -y build-essential"
-]
+# 安裝系統依賴
+cmds = ["apt-get update", "apt-get install -y build-essential curl git"]
 
 [phases.install]
 # 安裝 Python 依賴
+# 先安裝根目錄的 jobseeker 套件，再安裝 web_app 的依賴
 cmds = [
     "pip install --upgrade pip",
-    "pip install -r requirements.txt",
-    "pip install -e .."
+    "cd /app && pip install -e .",
+    "cd /app/web_app && pip install -r requirements.txt",
 ]
 
 [phases.build]
-# 構建階段（如果有需要編譯的內容）
+# 構建階段
 cmds = [
-    "echo 'Build phase completed'"
+    "echo 'Build phase completed'",
+    "echo 'JobSpy web application ready for deployment'",
 ]
