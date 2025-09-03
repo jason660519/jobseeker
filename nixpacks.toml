@@ -1,5 +1,5 @@
 # Railway deployment configuration for JobSpy Flask application
-# Optimized for Railway's Python environment
+# Optimized for Railway's Nixpacks Python environment
 
 [variables]
 # Environment variables
@@ -8,18 +8,20 @@ FLASK_DEBUG = "false"
 PYTHON_VERSION = "3.10"
 
 [phases.setup]
-# System dependencies
+# Install system dependencies and ensure Python/pip are available
 cmds = [
     "apt-get update",
-    "apt-get install -y build-essential curl git"
+    "apt-get install -y build-essential curl git python3 python3-pip python3-venv",
+    "python3 --version",
+    "python3 -m pip --version"
 ]
 
 [phases.install]
-# Install Python dependencies
+# Install Python dependencies using python3 -m pip for reliability
 cmds = [
-    "pip3 install --upgrade pip setuptools wheel",
-    "pip3 install -e .",
-    "pip3 install -r web_app/requirements.txt"
+    "python3 -m pip install --upgrade pip setuptools wheel",
+    "python3 -m pip install -e .",
+    "python3 -m pip install -r web_app/requirements.txt"
 ]
 
 [phases.build]

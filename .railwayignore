@@ -1,8 +1,17 @@
 # Railway deployment configuration
 # This file tells Railway which files to ignore during deployment
 
-# Force Railway to use nixpacks.toml instead of Docker
-# Ignore all Docker-related files to prevent Railway from using Docker
+# Force Railway to use Procfile by temporarily ignoring complex configurations
+# Comment/uncomment lines below to switch between deployment methods
+
+# Option 1: Use Procfile (simple automatic detection)
+nixpacks.toml
+railway.toml
+
+# Option 2: Use nixpacks (comment out the above lines)
+# Leave nixpacks.toml and railway.toml active
+
+# Always ignore Docker files to prevent Railway from using Docker
 Dockerfile*
 docker-compose.yml
 docker-compose.yaml
