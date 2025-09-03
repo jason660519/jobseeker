@@ -349,3 +349,39 @@ test-info:
 	@echo "  make test-unit       # 單元測試"
 	@echo "  make test-all        # 所有測試"
 	@echo "  make coverage        # 覆蓋率報告"
+	@echo ""
+	@echo "數據管理命令:"
+	@echo "  make setup           # 設置數據目錄結構"
+	@echo "  make migrate         # 遷移現有數據"
+	@echo "  make cleanup         # 清理舊數據"
+	@echo "  make query           # 查詢數據"
+	@echo "  make summary         # 顯示數據摘要"
+	@echo "  make full-setup      # 完整設置 (遷移 + 清理)"
+
+# 數據管理命令
+setup:
+	@echo "🚀 設置數據目錄結構..."
+	python -c "from jobseeker.data_manager import data_manager; print('✅ 數據目錄結構已創建')"
+
+migrate:
+	@echo "🚀 開始數據遷移..."
+	python scripts/migrate_existing_data.py
+
+cleanup:
+	@echo "🧹 清理舊數據..."
+	python scripts/cleanup_data.py --retention-days 30
+
+cleanup-dry:
+	@echo "🧹 清理舊數據 (試運行)..."
+	python scripts/cleanup_data.py --retention-days 30 --dry-run
+
+query:
+	@echo "🔍 查詢數據..."
+	python scripts/query_data.py --summary
+
+summary:
+	@echo "📊 顯示數據摘要..."
+	python scripts/manage_data.py summary
+
+full-setup: setup migrate cleanup
+	@echo "✅ 完整設置完成"
