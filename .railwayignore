@@ -1,8 +1,8 @@
 # Railway deployment configuration
-# Force Railway to use Procfile + automatic Python detection
+# Switch to using Dockerfile.railway for better dependency control
 
-# Ignore all Docker files to prevent Railway from using Docker
-Dockerfile*
+# Ignore other Docker files but allow Dockerfile.railway
+Dockerfile.local
 docker-compose.yml
 docker-compose.yaml
 .dockerignore
