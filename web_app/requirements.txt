@@ -24,6 +24,7 @@ orjson>=3.9.0
 
 # 生產環境 WSGI 伺服器
 gunicorn>=21.2.0
+waitress>=2.1.2  # Windows-compatible WSGI server
 
 # jobseeker 核心依賴
 pydantic>=2.3.0

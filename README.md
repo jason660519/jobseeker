@@ -1,4 +1,4 @@
-﻿# 🔍 jobseeker - 智能職位搜尋工具
+# 🔍 jobseeker - 智能職位搜尋工具
 
 > **一個強大且易用的 Python 職位搜尋工具，讓找工作變得更簡單！**
 
@@ -35,7 +35,7 @@
 ### 🔧 前置需求
 
 在開始安裝之前，請確保您的電腦已安裝：
-- **Python 3.8 或更新版本** - [下載 Python](https://www.python.org/downloads/)
+- **Python 3.10 或更新版本** - [下載 Python](https://www.python.org/downloads/)
 - **Git** - [下載 Git](https://git-scm.com/downloads)（用於下載專案）
 
 ### 方法一：使用 uv（最簡單，推薦新手）

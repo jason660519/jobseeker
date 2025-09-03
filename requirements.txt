@@ -1,0 +1,43 @@
+# jobseeker 核心依賴套件
+# 這個檔案是從 pyproject.toml 生成的，用於支援傳統的 pip 安裝方式
+# 建議使用 poetry 或 uv 進行依賴管理
+
+# ==================== 核心依賴 ====================
+
+# HTTP 請求處理
+requests>=2.31.0
+
+# HTML 解析
+beautifulsoup4>=4.12.2
+
+# 數據處理
+pandas>=2.1.0
+numpy==1.26.3
+
+# 數據驗證
+pydantic>=2.3.0
+
+# TLS 客戶端
+tls-client>=1.0.1
+
+# Markdown 轉換
+markdownify>=1.1.0
+
+# 正則表達式
+regex>=2024.4.28
+
+# ==================== 開發依賴（可選）====================
+# 如需開發環境，請安裝以下套件：
+# jupyter>=1.0.0
+# black
+# pre-commit
+
+# ==================== 安裝說明 ====================
+# 安裝方式：
+# pip install -r requirements.txt
+#
+# 或使用 poetry（推薦）：
+# poetry install
+#
+# 或使用 uv（最新推薦）：
+# uv pip install -r requirements.txt

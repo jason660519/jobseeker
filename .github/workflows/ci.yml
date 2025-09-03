@@ -1,4 +1,4 @@
-﻿name: CI/CD Pipeline
+name: CI/CD Pipeline
 
 # 觸發條件
 on:
@@ -24,7 +24,7 @@ on:
 
 # 環境變數
 env:
-  PYTHON_VERSION: '3.9'
+  PYTHON_VERSION: '3.10'
   jobseeker_TEST_ENV: 'ci'
   jobseeker_CACHE_ENABLED: 'false'
   jobseeker_MOCK_NETWORK: 'true'
@@ -104,11 +104,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.10', '3.11', '3.12']
         exclude:
           # 減少 macOS 測試以節省資源
           - os: macos-latest
-            python-version: '3.8'
+            python-version: '3.10'
           - os: macos-latest
             python-version: '3.10'
     
@@ -341,7 +341,7 @@ jobs:
     
     strategy:
       matrix:
-        python-version: ['3.8', '3.12-dev']
+        python-version: ['3.10', '3.12-dev']
     
     steps:
     - name: 檢出程式碼

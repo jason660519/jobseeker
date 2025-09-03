@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 jobseeker 測試配置
@@ -335,7 +335,7 @@ def check_test_environment() -> Dict[str, bool]:
     
     # 檢查 Python 版本
     import sys
-    checks['python_version'] = sys.version_info >= (3, 8)
+    checks['python_version'] = sys.version_info >= (3, 10)
     
     # 檢查必要套件
     required_packages = ['pytest', 'requests', 'pandas', 'beautifulsoup4']

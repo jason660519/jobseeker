@@ -1,4 +1,4 @@
-﻿name: jobseeker Tests
+name: jobseeker Tests
 
 # 觸發條件
 on:
@@ -14,7 +14,7 @@ on:
 
 # 環境變數
 env:
-  PYTHON_VERSION: '3.9'
+  PYTHON_VERSION: '3.10'
   CACHE_VERSION: v1
 
 jobs:
@@ -100,13 +100,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.10', '3.11', '3.12']
         exclude:
           # 排除一些組合以節省 CI 時間
           - os: macos-latest
-            python-version: '3.8'
+            python-version: '3.10'
           - os: windows-latest
-            python-version: '3.8'
+             python-version: '3.10'
     
     steps:
     - name: Checkout code

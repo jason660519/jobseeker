@@ -1,4 +1,4 @@
-﻿# jobseeker 專案 Makefile
+# jobseeker 專案 Makefile
 # 提供便捷的開發和測試命令
 
 .PHONY: help install test test-unit test-integration test-performance test-network test-all test-quick test-smoke
@@ -318,7 +318,7 @@ info:
 	@echo "================="
 	@echo "專案名稱: jobseeker"
 	@echo "描述: 職位資訊爬蟲工具"
-	@echo "Python 版本: >= 3.8"
+	@echo "Python 版本: >= 3.10"
 	@echo "主要功能: 多網站職位爬取、非同步處理、智能快取"
 	@echo ""
 	@echo "目錄結構:"
