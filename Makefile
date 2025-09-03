@@ -4,6 +4,7 @@
 .PHONY: help install test test-unit test-integration test-performance test-network test-all test-quick test-smoke
 .PHONY: coverage lint format check clean build docs serve-docs
 .PHONY: setup-dev setup-ci docker-build docker-test
+.PHONY: docker-build-test-browser docker-test-browser
 
 # 預設目標
 help:
@@ -154,6 +155,14 @@ docker-build:
 docker-test:
 	@echo "🐳 在 Docker 中執行測試..."
 	docker run --rm -v $(PWD):/app -w /app jobseeker:latest python test_runner.py --all
+
+docker-build-test-browser:
+	@echo "🐳 建置含瀏覽器依賴的測試映像..."
+	docker build --target testing-browser -t jobseeker:test-browser .
+
+docker-test-browser: docker-build-test-browser
+	@echo "🧪 在含瀏覽器依賴的容器中執行 1111 隨機用戶測試..."
+	docker run --rm -v $(PWD):/app -w /app jobseeker:test-browser pytest -v tests/integration/test_tw1111_random_user.py
 
 # ==================== Web App (Compose) ====================
 

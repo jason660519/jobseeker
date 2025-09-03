@@ -89,6 +89,24 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 # 預設執行測試
 CMD ["python", "test_runner.py", "--all"]
 
+# ==================== 測試環境（含瀏覽器 & 依賴） ====================
+FROM mcr.microsoft.com/playwright/python:v1.45.0-jammy AS testing-browser
+
+# 工作目錄
+WORKDIR /app
+
+COPY pyproject.toml README.md LICENSE ./
+COPY jobseeker/ ./jobseeker/
+# 安裝最小依賴以執行 1111 隨機用戶測試
+RUN pip install -e . && \
+    pip install --no-cache-dir pytest requests beautifulsoup4
+
+# 複製專案（測試檔案等）
+COPY . .
+
+# 預設執行整合與瀏覽器相關測試
+CMD ["pytest", "-q", "tests/integration/test_tw1111_random_user.py", "-v"]
+
 # ==================== 生產環境 ====================
 FROM base AS production
 
