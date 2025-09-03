@@ -1,0 +1,85 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+# 設置權限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 確保只有一個部署作業同時運行
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # 構建靜態前端
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        # 安裝 Python 依賴
+        pip install -r web_app/requirements.txt
+        
+        # 如果有 package.json，安裝 Node.js 依賴
+        if [ -f package.json ]; then
+          npm ci
+        fi
+        
+    - name: Build static frontend
+      run: |
+        # 創建靜態前端目錄
+        mkdir -p dist
+        
+        # 複製靜態文件
+        cp -r static_frontend/* dist/
+        
+        # 更新 API 端點配置
+        if [ -n "${{ secrets.API_BASE_URL }}" ]; then
+          sed -i "s|https://your-backend.railway.app|${{ secrets.API_BASE_URL }}|g" dist/app.js
+        fi
+        
+        # 如果有構建腳本，執行它
+        if [ -f scripts/build-static.sh ]; then
+          chmod +x scripts/build-static.sh
+          ./scripts/build-static.sh
+        fi
+        
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: dist
+
+  # 部署到 GitHub Pages
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSpy - 智能職位搜尋</title>
+    <meta name="description" content="JobSpy 是一個智能職位搜尋工具，整合多個求職網站，提供快速、準確的職位搜尋服務。">
+    <meta name="keywords" content="求職,職位搜尋,工作,JobSpy,LinkedIn,Indeed,Glassdoor">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- 自定義樣式 -->
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-search me-2"></i>JobSpy
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">功能特色</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">使用方式</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#api-docs">API 文檔</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要搜尋區域 -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h1 class="display-4 fw-bold text-white mb-3">
+                            <i class="fas fa-briefcase me-3"></i>智能職位搜尋
+                        </h1>
+                        <p class="lead text-white-50 mb-4">
+                            整合 LinkedIn、Indeed、Glassdoor 等多個求職網站，一次搜尋找到最適合的工作機會
+                        </p>
+                    </div>
+
+                    <!-- 搜尋表單 -->
+                    <div class="search-card">
+                        <form id="searchForm">
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label for="query" class="form-label">
+                                        <i class="fas fa-search me-2"></i>搜尋關鍵字
+                                    </label>
+                                    <input type="text" class="form-control form-control-lg" id="query" 
+                                           placeholder="例如：軟體工程師 台北" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="location" class="form-label">
+                                        <i class="fas fa-map-marker-alt me-2"></i>地點（可選）
+                                    </label>
+                                    <input type="text" class="form-control form-control-lg" id="location" 
+                                           placeholder="例如：台北、新竹">
+                                </div>
+                            </div>
+                            
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-4">
+                                    <label for="results_wanted" class="form-label">
+                                        <i class="fas fa-list me-2"></i>結果數量
+                                    </label>
+                                    <select class="form-select" id="results_wanted">
+                                        <option value="10">10 個結果</option>
+                                        <option value="20" selected>20 個結果</option>
+                                        <option value="50">50 個結果</option>
+                                        <option value="100">100 個結果</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="hours_old" class="form-label">
+                                        <i class="fas fa-clock me-2"></i>發布時間
+                                    </label>
+                                    <select class="form-select" id="hours_old">
+                                        <option value="">不限時間</option>
+                                        <option value="24">24 小時內</option>
+                                        <option value="72">3 天內</option>
+                                        <option value="168">1 週內</option>
+                                        <option value="720">1 個月內</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="selected_sites" class="form-label">
+                                        <i class="fas fa-globe me-2"></i>搜尋網站
+                                    </label>
+                                    <select class="form-select" id="selected_sites">
+                                        <option value="">所有網站</option>
+                                        <option value="linkedin">LinkedIn</option>
+                                        <option value="indeed">Indeed</option>
+                                        <option value="glassdoor">Glassdoor</option>
+                                        <option value="seek">Seek</option>
+                                        <option value="zip_recruiter">ZipRecruiter</option>
+                                        <option value="104">104 人力銀行</option>
+                                        <option value="1111">1111 人力銀行</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5" id="searchBtn">
+                                    <i class="fas fa-search me-2"></i>開始搜尋
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 搜尋結果區域 -->
+    <div class="container mt-5" id="resultsSection" style="display: none;">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h3 mb-0">
+                        <i class="fas fa-list-alt me-2"></i>搜尋結果
+                    </h2>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary" id="downloadCsvBtn">
+                            <i class="fas fa-download me-2"></i>下載 CSV
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="downloadJsonBtn">
+                            <i class="fas fa-download me-2"></i>下載 JSON
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 搜尋統計 -->
+                <div class="alert alert-info" id="searchStats" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <strong>總結果數：</strong><span id="totalJobs">0</span>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>執行時間：</strong><span id="executionTime">0</span> 秒
+                        </div>
+                        <div class="col-md-3">
+                            <strong>成功平台：</strong><span id="successfulPlatforms">0</span>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>失敗平台：</strong><span id="failedPlatforms">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 載入動畫 -->
+                <div class="text-center py-5" id="loadingSpinner" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">搜尋中...</span>
+                    </div>
+                    <p class="mt-3 text-muted">正在搜尋職位，請稍候...</p>
+                </div>
+
+                <!-- 結果列表 -->
+                <div id="resultsList"></div>
+
+                <!-- 分頁 -->
+                <nav aria-label="搜尋結果分頁" id="paginationNav" style="display: none;">
+                    <ul class="pagination justify-content-center" id="paginationList">
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- 功能特色 -->
+    <section class="py-5 bg-light" id="features">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center mb-5">
+                    <h2 class="display-5 fw-bold">功能特色</h2>
+                    <p class="lead text-muted">為什麼選擇 JobSpy？</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h4>多平台整合</h4>
+                        <p class="text-muted">整合 LinkedIn、Indeed、Glassdoor 等主流求職網站，一次搜尋覆蓋全網</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>智能路由</h4>
+                        <p class="text-muted">根據搜尋條件自動選擇最適合的求職網站，提高搜尋效率</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h4>多格式下載</h4>
+                        <p class="text-muted">支援 CSV 和 JSON 格式下載，方便後續處理和分析</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用方式 -->
+    <section class="py-5" id="how-it-works">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center mb-5">
+                    <h2 class="display-5 fw-bold">使用方式</h2>
+                    <p class="lead text-muted">簡單三步驟，找到理想工作</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="step-card text-center">
+                        <div class="step-number">1</div>
+                        <h4>輸入搜尋條件</h4>
+                        <p class="text-muted">輸入職位關鍵字、地點等搜尋條件</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="step-card text-center">
+                        <div class="step-number">2</div>
+                        <h4>智能搜尋</h4>
+                        <p class="text-muted">系統自動選擇最適合的求職網站進行搜尋</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="step-card text-center">
+                        <div class="step-number">3</div>
+                        <h4>查看結果</h4>
+                        <p class="text-muted">瀏覽搜尋結果，下載或收藏感興趣的職位</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API 文檔 -->
+    <section class="py-5 bg-light" id="api-docs">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center mb-5">
+                    <h2 class="display-5 fw-bold">API 文檔</h2>
+                    <p class="lead text-muted">開發者友好的 RESTful API</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="api-doc-card">
+                        <h4><i class="fas fa-code me-2"></i>搜尋職位 API</h4>
+                        <div class="api-endpoint">
+                            <code>POST /api/v2/search</code>
+                        </div>
+                        <h5>請求參數：</h5>
+                        <pre><code>{
+  "query": "軟體工程師",
+  "location": "台北",
+  "results_wanted": 20,
+  "hours_old": 168,
+  "page": 1,
+  "per_page": 20
+}</code></pre>
+                        <h5>回應格式：</h5>
+                        <pre><code>{
+  "success": true,
+  "total_jobs": 150,
+  "jobs": [...],
+  "pagination": {
+    "page": 1,
+    "per_page": 20,
+    "total": 150,
+    "total_pages": 8,
+    "has_next": true,
+    "has_prev": false
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁腳 -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-search me-2"></i>JobSpy</h5>
+                    <p class="text-muted">智能職位搜尋工具，讓找工作變得更簡單。</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-muted mb-0">
+                        &copy; 2025 JobSpy. 開源專案，歡迎貢獻。
+                    </p>
+                    <div class="mt-2">
+                        <a href="https://github.com/jason660519/jobseeker" class="text-white me-3">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <a href="#" class="text-white">
+                            <i class="fas fa-book"></i> 文檔
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 自定義 JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
