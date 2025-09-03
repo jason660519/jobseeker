@@ -40,7 +40,7 @@ import pandas as pd
 
 # 導入 jobseeker 核心功能
 try:
-    from jobseeker.route_manager import smart_scrape_jobs
+    from jobseeker.smart_router import smart_router
     from jobseeker.model import Site, Country
     from jobseeker.query_parser import parse_user_query_smart
 except ImportError as e:
@@ -275,15 +275,22 @@ def search_jobs():
         else:
             print(f"選擇的網站: {selected_sites if selected_sites else '所有網站'}")
             
-        result = smart_scrape_jobs(
-            user_query=parsed.search_term,
-            location=derived_location if derived_location else None,
-            results_wanted=results_wanted,
-            hours_old=hours_old,
-            site_name=site_name,
-            is_remote=parsed.is_remote,
-            country_indeed=derived_country or 'usa'
-        )
+        # 使用新的智能路由器
+        if site_name:
+            # 單平台搜尋
+            result = smart_router.search_jobs(
+                query=parsed.search_term,
+                location=derived_location if derived_location else None,
+                max_results=results_wanted,
+                platforms=[site_name]
+            )
+        else:
+            # 多平台智能搜尋
+            result = smart_router.search_jobs(
+                query=parsed.search_term,
+                location=derived_location if derived_location else None,
+                max_results=results_wanted
+            )
         
         # 處理搜尋結果
         if result.total_jobs == 0:
@@ -294,8 +301,9 @@ def search_jobs():
                 'message': '未找到符合條件的職位，請嘗試調整搜尋條件',
                 'jobs': [],
                 'routing_info': {
-                    'successful_agents': [agent.value for agent in result.successful_agents],
-                    'confidence_score': result.routing_decision.confidence_score
+                    'successful_platforms': result.successful_platforms,
+                    'failed_platforms': result.failed_platforms,
+                    'execution_time': result.total_execution_time
                 },
                 'pagination': {
                     'page': page,
@@ -309,25 +317,22 @@ def search_jobs():
         
         # 轉換職位數據為字典格式
         jobs_list = []
-        if result.combined_jobs_data is not None:
-            # 處理 NaN 值和數據類型
-            df_clean = result.combined_jobs_data.fillna('')
-            
-            for _, row in df_clean.iterrows():
+        if result.jobs:
+            for job in result.jobs:
                 job_dict = {
-                    'title': str(row.get('title', '')),
-                    'company': str(row.get('company', '')),
-                    'location': str(row.get('location', '')),
-                    'description': str(row.get('description', ''))[:500] + ('...' if len(str(row.get('description', ''))) > 500 else ''),
-                    'salary_min': float(row['salary_min']) if pd.notna(row.get('salary_min')) else None,
-                    'salary_max': float(row['salary_max']) if pd.notna(row.get('salary_max')) else None,
-                    'salary_currency': str(row.get('salary_currency', '')),
-                    'date_posted': str(row.get('date_posted', '')),
-                    'job_url': str(row.get('job_url', '')),
-                    'job_url_direct': str(row.get('job_url_direct', '')),
-                    'site': str(row.get('site', '')),
-                    'job_type': str(row.get('job_type', '')),
-                    'is_remote': bool(row.get('is_remote', False))
+                    'title': str(job.title or ''),
+                    'company': str(job.company_name or ''),
+                    'location': str(job.location.city if job.location else ''),
+                    'description': str(job.description or '')[:500] + ('...' if len(str(job.description or '')) > 500 else ''),
+                    'salary_min': None,  # 新架構中需要從compensation解析
+                    'salary_max': None,  # 新架構中需要從compensation解析
+                    'salary_currency': '',  # 新架構中需要從compensation解析
+                    'date_posted': str(job.date_posted or ''),
+                    'job_url': str(job.job_url or ''),
+                    'job_url_direct': str(job.job_url_direct or ''),
+                    'site': str(job.site or ''),
+                    'job_type': str(job.job_type or ''),
+                    'is_remote': bool(job.is_remote or False)
                 }
                 jobs_list.append(job_dict)
 
@@ -376,10 +381,10 @@ def search_jobs():
             'total_jobs': total,
             'jobs': page_jobs,
             'routing_info': {
-                'successful_agents': [agent.value for agent in result.successful_agents],
-                'failed_agents': [agent.value for agent in result.failed_agents],
-                'confidence_score': result.routing_decision.confidence_score,
-                'execution_time': result.total_execution_time
+                'successful_platforms': result.successful_platforms,
+                'failed_platforms': result.failed_platforms,
+                'execution_time': result.total_execution_time,
+                'search_metadata': result.search_metadata
             },
             'search_params': {
                 'query': user_query,
