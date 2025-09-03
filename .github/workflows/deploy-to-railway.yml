@@ -1,0 +1,74 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+  RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+
+jobs:
+  deploy:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install Railway CLI
+      run: npm install -g @railway/cli
+      
+    - name: Login to Railway
+      run: railway login --token ${{ secrets.RAILWAY_TOKEN }}
+      
+    - name: Deploy to Railway
+      run: |
+        # 設置專案
+        railway link ${{ secrets.RAILWAY_PROJECT_ID }}
+        
+        # 部署
+        railway up --detach
+        
+    - name: Get deployment URL
+      id: get-url
+      run: |
+        # 獲取部署 URL
+        URL=$(railway status --json | jq -r '.deployments[0].url')
+        echo "deployment_url=$URL" >> $GITHUB_OUTPUT
+        echo "🚀 部署完成！URL: $URL"
+        
+    - name: Comment deployment URL on PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `🚀 **Railway 部署完成！**\n\n🔗 **部署 URL**: ${{ steps.get-url.outputs.deployment_url }}\n\n📊 **部署詳情**:\n- 分支: \`${{ github.ref_name }}\`\n- 提交: \`${{ github.sha }}\`\n- 觸發者: @${{ github.actor }}`
+          })
+          
+    - name: Create deployment status
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.repos.createDeploymentStatus({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            deployment_id: context.payload.deployment.id,
+            state: 'success',
+            environment_url: '${{ steps.get-url.outputs.deployment_url }}',
+            description: 'Railway deployment completed successfully'
+          })
