@@ -140,121 +140,7 @@ endblock %} {% block content %}
                 <!-- 搜尋關鍵字（隱藏，用於後端處理） -->
                 <input type="hidden" id="query" name="query" />
 
-                <!-- 快速選擇工作地點 -->
-                <div class="quick-locations mt-4">
-                  <div class="row g-2">
-                    <div class="col-12">
-                      <small class="text-muted mb-2 d-block">
-                        <i class="fas fa-map-marker-alt me-1"></i
-                        >快速選擇工作地點：
-                      </small>
-                    </div>
-                    <div class="col-md-3 col-6">
-                      <button
-                        type="button"
-                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
-                        data-location="台北"
-                      >
-                        台北
-                      </button>
-                    </div>
-                    <div class="col-md-3 col-6">
-                      <button
-                        type="button"
-                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
-                        data-location="新竹"
-                      >
-                        新竹
-                      </button>
-                    </div>
-                    <div class="col-md-3 col-6">
-                      <button
-                        type="button"
-                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
-                        data-location="台中"
-                      >
-                        台中
-                      </button>
-                    </div>
-                    <div class="col-md-3 col-6">
-                      <button
-                        type="button"
-                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
-                        data-location="高雄"
-                      >
-                        高雄
-                      </button>
-                    </div>
-                    <div class="col-md-3 col-6">
-                      <button
-                        type="button"
-                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
-                        data-location="新加坡"
-                      >
-                        新加坡
-                      </button>
-                    </div>
-                    <div class="col-md-3 col-6">
-                      <button
-                        type="button"
-                        class="btn btn-outline-success btn-sm w-100 quick-location-btn"
-                        data-location="遠端"
-                      >
-                        遠端工作
-                      </button>
-                    </div>
-                  </div>
-                </div>
 
-                <!-- 基本設定（直接顯示） -->
-                <div class="basic-settings mt-4">
-                  <div class="row g-3">
-                    <div class="col-md-4">
-                      <label class="form-label">
-                        <i class="fas fa-list-ol me-1"></i>結果數量
-                      </label>
-                      <select
-                        class="form-select"
-                        id="results_wanted"
-                        name="results_wanted"
-                      >
-                        <option value="10">10 個結果</option>
-                        <option value="25" selected>25 個結果</option>
-                        <option value="50">50 個結果</option>
-                        <option value="100">100 個結果</option>
-                      </select>
-                    </div>
-                    <div class="col-md-4">
-                      <label class="form-label">
-                        <i class="fas fa-calendar-alt me-1"></i>發布時間
-                      </label>
-                      <select
-                        class="form-select"
-                        id="hours_old"
-                        name="hours_old"
-                      >
-                        <option value="">不限時間</option>
-                        <option value="24">1 天內</option>
-                        <option value="72">3 天內</option>
-                        <option value="168" selected>7 天內</option>
-                        <option value="336">14 天內</option>
-                        <option value="720">30 天內</option>
-                      </select>
-                    </div>
-                    <div class="col-md-4">
-                      <label class="form-label">
-                        <i class="fas fa-globe me-1"></i>搜尋平台
-                      </label>
-                      <button
-                        type="button"
-                        class="btn btn-outline-secondary w-100"
-                        onclick="showSiteSelector()"
-                      >
-                        <i class="fas fa-cog me-1"></i>選擇平台
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <!-- 搜尋按鈕 -->
@@ -453,23 +339,9 @@ endblock %} {% block content %}
         } catch (e) {}
       })();
 
-      // 快速選擇地點按鈕功能
-      $(".quick-location-btn").on("click", function () {
-        const location = $(this).data("location");
-        $("#location").val(location);
-
-        // 更新視覺狀態
-        $(".quick-location-btn").removeClass("active");
-        $(this).addClass("active");
-
-        // 自動組合搜尋關鍵字
-        updateSearchQuery();
-      });
-
       // 監聽輸入框變化
       $("#jobTitle, #location").on("input", function () {
         updateSearchQuery();
-        $(".quick-location-btn").removeClass("active");
       });
 
       // 更新搜尋關鍵字
@@ -532,12 +404,9 @@ endblock %} {% block content %}
       function performSearch() {
         const formData = {
           query: $("#query").val().trim(),
-          results_wanted: parseInt($("#results_wanted").val()),
-          hours_old: $("#hours_old").val() || null,
-          selected_sites:
-            typeof selectedSites !== "undefined" && Array.isArray(selectedSites)
-              ? selectedSites.join(",")
-              : "",
+          results_wanted: 25, // 默認25個結果
+          hours_old: null, // 不限時間
+          selected_sites: "", // 搜尋所有平台
         };
         // 伺服器端分頁參數
         formData.page = 1;
