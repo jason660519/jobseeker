@@ -140,6 +140,24 @@ endblock %} {% block content %}
                 <!-- 搜尋關鍵字（隱藏，用於後端處理） -->
                 <input type="hidden" id="query" name="query" />
 
+                <!-- 平台選擇區域 -->
+                <div class="platform-selection mt-4">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label">
+                        <i class="fas fa-globe me-1"></i>搜尋平台
+                      </label>
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary w-100"
+                        onclick="showSiteSelector()"
+                      >
+                        <i class="fas fa-cog me-1"></i>選擇平台
+                        <span class="badge bg-primary ms-2" id="selectedPlatformsCount">全部</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
               </div>
 
@@ -406,7 +424,7 @@ endblock %} {% block content %}
           query: $("#query").val().trim(),
           results_wanted: 25, // 默認25個結果
           hours_old: null, // 不限時間
-          selected_sites: "indeed,linkedin,google,ziprecruiter,seek,104,1111", // 強制搜尋多個平台
+          selected_sites: selectedSites.length > 0 ? selectedSites.join(',') : "", // 使用選擇的平台
         };
         // 伺服器端分頁參數
         formData.page = 1;
@@ -877,7 +895,246 @@ endblock %} {% block content %}
         };
         window.saveFavorite(jobObj);
       };
+
+      // 網站選擇器相關函數
+      let selectedSites = [];
+
+      function showSiteSelector() {
+        const modal = new bootstrap.Modal(document.getElementById('siteSelector'));
+        modal.show();
+      }
+
+      // 全選網站
+      function selectAllSites() {
+        const checkboxes = document.querySelectorAll('#siteSelector input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = true;
+        });
+      }
+
+      // 清除所有選擇
+      function clearAllSites() {
+        const checkboxes = document.querySelectorAll('#siteSelector input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = false;
+        });
+      }
+
+      // 應用網站選擇
+      function applySiteSelection() {
+        const checkboxes = document.querySelectorAll('#siteSelector input[type="checkbox"]:checked');
+        selectedSites = Array.from(checkboxes).map(cb => cb.value);
+
+        // 更新搜尋表單中的隱藏欄位
+        updateSearchFormSites();
+
+        // 更新按鈕顯示
+        updatePlatformButton();
+
+        // 關閉彈出視窗
+        const modal = bootstrap.Modal.getInstance(document.getElementById('siteSelector'));
+        modal.hide();
+
+        // 顯示選擇結果
+        if (selectedSites.length > 0) {
+          console.log('已選擇的網站:', selectedSites);
+        } else {
+          alert('請至少選擇一個搜尋網站！');
+        }
+      }
+
+      // 更新搜尋表單中的網站選擇
+      function updateSearchFormSites() {
+        // 移除現有的隱藏欄位
+        const existingFields = document.querySelectorAll('input[name="selected_sites"]');
+        existingFields.forEach(field => field.remove());
+
+        // 添加新的隱藏欄位
+        const form = document.getElementById('searchForm');
+        if (form && selectedSites.length > 0) {
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = 'selected_sites';
+          hiddenInput.value = selectedSites.join(',');
+          form.appendChild(hiddenInput);
+        }
+      }
+
+      // 更新平台選擇按鈕顯示
+      function updatePlatformButton() {
+        const countElement = document.getElementById('selectedPlatformsCount');
+        if (countElement) {
+          if (selectedSites.length === 0) {
+            countElement.textContent = '全部';
+            countElement.className = 'badge bg-primary ms-2';
+          } else if (selectedSites.length === 1) {
+            countElement.textContent = selectedSites[0];
+            countElement.className = 'badge bg-success ms-2';
+          } else {
+            countElement.textContent = `${selectedSites.length}個`;
+            countElement.className = 'badge bg-info ms-2';
+          }
+        }
+      }
+
+      // 初始化：設置默認選擇
+      $(document).ready(function() {
+        // 設置默認選擇的網站
+        selectedSites = ['linkedin', 'indeed', 'glassdoor', 'ziprecruiter'];
+        updateSearchFormSites();
+        updatePlatformButton();
+      });
     });
   </script>
+
+  <!-- 網站選擇器模態框 -->
+  <div
+    class="modal fade"
+    id="siteSelector"
+    tabindex="-1"
+    aria-labelledby="siteSelectorLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="siteSelectorLabel">
+            <i class="fas fa-globe me-2"></i>選擇搜尋網站
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-3">請選擇您要搜尋的求職網站：</p>
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="linkedin"
+                  id="site_linkedin"
+                  checked
+                />
+                <label class="form-check-label" for="site_linkedin">
+                  <i class="fab fa-linkedin text-primary me-2"></i>LinkedIn
+                </label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="indeed"
+                  id="site_indeed"
+                  checked
+                />
+                <label class="form-check-label" for="site_indeed">
+                  <i class="fas fa-briefcase text-info me-2"></i>Indeed
+                </label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="glassdoor"
+                  id="site_glassdoor"
+                  checked
+                />
+                <label class="form-check-label" for="site_glassdoor">
+                  <i class="fas fa-building text-success me-2"></i>Glassdoor
+                </label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="ziprecruiter"
+                  id="site_ziprecruiter"
+                  checked
+                />
+                <label class="form-check-label" for="site_ziprecruiter">
+                  <i class="fas fa-search text-warning me-2"></i>ZipRecruiter
+                </label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="seek"
+                  id="site_seek"
+                />
+                <label class="form-check-label" for="site_seek">
+                  <i class="fas fa-compass text-danger me-2"></i>Seek
+                </label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="google"
+                  id="site_google"
+                />
+                <label class="form-check-label" for="site_google">
+                  <i class="fab fa-google text-primary me-2"></i>Google Jobs
+                </label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="104"
+                  id="site_104"
+                />
+                <label class="form-check-label" for="site_104">
+                  <i class="fas fa-briefcase text-info me-2"></i>104人力銀行
+                </label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value="1111"
+                  id="site_1111"
+                />
+                <label class="form-check-label" for="site_1111">
+                  <i class="fas fa-briefcase text-success me-2"></i>1111人力銀行
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" onclick="clearAllSites()">
+            <i class="fas fa-times me-1"></i>清除全部
+          </button>
+          <button type="button" class="btn btn-outline-primary" onclick="selectAllSites()">
+            <i class="fas fa-check me-1"></i>全選
+          </button>
+          <button type="button" class="btn btn-primary" onclick="applySiteSelection()">
+            <i class="fas fa-save me-1"></i>確認選擇
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {% endblock %}
 </div>
