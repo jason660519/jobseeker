@@ -1,0 +1,317 @@
+[
+  {
+    "status": "success",
+    "query": "軟體工程師",
+    "location": "台北",
+    "job_count": 0,
+    "response_time": 2.058035,
+    "data": {
+      "jobs": [],
+      "message": "未找到符合條件的職位，請嘗試調整搜尋條件",
+      "pagination": {
+        "has_next": false,
+        "has_prev": false,
+        "page": 1,
+        "per_page": 20,
+        "total": 0,
+        "total_pages": 0
+      },
+      "routing_info": {
+        "execution_time": 0.0016088485717773438,
+        "failed_platforms": [
+          "indeed",
+          "1111",
+          "104"
+        ],
+        "successful_platforms": []
+      },
+      "search_id": "23a53a35-eee2-401a-9790-97a4282a860b",
+      "success": true,
+      "total_jobs": 0
+    }
+  },
+  {
+    "status": "success",
+    "query": "Python開發者",
+    "location": "新竹",
+    "job_count": 0,
+    "response_time": 2.049877,
+    "data": {
+      "jobs": [],
+      "message": "未找到符合條件的職位，請嘗試調整搜尋條件",
+      "pagination": {
+        "has_next": false,
+        "has_prev": false,
+        "page": 1,
+        "per_page": 20,
+        "total": 0,
+        "total_pages": 0
+      },
+      "routing_info": {
+        "execution_time": 0.0016062259674072266,
+        "failed_platforms": [
+          "1111",
+          "indeed",
+          "104"
+        ],
+        "successful_platforms": []
+      },
+      "search_id": "3fc37edc-958e-488d-a103-39322867241f",
+      "success": true,
+      "total_jobs": 0
+    }
+  },
+  {
+    "status": "success",
+    "query": "前端工程師",
+    "location": "台中",
+    "job_count": 0,
+    "response_time": 2.07437,
+    "data": {
+      "jobs": [],
+      "message": "未找到符合條件的職位，請嘗試調整搜尋條件",
+      "pagination": {
+        "has_next": false,
+        "has_prev": false,
+        "page": 1,
+        "per_page": 20,
+        "total": 0,
+        "total_pages": 0
+      },
+      "routing_info": {
+        "execution_time": 0.001512289047241211,
+        "failed_platforms": [
+          "1111",
+          "indeed",
+          "104"
+        ],
+        "successful_platforms": []
+      },
+      "search_id": "505c47f1-c482-4f42-a9c9-0e045c33b5cd",
+      "success": true,
+      "total_jobs": 0
+    }
+  },
+  {
+    "status": "http_error",
+    "query": "資料科學家",
+    "location": "高雄",
+    "status_code": 400,
+    "error_text": "{\"decision_analysis\":{\"confidence\":1.0,\"reasoning\":\"\\u67e5\\u8a62\\u4e0d\\u662f\\u6c42\\u8077\\u76f8\\u95dc\\uff0c\\u62d2\\u7d55\\u8655\\u7406\",\"strategy\":\"reject_query\"},\"error\":\"\\u62b1\\u6b49\\uff0c\\u6211\\u662fAI\\u52a9\\u624b\\uff0c\\u50c5\\u80fd\\u5354\\u52a9\\u60a8\\u8655\\u7406\\u6c42\\u8077\\u76f8\\u95dc\\u554f\\u984c\\uff0c\\u7121\\u6cd5\\u9032\\u884c\\u4e00\\u822c\\u804a\\u5929\\u3002\",\"intent_analysis\":{\"analysis_method\":\"llm\",\"confidence\":0.6,\"intent_type\":\"job_search\"},\"success\":false}\n"
+  },
+  {
+    "status": "success",
+    "query": "Software Engineer",
+    "location": "Taipei",
+    "job_count": 0,
+    "response_time": 2.05736,
+    "data": {
+      "jobs": [],
+      "message": "未找到符合條件的職位，請嘗試調整搜尋條件",
+      "pagination": {
+        "has_next": false,
+        "has_prev": false,
+        "page": 1,
+        "per_page": 20,
+        "total": 0,
+        "total_pages": 0
+      },
+      "routing_info": {
+        "execution_time": 0.0018389225006103516,
+        "failed_platforms": [
+          "1111",
+          "indeed",
+          "104"
+        ],
+        "successful_platforms": []
+      },
+      "search_id": "e8d11ad1-f285-4364-863b-2363826ce2e0",
+      "success": true,
+      "total_jobs": 0
+    }
+  },
+  {
+    "status": "http_error",
+    "query": "Data Analyst",
+    "location": "Taichung",
+    "status_code": 400,
+    "error_text": "{\"decision_analysis\":{\"confidence\":1.0,\"reasoning\":\"\\u67e5\\u8a62\\u4e0d\\u662f\\u6c42\\u8077\\u76f8\\u95dc\\uff0c\\u62d2\\u7d55\\u8655\\u7406\",\"strategy\":\"reject_query\"},\"error\":\"\\u62b1\\u6b49\\uff0c\\u6211\\u662fAI\\u52a9\\u624b\\uff0c\\u50c5\\u80fd\\u5354\\u52a9\\u60a8\\u8655\\u7406\\u6c42\\u8077\\u76f8\\u95dc\\u554f\\u984c\\uff0c\\u7121\\u6cd5\\u9032\\u884c\\u4e00\\u822c\\u804a\\u5929\\u3002\",\"intent_analysis\":{\"analysis_method\":\"llm\",\"confidence\":0.6,\"intent_type\":\"job_search\"},\"success\":false}\n"
+  },
+  {
+    "status": "success",
+    "query": "Product Manager",
+    "location": "Kaohsiung",
+    "job_count": 0,
+    "response_time": 2.062529,
+    "data": {
+      "jobs": [],
+      "message": "未找到符合條件的職位，請嘗試調整搜尋條件",
+      "pagination": {
+        "has_next": false,
+        "has_prev": false,
+        "page": 1,
+        "per_page": 20,
+        "total": 0,
+        "total_pages": 0
+      },
+      "routing_info": {
+        "execution_time": 0.008732080459594727,
+        "failed_platforms": [
+          "ziprecruiter",
+          "linkedin",
+          "indeed",
+          "glassdoor"
+        ],
+        "successful_platforms": []
+      },
+      "search_id": "d4145160-70ab-431e-9b21-a2a167ef846c",
+      "success": true,
+      "total_jobs": 0
+    }
+  },
+  {
+    "status": "success",
+    "query": "AI/ML工程師",
+    "location": "台北",
+    "job_count": 0,
+    "response_time": 2.05101,
+    "data": {
+      "jobs": [],
+      "message": "未找到符合條件的職位，請嘗試調整搜尋條件",
+      "pagination": {
+        "has_next": false,
+        "has_prev": false,
+        "page": 1,
+        "per_page": 20,
+        "total": 0,
+        "total_pages": 0
+      },
+      "routing_info": {
+        "execution_time": 0.0014185905456542969,
+        "failed_platforms": [
+          "1111",
+          "indeed",
+          "104"
+        ],
+        "successful_platforms": []
+      },
+      "search_id": "b1789b80-8968-4e78-bfdd-beaeaef7e12e",
+      "success": true,
+      "total_jobs": 0
+    }
+  },
+  {
+    "status": "success",
+    "query": "C++開發者",
+    "location": "新竹",
+    "job_count": 0,
+    "response_time": 2.047418,
+    "data": {
+      "jobs": [],
+      "message": "未找到符合條件的職位，請嘗試調整搜尋條件",
+      "pagination": {
+        "has_next": false,
+        "has_prev": false,
+        "page": 1,
+        "per_page": 20,
+        "total": 0,
+        "total_pages": 0
+      },
+      "routing_info": {
+        "execution_time": 0.0018172264099121094,
+        "failed_platforms": [
+          "indeed",
+          "1111",
+          "104"
+        ],
+        "successful_platforms": []
+      },
+      "search_id": "40800b49-27ba-4267-b7dd-2abc9b2dc24c",
+      "success": true,
+      "total_jobs": 0
+    }
+  },
+  {
+    "status": "http_error",
+    "query": "UI/UX設計師",
+    "location": "台中",
+    "status_code": 400,
+    "error_text": "{\"decision_analysis\":{\"confidence\":1.0,\"reasoning\":\"\\u67e5\\u8a62\\u4e0d\\u662f\\u6c42\\u8077\\u76f8\\u95dc\\uff0c\\u62d2\\u7d55\\u8655\\u7406\",\"strategy\":\"reject_query\"},\"error\":\"\\u62b1\\u6b49\\uff0c\\u6211\\u662fAI\\u52a9\\u624b\\uff0c\\u50c5\\u80fd\\u5354\\u52a9\\u60a8\\u8655\\u7406\\u6c42\\u8077\\u76f8\\u95dc\\u554f\\u984c\\uff0c\\u7121\\u6cd5\\u9032\\u884c\\u4e00\\u822c\\u804a\\u5929\\u3002\",\"intent_analysis\":{\"analysis_method\":\"llm\",\"confidence\":0.6,\"intent_type\":\"job_search\"},\"success\":false}\n"
+  },
+  {
+    "status": "http_error",
+    "query": "",
+    "location": "台北",
+    "status_code": 400,
+    "error_text": "{\"error\":\"\\u8acb\\u8f38\\u5165\\u641c\\u5c0b\\u95dc\\u9375\\u5b57\",\"success\":false}\n"
+  },
+  {
+    "status": "http_error",
+    "query": "   ",
+    "location": "台北",
+    "status_code": 400,
+    "error_text": "{\"error\":\"\\u8acb\\u8f38\\u5165\\u641c\\u5c0b\\u95dc\\u9375\\u5b57\",\"success\":false}\n"
+  },
+  {
+    "status": "success",
+    "query": "工程師",
+    "location": "",
+    "job_count": 0,
+    "response_time": 2.051448,
+    "data": {
+      "jobs": [],
+      "message": "未找到符合條件的職位，請嘗試調整搜尋條件",
+      "pagination": {
+        "has_next": false,
+        "has_prev": false,
+        "page": 1,
+        "per_page": 20,
+        "total": 0,
+        "total_pages": 0
+      },
+      "routing_info": {
+        "execution_time": 0.003864765167236328,
+        "failed_platforms": [
+          "google",
+          "indeed",
+          "linkedin"
+        ],
+        "successful_platforms": []
+      },
+      "search_id": "a79c939c-6cd6-4f7c-8493-e4b6394c2379",
+      "success": true,
+      "total_jobs": 0
+    }
+  },
+  {
+    "status": "success",
+    "query": "資深全端軟體開發工程師具備React Node.js經驗",
+    "location": "台北",
+    "job_count": 0,
+    "response_time": 2.072761,
+    "data": {
+      "jobs": [],
+      "message": "未找到符合條件的職位，請嘗試調整搜尋條件",
+      "pagination": {
+        "has_next": false,
+        "has_prev": false,
+        "page": 1,
+        "per_page": 20,
+        "total": 0,
+        "total_pages": 0
+      },
+      "routing_info": {
+        "execution_time": 0.0013608932495117188,
+        "failed_platforms": [
+          "1111",
+          "104",
+          "indeed"
+        ],
+        "successful_platforms": []
+      },
+      "search_id": "12b24860-dd32-4019-84a9-4c55fafe2a42",
+      "success": true,
+      "total_jobs": 0
+    }
+  }
+]

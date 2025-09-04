@@ -17,6 +17,7 @@ from typing import List, Optional, Dict, Any
 import os
 import json
 import requests
+import logging
 
 from .model import Country
 
@@ -192,6 +193,31 @@ def _truthy(val: Optional[str]) -> bool:
     return str(val).strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
+def _load_system_prompt() -> str:
+    """Load standardized system prompt from config file."""
+    try:
+        # Try to load from config file
+        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'llm_system_prompts.json')
+        if os.path.exists(config_path):
+            with open(config_path, 'r', encoding='utf-8') as f:
+                prompts_config = json.load(f)
+            return prompts_config['query_parser']['system_prompt']
+        else:
+            logging.warning("Config file not found, using default system prompt")
+    except Exception as e:
+        logging.error(f"Error loading system prompt config: {e}, using default")
+    
+    # Fallback to default English prompt
+    return (
+        "You are a precise intent parser for a job search application. "
+        "Given a single freeform user query (may include language mixing), "
+        "extract a strict JSON object with keys: search_term (string), "
+        "location (string or null), is_remote (boolean), site_hints (array of strings from: "
+        "['linkedin','indeed','glassdoor','zip_recruiter','seek','google']). "
+        "Do not include any other keys and do not add trailing text."
+    )
+
+
 def parse_user_query_llm(query: str) -> Optional[ParsedQuery]:
     """
     Optional LLM-backed parsing. Controlled by env vars:
@@ -216,14 +242,8 @@ def parse_user_query_llm(query: str) -> Optional[ParsedQuery]:
     base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
     model = os.getenv("LLM_MODEL", "gpt-4o-mini")
 
-    sys_msg = (
-        "You are a precise intent parser for a job search app. "
-        "Given a single freeform user query (may include language mixing), "
-        "extract a strict JSON object with keys: search_term (string), "
-        "location (string or null), is_remote (boolean), site_hints (array of strings from: "
-        "['linkedin','indeed','glassdoor','zip_recruiter','seek','google']). "
-        "Do not include any other keys and do not add trailing text."
-    )
+    # Load standardized system prompt from config
+    sys_msg = _load_system_prompt()
     user_msg = f"Query: {query}"
 
     try:

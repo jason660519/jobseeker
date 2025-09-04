@@ -10,6 +10,7 @@ Date: 2025-01-27
 
 import json
 import re
+import os
 from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, asdict
 from enum import Enum
@@ -127,15 +128,28 @@ class LLMIntentAnalyzer:
             return
             
         try:
-             config = LLMConfig(
-                 provider=self.provider,
-                 api_key=self.api_key,
-                 model_name=self._get_default_model(),
-                 temperature=0.1,
-                 max_tokens=1000
-             )
-             self.llm_client = create_llm_client(config)
-             self.logger.info(f"LLM客戶端初始化成功，提供商: {self.provider.value}")
+            # 映射到正確的LLMConfig提供商
+            from .llm_config import LLMProvider as ConfigLLMProvider
+            
+            provider_mapping = {
+                LLMProvider.OPENAI_GPT35: ConfigLLMProvider.OPENAI,
+                LLMProvider.OPENAI_GPT4: ConfigLLMProvider.OPENAI,
+                LLMProvider.ANTHROPIC_CLAUDE: ConfigLLMProvider.ANTHROPIC,
+                LLMProvider.AZURE_OPENAI: ConfigLLMProvider.AZURE_OPENAI,
+                LLMProvider.LOCAL_LLAMA: ConfigLLMProvider.LOCAL_LLAMA
+            }
+            
+            config_provider = provider_mapping.get(self.provider, ConfigLLMProvider.OPENAI)
+            
+            config = LLMConfig(
+                provider=config_provider,
+                api_key=self.api_key,
+                model_name=self._get_default_model(),
+                temperature=0.1,
+                max_tokens=1000
+            )
+            self.llm_client = create_llm_client(config)
+            self.logger.info(f"LLM客戶端初始化成功，提供商: {self.provider.value}")
             
         except Exception as e:
             self.logger.error(f"LLM客戶端初始化失敗: {e}")
@@ -143,88 +157,98 @@ class LLMIntentAnalyzer:
             self.llm_client = None
     
     def _init_prompt_templates(self):
-        """初始化提示詞模板"""
-        self.system_prompt = """
-你是一個專業的求職意圖分析AI助手，專門分析用戶的工作搜索查詢並將其轉化為結構化的搜索條件。
+        """初始化提示詞模板 - 從配置文件加載英文標準化提示"""
+        try:
+            # 嘗試從配置文件加載標準化提示
+            config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'llm_system_prompts.json')
+            if os.path.exists(config_path):
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    prompts_config = json.load(f)
+                    
+                self.system_prompt = prompts_config['intent_analyzer']['system_prompt']
+                self.analysis_prompt_template = prompts_config['intent_analyzer']['analysis_prompt_template']
+                logging.info("Successfully loaded standardized English prompts from config file")
+            else:
+                # 如果配置文件不存在，使用默認英文提示
+                self._init_default_english_prompts()
+                logging.warning("Config file not found, using default English prompts")
+        except Exception as e:
+            logging.error(f"Error loading prompt config: {e}, falling back to default English prompts")
+            self._init_default_english_prompts()
+    
+    def _init_default_english_prompts(self):
+        """初始化默認英文提示模板"""
+        self.system_prompt = """You are a professional job search intent analyzer. Your task is to accurately determine if user queries are job-related and extract structured information.
 
-核心能力：
-1. 深度語義理解：理解自然語言中的隱含意圖和上下文
-2. 智能意圖分類：準確判斷查詢是否與求職相關
-3. 結構化提取：將複雜查詢轉化為可搜索的結構化數據
-4. 智能推理：從描述中推斷用戶的深層需求和偏好
+Core Judgment Principles:
+1. Job-related queries must satisfy the following conditions:
+   - Contains explicit job titles or job search verbs (e.g., 'find job', 'apply for', 'job search')
+   - Or contains job title + location combination (e.g., 'software engineer Sydney')
+   - Or contains clear career development intent (e.g., 'career planning', 'career change')
 
-分析原則：
-- 語義優先：重視語義理解而非關鍵詞匹配
-- 上下文感知：考慮查詢的完整上下文
-- 意圖推斷：從描述中推斷隱含的求職偏好
-- 精準分類：嚴格區分求職相關和非求職查詢
+2. Non-job-related queries:
+   - Only contains location names (e.g., 'Sydney', 'Melbourne')
+   - Only contains skill learning queries (e.g., 'learn Python', 'how to learn')
+   - Daily life queries (weather, entertainment, shopping, travel, etc.)
+   - Pure technical questions or academic discussions
 
-輸出要求：
-- 必須輸出有效的JSON格式
-- 所有字段都必須包含
-- confidence分數要準確反映分析確信度
-- reasoning要提供清晰的分析邏輯
+3. Confidence scoring standards:
+   - 0.9-1.0: Clearly contains job title + location/skills
+   - 0.7-0.8: Contains job search verbs or career development keywords
+   - 0.5-0.6: Ambiguous job-related queries
+   - 0.3-0.4: Boundary cases, leaning towards non-job
+   - 0.0-0.2: Clearly non-job-related
 
-JSON輸出格式：
+Output JSON format (must strictly follow):
 {
   "is_job_related": boolean,
   "intent_type": "job_search" | "non_job_related" | "unclear",
   "confidence": 0.0-1.0,
-  "reasoning": "詳細的分析推理過程",
-  "structured_intent": {
-    "job_titles": ["識別的職位名稱"],
-    "skills": ["相關技能和工具"],
-    "locations": ["工作地點"],
-    "salary_range": "薪資範圍或null",
-    "work_mode": "遠程/線下/混合或null",
-    "company_size": "公司規模或null",
-    "industry": "目標行業或null",
-    "experience_level": "經驗要求或null",
-    "soft_preferences": ["工作偏好和文化要求"],
-    "urgency": "求職緊急程度或null"
-  },
-  "search_suggestions": ["優化的搜索建議"],
-  "response_message": "給用戶的友好回應"
+  "reasoning": "analysis reasoning process",
+  "job_titles": ["job title list"],
+  "skills": ["skill list"],
+  "locations": ["location list"],
+  "search_suggestions": ["search suggestions"],
+  "response_message": "user response message"
 }
-"""
+
+Important: Queries containing only location or skill keywords but lacking clear job search intent should be classified as non-job-related."""
         
-        self.analysis_prompt_template = """
-請深度分析以下用戶查詢的求職意圖：
+        self.analysis_prompt_template = """I am a career analyst. I will analyze the user's prompt, extract key parameters (such as location, job categories, etc.), and output structured JSON format for downstream databases and crawler engines.
 
-用戶查詢："{user_input}"
+User Query: "{user_input}"
 
-分析維度：
+Analysis Dimensions:
 
-1. 意圖分類：
-   - 明確求職：包含職位、技能、地點等求職元素
-   - 職業諮詢：關於職業發展、技能學習的問題
-   - 非求職相關：日常生活、娛樂、學術等話題
-   - 模糊查詢：意圖不明確，需要進一步澄清
+1. Intent Classification:
+   - Clear job search: Contains job titles, skills, locations and other job search elements
+   - Career consultation: Questions about career development and skill learning
+   - Non-job-related: Daily life, entertainment, academic topics
+   - Ambiguous query: Unclear intent, requires further clarification
 
-2. 深度語義提取（僅限求職相關）：
-   - 職位意圖：直接提及的職位 + 從技能推斷的職位
-   - 技能圖譜：技術技能、軟技能、工具、框架
-   - 地理偏好：具體城市、國家、遠程工作偏好
-   - 薪資期望：明確數字、範圍、相對描述（如"高薪"）
-   - 工作模式：遠程、混合、現場，以及靈活性要求
-   - 公司特徵：規模（初創/大企業）、行業、知名度
-   - 職業階段：入門/中級/資深/管理層
-   - 文化偏好：工作氛圍、價值觀、福利期望
+2. Deep Semantic Extraction (job-related only):
+   - Job Intent: Directly mentioned positions + positions inferred from skills
+   - Skill Map: Technical skills, soft skills, tools, frameworks
+   - Geographic Preferences: Specific cities, countries, remote work preferences
+   - Salary Expectations: Specific numbers, ranges, relative descriptions (e.g., "high salary")
+   - Work Mode: Remote, hybrid, on-site, and flexibility requirements
+   - Company Characteristics: Size (startup/enterprise), industry, reputation
+   - Career Stage: Entry/mid-level/senior/management
+   - Cultural Preferences: Work atmosphere, values, benefit expectations
 
-3. 隱含意圖推理：
-   - "不想加班" → 工作生活平衡、正常工時
-   - "學習機會" → 培訓機會、技術成長
-   - "團隊氛圍" → 協作文化、扁平管理
-   - "穩定" → 大公司、傳統行業
-   - "挑戰" → 初創公司、新技術
+3. Implicit Intent Reasoning:
+   - "No overtime" → Work-life balance, normal working hours
+   - "Learning opportunities" → Training opportunities, technical growth
+   - "Team atmosphere" → Collaborative culture, flat management
+   - "Stability" → Large companies, traditional industries
+   - "Challenge" → Startups, new technologies
 
-4. 搜索優化建議：
-   - 基於提取的結構化數據生成精準搜索詞
-   - 提供多個搜索角度和組合
-   - 考慮同義詞和相關概念
+4. Search Optimization Suggestions:
+   - Generate precise search terms based on extracted structured data
+   - Provide multiple search angles and combinations
+   - Consider synonyms and related concepts
 
-請嚴格按照JSON格式輸出，確保所有字段完整且類型正確。
-"""
+Output must be standard JSON structure containing all necessary parameters so that the router can distribute to appropriate crawler programs (such as LinkedIn, Indeed, Google, etc.) for subsequent search operations. Please strictly output in JSON format, ensuring all fields are complete and types are correct."""
     
     def analyze_intent_with_decision(self, query: str, user_context: Optional[Dict[str, Any]] = None) -> tuple[LLMIntentResult, DecisionResult]:
         """
@@ -333,20 +357,23 @@ JSON輸出格式：
             
         Returns:
             LLMIntentResult: 分析結果
+            
+        Raises:
+            Exception: 當LLM服務不可用時
         """
+        # 檢查LLM客戶端是否可用
+        if not self.llm_client:
+            raise Exception("目前LLM服務暫時不可用，請使用主頁的智能職位搜尋功能，這將幫助您更精準地找到理想工作。")
+        
         # 構建提示詞
         prompt = self.analysis_prompt_template.format(user_input=query)
         
         # 調用LLM API
         try:
-            if self.llm_client:
-                llm_response = self._call_llm_api(prompt)
-            else:
-                # 回退到模擬調用
-                llm_response = self._mock_llm_call(query, prompt)
+            llm_response = self._call_llm_api(prompt)
         except Exception as e:
             self.logger.error(f"LLM分析失敗: {e}")
-            raise
+            raise Exception("目前LLM服務暫時不可用，請使用主頁的智能職位搜尋功能，這將幫助您更精準地找到理想工作。")
         
         # 解析LLM響應
         return self._parse_llm_response(llm_response, query)
@@ -437,71 +464,195 @@ JSON輸出格式：
             self.logger.error(f"LLM API調用異常: {e}")
             raise
     
-    def _mock_llm_call(self, query: str, prompt: str) -> Dict[str, Any]:
+    # 模擬LLM相關方法已移除 - 不再支持模擬功能
+    
+    def _calculate_job_relevance_score(self, query_lower: str, job_keywords: Dict[str, list]) -> float:
         """
-        模擬LLM調用（用於演示，實際使用時應替換為真實的LLM API調用）
+        計算求職相關性得分 (0.0 - 1.0)
+        """
+        score = 0.0
         
-        Args:
-            query: 用戶查詢
-            prompt: 完整提示詞
-            
-        Returns:
-            Dict: 模擬的LLM響應
+        # 職位名稱匹配 (權重: 0.4)
+        for title in job_keywords['job_titles_zh'] + job_keywords['job_titles_en']:
+            if title.lower() in query_lower:
+                score += 0.4
+                break
+        
+        # 技能關鍵字匹配 (權重: 0.3)
+        skill_matches = sum(1 for skill in job_keywords['skills'] 
+                           if skill.lower() in query_lower)
+        if skill_matches > 0:
+            score += min(0.3, skill_matches * 0.1)
+        
+        # 求職動詞匹配 (權重: 0.2)
+        for verb in job_keywords['job_verbs']:
+            if verb.lower() in query_lower:
+                score += 0.2
+                break
+        
+        # 地點關鍵字匹配 (權重: 0.1)
+        for location in job_keywords['locations']:
+            if location.lower() in query_lower:
+                score += 0.1
+                break
+        
+        return min(score, 1.0)
+    
+    def _is_boundary_case_non_job(self, query_lower: str, job_score: float) -> bool:
         """
-        # 這裡是模擬邏輯，實際實現時應該調用真實的LLM API
+        檢查是否為邊界案例中的非求職查詢
+        主要針對單純的地點、薪資關鍵詞等
+        """
+        # 如果得分太高，不是邊界案例
+        if job_score >= 0.2:
+            return False
+            
+        # 定義邊界案例關鍵詞
+        location_only_keywords = [
+            '台北', '新北', '桃園', '台中', '台南', '高雄', '新竹', '基隆',
+            'taipei', 'taichung', 'kaohsiung', 'sydney', 'melbourne', 'singapore'
+        ]
+        
+        salary_only_keywords = ['薪水', '薪資', '工資', 'salary', 'wage', 'pay']
+        
+        general_keywords = ['工作', 'job', 'work', '職位', 'position']
+        
+        # 移除空格並分割查詢
+        query_words = query_lower.replace(' ', '').split()
+        
+        # 檢查是否只包含單一地點
+        if len(query_words) <= 2 and any(loc in query_lower for loc in location_only_keywords):
+            # 檢查是否沒有其他求職相關詞彙
+            has_job_context = any(word in query_lower for word in 
+                                ['工程師', '開發', '設計師', '經理', '分析師', 'engineer', 'developer', 'manager', 'analyst'])
+            if not has_job_context:
+                return True
+        
+        # 檢查是否只包含薪資關鍵詞
+        if len(query_words) <= 2 and any(sal in query_lower for sal in salary_only_keywords):
+            # 檢查是否沒有職位上下文
+            has_job_context = any(word in query_lower for word in 
+                                ['工程師', '開發', '設計師', '經理', '分析師', 'engineer', 'developer', 'manager', 'analyst'])
+            if not has_job_context:
+                return True
+        
+        # 檢查是否只包含過於泛泛的關鍵詞
+        if len(query_words) <= 2 and any(gen in query_lower for gen in general_keywords):
+            # 如果只有「工作」或「職位」這樣的詞，且沒有其他具體信息
+            has_specific_context = any(word in query_lower for word in 
+                                     ['工程師', '開發', '設計師', '經理', '分析師', 'python', 'java', 'react', 
+                                      'engineer', 'developer', 'manager', 'analyst'])
+            if not has_specific_context and job_score <= 0.15:
+                return True
+        
+        return False
+    
+    def _create_job_related_response(self, query: str, score: float, confidence_level: str) -> Dict[str, Any]:
+        """
+        創建求職相關的響應
+        """
+        # 提取結構化信息
+        structured_intent = self._extract_structured_intent(query)
+        
+        # 根據置信度調整confidence值
+        confidence_map = {"高": 0.9, "中": 0.7, "低": 0.5}
+        confidence = confidence_map.get(confidence_level, 0.7)
+        
+        # 生成搜索建議
+        search_suggestions = []
+        if structured_intent['job_titles'] and structured_intent['locations']:
+            search_suggestions.append(f"{structured_intent['job_titles'][0]} {structured_intent['locations'][0]}")
+        if structured_intent['job_titles'] and structured_intent['skills']:
+            search_suggestions.append(f"{structured_intent['job_titles'][0]} {' '.join(structured_intent['skills'][:2])}")
+        
+        return {
+            "is_job_related": True,
+            "intent_type": "job_search",
+            "confidence": confidence,
+            "reasoning": f"求職相關性得分{score:.2f}，置信度{confidence_level}",
+            "structured_intent": structured_intent,
+            "search_suggestions": search_suggestions,
+            "response_message": "已為您分析查詢意圖，正在搜索相關職位..."
+        }
+    
+    def _extract_structured_intent(self, query: str) -> Dict[str, Any]:
+        """
+        從查詢中提取結構化的求職意圖
+        增強版本，支援更多職位和技能識別
+        """
         query_lower = query.lower()
         
-        # 模擬智能分析
-        if any(keyword in query_lower for keyword in ['天氣', '電影', '音樂', '食譜', '烹飪']):
-            return {
-                "is_job_related": False,
-                "intent_type": "non_job_related",
-                "confidence": 0.9,
-                "reasoning": "查詢內容與求職無關，涉及日常生活話題",
-                "structured_intent": None,
-                "search_suggestions": [],
-                "response_message": "抱歉，我是AI助手，僅能協助您處理求職相關問題。您可以嘗試搜索：'軟體工程師 台北'、'產品經理 薪資'等求職相關內容。"
-            }
-        
-        # 模擬求職相關分析
+        # 提取職位名稱 (擴展版)
         job_titles = []
-        skills = []
-        locations = []
-        soft_preferences = []
+        job_keywords = [
+            '工程師', '開發者', '程式設計師', '設計師', '經理', '分析師', '科學家',
+            'engineer', 'developer', 'programmer', 'designer', 'manager', 'analyst', 'scientist'
+        ]
+        for keyword in job_keywords:
+            if keyword in query_lower:
+                job_titles.append(keyword)
         
         # 智能提取職位
         if any(title in query_lower for title in ['工程師', 'engineer', '開發', 'developer']):
             if 'ai' in query_lower or '人工智慧' in query_lower or '機器學習' in query_lower:
-                job_titles.append('AI工程師')
-                skills.extend(['Python', 'TensorFlow', 'PyTorch', 'Machine Learning'])
+                if 'AI工程師' not in job_titles:
+                    job_titles.append('AI工程師')
             elif 'frontend' in query_lower or '前端' in query_lower:
-                job_titles.append('前端工程師')
-                skills.extend(['JavaScript', 'React', 'Vue'])
+                if '前端工程師' not in job_titles:
+                    job_titles.append('前端工程師')
             elif 'backend' in query_lower or '後端' in query_lower:
-                job_titles.append('後端工程師')
-                skills.extend(['Python', 'Java', 'Node.js'])
-            else:
-                job_titles.append('軟體工程師')
+                if '後端工程師' not in job_titles:
+                    job_titles.append('後端工程師')
         
-        if '產品經理' in query or 'product manager' in query_lower:
-            job_titles.append('產品經理')
+        # 提取技能 (擴展版)
+        skills = []
+        skill_keywords = [
+            'python', 'java', 'javascript', 'react', 'vue', 'angular', 'node.js',
+            'sql', 'mysql', 'postgresql', 'machine learning', 'ai', 'ml',
+            'docker', 'kubernetes', 'aws', 'azure', 'git'
+        ]
+        for skill in skill_keywords:
+            if skill in query_lower:
+                skills.append(skill)
         
-        if 'ai' in query_lower and '工程師' not in query_lower:
-            job_titles.append('AI工程師')
-            skills.extend(['Python', 'Machine Learning', 'Deep Learning'])
+        # 智能技能推斷
+        if 'ai' in query_lower or '人工智慧' in query_lower or '機器學習' in query_lower:
+            skills.extend(['Python', 'TensorFlow', 'PyTorch', 'Machine Learning'])
+        elif 'frontend' in query_lower or '前端' in query_lower:
+            skills.extend(['JavaScript', 'React', 'Vue'])
+        elif 'backend' in query_lower or '後端' in query_lower:
+            skills.extend(['Python', 'Java', 'Node.js'])
         
-        # 智能提取地點
-        for location in ['台北', '新北', '台中', '高雄', 'sydney', 'melbourne']:
+        # 去重
+        skills = list(set(skills))
+        
+        # 提取地點 (擴展版)
+        locations = []
+        location_keywords = [
+            '台北', '新北', '桃園', '台中', '台南', '高雄', '新竹', '基隆',
+            'taipei', 'taichung', 'kaohsiung', 'sydney', 'melbourne', 'singapore',
+            'remote', '遠程', '遠端'
+        ]
+        for location in location_keywords:
             if location in query_lower:
                 locations.append(location)
         
-        if '遠程' in query or 'remote' in query_lower or '在家工作' in query_lower:
+        if '在家工作' in query_lower or 'wfh' in query_lower:
             locations.append('遠程工作')
         
-        # 智能提取軟性偏好
+        # 提取經驗要求
+        experience_level = None
+        if any(word in query_lower for word in ['新手', '初級', 'junior', 'entry']):
+            experience_level = 'junior'
+        elif any(word in query_lower for word in ['資深', '高級', 'senior']):
+            experience_level = 'senior'
+        elif any(word in query_lower for word in ['中級', 'mid', 'middle']):
+            experience_level = 'mid'
+        
+        # 提取軟性偏好
+        soft_preferences = []
         if '不加班' in query or '不想加班' in query:
             soft_preferences.extend(['工作生活平衡', '正常工時', '不加班'])
-        
         if '團隊氛圍' in query or '文化' in query:
             soft_preferences.extend(['團隊氛圍好', '企業文化佳'])
         
@@ -514,32 +665,17 @@ JSON輸出格式：
             else:
                 salary_range = f"{salary_match.group(1)}萬以上"
         
-        # 生成搜索建議
-        search_suggestions = []
-        if job_titles and locations:
-            search_suggestions.append(f"{job_titles[0]} {locations[0]}")
-        if job_titles and skills:
-            search_suggestions.append(f"{job_titles[0]} {' '.join(skills[:2])}")
-        
         return {
-            "is_job_related": bool(job_titles or skills or locations or '工作' in query or 'job' in query_lower),
-            "intent_type": "job_search",
-            "confidence": 0.8 if job_titles else 0.6,
-            "reasoning": "基於關鍵詞和語義分析，識別出求職相關意圖",
-            "structured_intent": {
-                "job_titles": job_titles,
-                "skills": skills,
-                "locations": locations,
-                "salary_range": salary_range,
-                "work_mode": "遠程" if '遠程' in query else None,
-                "company_size": None,
-                "industry": None,
-                "experience_level": None,
-                "soft_preferences": soft_preferences,
-                "urgency": None
-            },
-            "search_suggestions": search_suggestions,
-            "response_message": "已為您分析查詢意圖，正在搜索相關職位..."
+            "job_titles": job_titles,
+            "skills": skills,
+            "locations": locations,
+            "salary_range": salary_range,
+            "work_mode": "遠程" if any(remote in query_lower for remote in ['遠程', '遠端', 'remote']) else None,
+            "company_size": None,
+            "industry": None,
+            "experience_level": experience_level,
+            "soft_preferences": soft_preferences,
+            "urgency": None
         }
     
     def _parse_llm_response(self, llm_response: Dict[str, Any], original_query: str) -> LLMIntentResult:
@@ -703,8 +839,35 @@ JSON輸出格式：
             self.logger.info("緩存已清空")
 
 
-# 全局實例
-llm_intent_analyzer = LLMIntentAnalyzer()
+# 全局實例（用於向後兼容）
+# 自動檢測API密鑰並初始化
+def _create_global_analyzer():
+    """創建全局分析器實例，自動檢測可用的API密鑰"""
+    import os
+    
+    # 檢查可用的API密鑰
+    openai_key = os.getenv('OPENAI_API_KEY')
+    anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+    
+    if openai_key:
+        # 使用OpenAI
+        return LLMIntentAnalyzer(
+            provider=LLMProvider.OPENAI_GPT35,
+            api_key=openai_key,
+            fallback_to_basic=True
+        )
+    elif anthropic_key:
+        # 使用Anthropic
+        return LLMIntentAnalyzer(
+            provider=LLMProvider.ANTHROPIC_CLAUDE,
+            api_key=anthropic_key,
+            fallback_to_basic=True
+        )
+    else:
+        # 沒有API密鑰，使用Mock模式
+        return LLMIntentAnalyzer()
+
+llm_intent_analyzer = _create_global_analyzer()
 
 
 def analyze_intent_with_llm(query: str) -> LLMIntentResult:

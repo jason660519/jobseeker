@@ -1,0 +1,635 @@
+{
+  "test_summary": {
+    "total_tests": 22,
+    "passed_tests": 20,
+    "failed_tests": 2,
+    "pass_rate": 90.9090909090909,
+    "timestamp": "2025-09-05T06:40:52.398907"
+  },
+  "test_results": [
+    {
+      "test_id": "之前失敗的案例-1",
+      "query": "資料科學家",
+      "location": "高雄",
+      "full_query": "資料科學家 高雄",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "科學家"
+        ],
+        "skills": [],
+        "locations": [
+          "高雄"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.390059"
+    },
+    {
+      "test_id": "之前失敗的案例-2",
+      "query": "Data Analyst",
+      "location": "Taichung",
+      "full_query": "Data Analyst Taichung",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.60，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "analyst"
+        ],
+        "skills": [
+          "ai",
+          "Machine Learning",
+          "TensorFlow",
+          "PyTorch",
+          "Python"
+        ],
+        "locations": [
+          "taichung"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "standard_search",
+      "timestamp": "2025-09-05T06:40:52.390390"
+    },
+    {
+      "test_id": "之前失敗的案例-3",
+      "query": "UI/UX設計師",
+      "location": "台中",
+      "full_query": "UI/UX設計師 台中",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "設計師"
+        ],
+        "skills": [],
+        "locations": [
+          "台中"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.390684"
+    },
+    {
+      "test_id": "之前失敗的案例-4",
+      "query": "軟體工程師",
+      "location": "台北",
+      "full_query": "軟體工程師 台北",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "工程師"
+        ],
+        "skills": [],
+        "locations": [
+          "台北"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.390963"
+    },
+    {
+      "test_id": "之前失敗的案例-5",
+      "query": "前端工程師",
+      "location": "新竹",
+      "full_query": "前端工程師 新竹",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "工程師",
+          "前端工程師"
+        ],
+        "skills": [
+          "JavaScript",
+          "Vue",
+          "React"
+        ],
+        "locations": [
+          "新竹"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "standard_search",
+      "timestamp": "2025-09-05T06:40:52.391244"
+    },
+    {
+      "test_id": "明確的求職查詢-1",
+      "query": "Python工程師",
+      "location": "台北",
+      "full_query": "Python工程師 台北",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.60，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "工程師"
+        ],
+        "skills": [
+          "python"
+        ],
+        "locations": [
+          "台北"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "standard_search",
+      "timestamp": "2025-09-05T06:40:52.392005"
+    },
+    {
+      "test_id": "明確的求職查詢-2",
+      "query": "機器學習工程師",
+      "location": "遠程",
+      "full_query": "機器學習工程師 遠程",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "工程師",
+          "AI工程師"
+        ],
+        "skills": [
+          "Python",
+          "TensorFlow",
+          "PyTorch",
+          "Machine Learning"
+        ],
+        "locations": [
+          "遠程"
+        ],
+        "salary_range": null,
+        "work_mode": "遠程",
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "standard_search",
+      "timestamp": "2025-09-05T06:40:52.392279"
+    },
+    {
+      "test_id": "明確的求職查詢-3",
+      "query": "產品經理",
+      "location": "台中",
+      "full_query": "產品經理 台中",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "經理"
+        ],
+        "skills": [],
+        "locations": [
+          "台中"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.392637"
+    },
+    {
+      "test_id": "明確的求職查詢-4",
+      "query": "DevOps工程師",
+      "location": "高雄",
+      "full_query": "DevOps工程師 高雄",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "工程師"
+        ],
+        "skills": [],
+        "locations": [
+          "高雄"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.392885"
+    },
+    {
+      "test_id": "明確的求職查詢-5",
+      "query": "全端開發者",
+      "location": "台南",
+      "full_query": "全端開發者 台南",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "structured_intent": {
+        "job_titles": [
+          "開發者"
+        ],
+        "skills": [],
+        "locations": [
+          "台南"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.393135"
+    },
+    {
+      "test_id": "技能導向查詢-1",
+      "query": "React開發",
+      "location": "台北",
+      "full_query": "React開發 台北",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.7,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.20，置信度中",
+      "structured_intent": {
+        "job_titles": [],
+        "skills": [
+          "react"
+        ],
+        "locations": [
+          "台北"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.393888"
+    },
+    {
+      "test_id": "技能導向查詢-2",
+      "query": "Python AI",
+      "location": "新竹",
+      "full_query": "Python AI 新竹",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.7,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.30，置信度中",
+      "structured_intent": {
+        "job_titles": [],
+        "skills": [
+          "ai",
+          "Machine Learning",
+          "TensorFlow",
+          "PyTorch",
+          "python",
+          "Python"
+        ],
+        "locations": [
+          "新竹"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "standard_search",
+      "timestamp": "2025-09-05T06:40:52.394161"
+    },
+    {
+      "test_id": "技能導向查詢-3",
+      "query": "Java後端",
+      "location": "台中",
+      "full_query": "Java後端 台中",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.7,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.20，置信度中",
+      "structured_intent": {
+        "job_titles": [],
+        "skills": [
+          "Python",
+          "Java",
+          "java",
+          "Node.js"
+        ],
+        "locations": [
+          "台中"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "standard_search",
+      "timestamp": "2025-09-05T06:40:52.394406"
+    },
+    {
+      "test_id": "技能導向查詢-4",
+      "query": "Vue.js前端",
+      "location": "高雄",
+      "full_query": "Vue.js前端 高雄",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.7,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.20，置信度中",
+      "structured_intent": {
+        "job_titles": [],
+        "skills": [
+          "JavaScript",
+          "Vue",
+          "vue",
+          "React"
+        ],
+        "locations": [
+          "高雄"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "standard_search",
+      "timestamp": "2025-09-05T06:40:52.394665"
+    },
+    {
+      "test_id": "邊界案例-1",
+      "query": "工作",
+      "location": "台北",
+      "full_query": "工作 台北",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.7,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.30，置信度中",
+      "structured_intent": {
+        "job_titles": [],
+        "skills": [],
+        "locations": [
+          "台北"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.395505"
+    },
+    {
+      "test_id": "邊界案例-2",
+      "query": "職位",
+      "location": "台中",
+      "full_query": "職位 台中",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.7,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.30，置信度中",
+      "structured_intent": {
+        "job_titles": [],
+        "skills": [],
+        "locations": [
+          "台中"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.395751"
+    },
+    {
+      "test_id": "邊界案例-3",
+      "query": "薪水",
+      "location": "高雄",
+      "full_query": "薪水 高雄",
+      "expected": false,
+      "actual": true,
+      "passed": false,
+      "confidence": 0.5,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "structured_intent": {
+        "job_titles": [],
+        "skills": [],
+        "locations": [
+          "高雄"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.395986",
+      "reason": "預期False但得到True"
+    },
+    {
+      "test_id": "邊界案例-4",
+      "query": "台北",
+      "location": "",
+      "full_query": "台北",
+      "expected": false,
+      "actual": true,
+      "passed": false,
+      "confidence": 0.5,
+      "intent_type": "job_search",
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "structured_intent": {
+        "job_titles": [],
+        "skills": [],
+        "locations": [
+          "台北"
+        ],
+        "salary_range": null,
+        "work_mode": null,
+        "company_size": null,
+        "industry": null,
+        "experience_level": null,
+        "soft_preferences": [],
+        "urgency": null
+      },
+      "decision_strategy": "broad_search",
+      "timestamp": "2025-09-05T06:40:52.396409",
+      "reason": "預期False但得到True"
+    },
+    {
+      "test_id": "應該拒絕的案例-1",
+      "query": "今天天氣如何",
+      "location": "",
+      "full_query": "今天天氣如何",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "non_job_related",
+      "reasoning": "查詢包含非求職關鍵字且求職相關性得分僅0.00",
+      "structured_intent": null,
+      "decision_strategy": "reject_query",
+      "timestamp": "2025-09-05T06:40:52.397193"
+    },
+    {
+      "test_id": "應該拒絕的案例-2",
+      "query": "推薦一部電影",
+      "location": "",
+      "full_query": "推薦一部電影",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "non_job_related",
+      "reasoning": "查詢包含非求職關鍵字且求職相關性得分僅0.00",
+      "structured_intent": null,
+      "decision_strategy": "reject_query",
+      "timestamp": "2025-09-05T06:40:52.397335"
+    },
+    {
+      "test_id": "應該拒絕的案例-3",
+      "query": "晚餐吃什麼",
+      "location": "",
+      "full_query": "晚餐吃什麼",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "confidence": 0.8,
+      "intent_type": "unclear",
+      "reasoning": "查詢求職相關性得分過低(0.00)，建議明確說明求職需求",
+      "structured_intent": null,
+      "decision_strategy": "reject_query",
+      "timestamp": "2025-09-05T06:40:52.397513"
+    },
+    {
+      "test_id": "應該拒絕的案例-4",
+      "query": "音樂推薦",
+      "location": "",
+      "full_query": "音樂推薦",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": "non_job_related",
+      "reasoning": "查詢包含非求職關鍵字且求職相關性得分僅0.00",
+      "structured_intent": null,
+      "decision_strategy": "reject_query",
+      "timestamp": "2025-09-05T06:40:52.397649"
+    }
+  ]
+}

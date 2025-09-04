@@ -23,7 +23,7 @@ class LLMProvider(Enum):
     AZURE_OPENAI = "azure_openai"
     DEEPSEEKER = "deepseeker"
     LOCAL_LLAMA = "local_llama"
-    MOCK = "mock"  # 用於測試和演示
+    OPENROUTER = "openrouter"
 
 
 @dataclass
@@ -66,8 +66,8 @@ class LLMConfig:
             LLMProvider.GOOGLE: ["GOOGLE_AI_STUDIO_API_KEY", "jobseeker_GOOGLE_API_KEY"],
             LLMProvider.AZURE_OPENAI: ["AZURE_OPENAI_API_KEY", "jobseeker_AZURE_OPENAI_API_KEY"],
             LLMProvider.DEEPSEEKER: ["DEEPSEEKER_API_KEY", "jobseeker_DEEPSEEKER_API_KEY"],
-            LLMProvider.LOCAL_LLAMA: None,
-            LLMProvider.MOCK: None
+            LLMProvider.OPENROUTER: ["OPENROUTER_API_KEY", "jobseeker_OPENROUTER_API_KEY"],
+            LLMProvider.LOCAL_LLAMA: None
         }
         
         env_keys = env_key_map.get(self.provider)
@@ -92,18 +92,14 @@ class LLMConfig:
             LLMProvider.GOOGLE: "gemini-1.5-flash",
             LLMProvider.AZURE_OPENAI: "gpt-35-turbo",
             LLMProvider.DEEPSEEKER: "deepseek-chat",
-            LLMProvider.LOCAL_LLAMA: "llama-3-8b-instruct",
-            LLMProvider.MOCK: "mock-model"
+            LLMProvider.OPENROUTER: "openai/gpt-4o-mini",
+            LLMProvider.LOCAL_LLAMA: "llama-3-8b-instruct"
         }
         
         return model_map.get(self.provider, "unknown")
     
     def is_valid(self) -> bool:
         """檢查配置是否有效"""
-        # Mock模式不需要API密鑰
-        if self.provider == LLMProvider.MOCK:
-            return True
-        
         # 本地模式不需要API密鑰
         if self.provider == LLMProvider.LOCAL_LLAMA:
             return True
@@ -139,11 +135,11 @@ class LLMConfigManager:
         self.enable_random_selection = os.getenv("jobseeker_LLM_RANDOM_SELECTION", "false").lower() == "true"
         
         # 設置默認提供商
-        default_provider_name = os.getenv("jobseeker_DEFAULT_LLM_PROVIDER", "mock").lower()
+        default_provider_name = os.getenv("jobseeker_DEFAULT_LLM_PROVIDER", "openrouter").lower()
         try:
             self.current_provider = LLMProvider(default_provider_name)
         except ValueError:
-            self.current_provider = LLMProvider.MOCK
+            self.current_provider = LLMProvider.OPENROUTER
     
     def _load_default_configs(self) -> Dict[LLMProvider, LLMConfig]:
         """加載默認配置"""
@@ -204,6 +200,17 @@ class LLMConfigManager:
             max_cost_per_day=5.0
         )
         
+        # OpenRouter 配置
+        configs[LLMProvider.OPENROUTER] = LLMConfig(
+            provider=LLMProvider.OPENROUTER,
+            model_name=os.getenv("jobseeker_OPENROUTER_MODEL", "openai/gpt-4o-mini"),
+            temperature=float(os.getenv("jobseeker_OPENROUTER_TEMPERATURE", "0.1")),
+            max_tokens=int(os.getenv("jobseeker_OPENROUTER_MAX_TOKENS", "1000")),
+            timeout=int(os.getenv("jobseeker_OPENROUTER_TIMEOUT", "30")),
+            max_requests_per_hour=500,
+            max_cost_per_day=8.0
+        )
+        
         # 本地Llama 配置
         configs[LLMProvider.LOCAL_LLAMA] = LLMConfig(
             provider=LLMProvider.LOCAL_LLAMA,
@@ -215,17 +222,7 @@ class LLMConfigManager:
             max_requests_per_hour=10000,  # 本地無限制
             max_cost_per_day=0.0  # 本地無成本
         )
-        
-        # Mock 配置（用於測試）
-        configs[LLMProvider.MOCK] = LLMConfig(
-            provider=LLMProvider.MOCK,
-            model_name="mock-model",
-            temperature=0.1,
-            max_tokens=1000,
-            timeout=1,
-            max_requests_per_hour=10000,
-            max_cost_per_day=0.0
-        )
+
         
         return configs
     
@@ -245,7 +242,7 @@ class LLMConfigManager:
             else:
                 provider = self.current_provider
         
-        return self.configs.get(provider, self.configs[LLMProvider.MOCK])
+        return self.configs.get(provider, self.configs[LLMProvider.OPENROUTER])
     
     def set_current_provider(self, provider: LLMProvider) -> bool:
         """

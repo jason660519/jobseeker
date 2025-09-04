@@ -1,0 +1,272 @@
+{
+  "summary": {
+    "total_tests": 18,
+    "passed": 14,
+    "failed": 4,
+    "pass_rate": 77.77777777777779,
+    "evaluation": "一般",
+    "category_stats": {
+      "明確求職查詢": {
+        "total": 3,
+        "passed": 3
+      },
+      "技能導向查詢": {
+        "total": 3,
+        "passed": 3
+      },
+      "模糊求職查詢": {
+        "total": 2,
+        "passed": 2
+      },
+      "邊界案例": {
+        "total": 3,
+        "passed": 1
+      },
+      "非求職相關": {
+        "total": 4,
+        "passed": 3
+      },
+      "複雜查詢": {
+        "total": 3,
+        "passed": 2
+      }
+    },
+    "timestamp": "2025-09-05T06:56:43.265592"
+  },
+  "results": [
+    {
+      "test_id": 1,
+      "category": "明確求職查詢",
+      "description": "完整職位+地點",
+      "query": "Python工程師 台北",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.60，置信度高",
+      "timestamp": "2025-09-05T06:56:43.246773"
+    },
+    {
+      "test_id": 2,
+      "category": "明確求職查詢",
+      "description": "職位+技能+地點",
+      "query": "前端工程師 React Vue 新竹",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.70，置信度高",
+      "timestamp": "2025-09-05T06:56:43.247878"
+    },
+    {
+      "test_id": 3,
+      "category": "明確求職查詢",
+      "description": "職位+薪資+地點",
+      "query": "資料科學家 60k 台中",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "timestamp": "2025-09-05T06:56:43.248994"
+    },
+    {
+      "test_id": 4,
+      "category": "技能導向查詢",
+      "description": "單一技能+地點",
+      "query": "React開發 遠程",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.7,
+      "reasoning": "求職相關性得分0.20，置信度中",
+      "timestamp": "2025-09-05T06:56:43.250141"
+    },
+    {
+      "test_id": 5,
+      "category": "技能導向查詢",
+      "description": "多個技能",
+      "query": "Python Django PostgreSQL",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.7,
+      "reasoning": "求職相關性得分0.30，置信度中",
+      "timestamp": "2025-09-05T06:56:43.251169"
+    },
+    {
+      "test_id": 6,
+      "category": "技能導向查詢",
+      "description": "AI相關技能",
+      "query": "機器學習 TensorFlow 深度學習",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.5,
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "timestamp": "2025-09-05T06:56:43.252341"
+    },
+    {
+      "test_id": 7,
+      "category": "模糊求職查詢",
+      "description": "求職動詞",
+      "query": "找工作 台北",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.7,
+      "reasoning": "求職相關性得分0.30，置信度中",
+      "timestamp": "2025-09-05T06:56:43.253303"
+    },
+    {
+      "test_id": 8,
+      "category": "模糊求職查詢",
+      "description": "職業諮詢",
+      "query": "軟體工程師職涯發展",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.40，置信度高",
+      "timestamp": "2025-09-05T06:56:43.254212"
+    },
+    {
+      "test_id": 9,
+      "category": "邊界案例",
+      "description": "僅地點名稱",
+      "query": "台北",
+      "expected_job_related": false,
+      "actual_job_related": true,
+      "passed": false,
+      "intent_type": "job_search",
+      "confidence": 0.5,
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "timestamp": "2025-09-05T06:56:43.255271"
+    },
+    {
+      "test_id": 10,
+      "category": "邊界案例",
+      "description": "薪資關鍵詞但非求職",
+      "query": "薪水",
+      "expected_job_related": false,
+      "actual_job_related": false,
+      "passed": true,
+      "intent_type": "unclear",
+      "confidence": 0.8,
+      "reasoning": "查詢求職相關性得分過低(0.00)，建議明確說明求職需求",
+      "timestamp": "2025-09-05T06:56:43.256285"
+    },
+    {
+      "test_id": 11,
+      "category": "邊界案例",
+      "description": "技能學習查詢",
+      "query": "學習Python的最佳方法",
+      "expected_job_related": false,
+      "actual_job_related": true,
+      "passed": false,
+      "intent_type": "job_search",
+      "confidence": 0.5,
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "timestamp": "2025-09-05T06:56:43.257615"
+    },
+    {
+      "test_id": 12,
+      "category": "非求職相關",
+      "description": "天氣查詢",
+      "query": "今天天氣如何",
+      "expected_job_related": false,
+      "actual_job_related": false,
+      "passed": true,
+      "intent_type": "non_job_related",
+      "confidence": 0.9,
+      "reasoning": "查詢包含非求職關鍵字且求職相關性得分僅0.00",
+      "timestamp": "2025-09-05T06:56:43.258449"
+    },
+    {
+      "test_id": 13,
+      "category": "非求職相關",
+      "description": "娛樂推薦",
+      "query": "推薦一部好電影",
+      "expected_job_related": false,
+      "actual_job_related": false,
+      "passed": true,
+      "intent_type": "non_job_related",
+      "confidence": 0.9,
+      "reasoning": "查詢包含非求職關鍵字且求職相關性得分僅0.00",
+      "timestamp": "2025-09-05T06:56:43.259408"
+    },
+    {
+      "test_id": 14,
+      "category": "非求職相關",
+      "description": "購物查詢",
+      "query": "哪裡可以買到便宜的筆電",
+      "expected_job_related": false,
+      "actual_job_related": false,
+      "passed": true,
+      "intent_type": "unclear",
+      "confidence": 0.8,
+      "reasoning": "查詢求職相關性得分過低(0.00)，建議明確說明求職需求",
+      "timestamp": "2025-09-05T06:56:43.260165"
+    },
+    {
+      "test_id": 15,
+      "category": "非求職相關",
+      "description": "旅遊查詢",
+      "query": "台北有什麼好玩的景點",
+      "expected_job_related": false,
+      "actual_job_related": true,
+      "passed": false,
+      "intent_type": "job_search",
+      "confidence": 0.5,
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "timestamp": "2025-09-05T06:56:43.260947"
+    },
+    {
+      "test_id": 16,
+      "category": "複雜查詢",
+      "description": "多條件求職",
+      "query": "尋找台北的全端工程師職位，要求React和Node.js經驗，薪資50k以上",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.90，置信度高",
+      "timestamp": "2025-09-05T06:56:43.261937"
+    },
+    {
+      "test_id": 17,
+      "category": "複雜查詢",
+      "description": "遠程工作查詢",
+      "query": "遠程工作機會 軟體開發 彈性時間",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.7,
+      "reasoning": "求職相關性得分0.30，置信度中",
+      "timestamp": "2025-09-05T06:56:43.262657"
+    },
+    {
+      "test_id": 18,
+      "category": "複雜查詢",
+      "description": "職涯轉換",
+      "query": "從傳統製造業轉入科技業的建議",
+      "expected_job_related": true,
+      "actual_job_related": false,
+      "passed": false,
+      "intent_type": "unclear",
+      "confidence": 0.8,
+      "reasoning": "查詢求職相關性得分過低(0.00)，建議明確說明求職需求",
+      "timestamp": "2025-09-05T06:56:43.263293"
+    }
+  ]
+}

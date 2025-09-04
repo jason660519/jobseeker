@@ -1,0 +1,19 @@
+{
+  "test_summary": {
+    "total_tests": 22,
+    "passed_tests": 20,
+    "failed_tests": 2,
+    "pass_rate": 90.9090909090909,
+    "timestamp": "2025-09-05T06:40:31.456606"
+  },
+  "test_results": [
+    {
+      "test_id": "之前失敗的案例-1",
+      "query": "資料科學家",
+      "location": "高雄",
+      "full_query": "資料科學家 高雄",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "confidence": 0.9,
+      "intent_type": 

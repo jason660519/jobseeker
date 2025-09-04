@@ -45,6 +45,7 @@ try:
     from jobseeker.query_parser import parse_user_query_smart
     from jobseeker.intent_analyzer import analyze_user_intent, is_job_related
     from jobseeker.llm_intent_analyzer import LLMIntentAnalyzer
+    from jobseeker.llm_config import LLMConfig, LLMProvider
     from jobseeker.intelligent_decision_engine import DecisionResult, ProcessingStrategy, PlatformSelectionMode
 except ImportError as e:
     print(f"警告: 無法導入 jobseeker 模組: {e}")
@@ -87,15 +88,14 @@ try:
         if anthropic_api_key:
             print("🤖 正在初始化LLM意圖分析器 (Anthropic模式)...")
             try:
-                llm_config = LLMConfig(
-                    provider=LLMProvider.ANTHROPIC,
+                from jobseeker.llm_intent_analyzer import LLMProvider as IntentLLMProvider
+                llm_intent_analyzer = LLMIntentAnalyzer(
+                    provider=IntentLLMProvider.ANTHROPIC_CLAUDE,
                     api_key=anthropic_api_key,
-                    model_name="anthropic/claude-3-haiku-20240307",
-                    temperature=0.1,
-                    max_tokens=1000
+                    fallback_to_basic=True
                 )
-                llm_intent_analyzer = LLMIntentAnalyzer(llm_config)
                 print("✅ LLM意圖分析器初始化成功 (Anthropic模式)")
+                llm_config = True  # 標記成功
             except Exception as e:
                 print(f"⚠️  Anthropic LLM初始化失敗: {e}")
                 llm_config = None
@@ -104,14 +104,14 @@ try:
         if not llm_config and openai_api_key:
             print("🤖 正在初始化LLM意圖分析器 (OpenAI模式)...")
             try:
-                llm_config = LLMConfig(
-                    provider=LLMProvider.OPENAI,
+                from jobseeker.llm_intent_analyzer import LLMProvider as IntentLLMProvider
+                llm_intent_analyzer = LLMIntentAnalyzer(
+                    provider=IntentLLMProvider.OPENAI_GPT35,
                     api_key=openai_api_key,
-                    temperature=0.1,
-                    max_tokens=1000
+                    fallback_to_basic=True
                 )
-                llm_intent_analyzer = LLMIntentAnalyzer(llm_config)
                 print("✅ LLM意圖分析器初始化成功 (OpenAI模式)")
+                llm_config = True  # 標記成功
             except Exception as e:
                 print(f"⚠️  OpenAI LLM初始化失敗: {e}")
                 llm_config = None
@@ -127,50 +127,8 @@ try:
 except ImportError as e:
     print(f"⚠️  LLM意圖分析器導入失敗: {e}")
     print("使用基本意圖分析器")
-    try:
-        from jobseeker.intent_analyzer import IntentAnalyzer as LLMIntentAnalyzer
-        llm_intent_analyzer = LLMIntentAnalyzer()
-    except ImportError:
-        # 如果連基本分析器都無法導入，創建一個簡單的替代品
-        class MockLLMIntentAnalyzer:
-            def analyze_intent_with_decision(self, query):
-                from jobseeker.intent_analyzer import analyze_user_intent, is_job_related
-                from jobseeker.intelligent_decision_engine import DecisionResult, ProcessingStrategy
-                
-                # 使用基本意圖分析
-                is_job = is_job_related(query)
-                intent = analyze_user_intent(query)
-                
-                # 創建模擬結果
-                class MockIntentResult:
-                    def __init__(self, is_job_related, rejection_message=None):
-                        self.is_job_related = is_job_related
-                        self.rejection_message = rejection_message
-                        self.intent_type = None
-                        self.confidence = 0.8
-                        self.llm_used = False
-                        self.structured_intent = None
-                
-                intent_result = MockIntentResult(
-                    is_job_related=is_job,
-                    rejection_message=None if is_job else "抱歉，我是AI助手，僅能協助您處理求職相關問題。"
-                )
-                
-                decision_result = DecisionResult(
-                    strategy=ProcessingStrategy.STANDARD_SEARCH if is_job else ProcessingStrategy.REJECT_QUERY,
-                    confidence=0.8,
-                    reasoning="基本意圖分析",
-                    recommended_platforms=[],
-                    search_parameters={}
-                )
-                
-                return intent_result, decision_result
-        
-        llm_intent_analyzer = MockLLMIntentAnalyzer()
-except Exception as e:
-    # 如果導入失敗，使用默認初始化
-    llm_intent_analyzer = LLMIntentAnalyzer()
-    print(f"⚠️  LLM意圖分析器初始化失敗，使用默認模式: {e}")
+    # 移除模擬LLM相關邏輯，當LLM服務不可用時將在搜索時提示用戶
+llm_intent_analyzer = None
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -362,6 +320,14 @@ def search_jobs():
                 'success': False,
                 'error': '請輸入搜尋關鍵字'
             }), 400
+        
+        # 檢查LLM意圖分析器是否可用
+        if llm_intent_analyzer is None:
+            return jsonify({
+                'success': False,
+                'error': '目前LLM服務暫時不可用，請使用主頁的智能職位搜尋功能，這將幫助您更精準地找到理想工作。',
+                'suggestion': '請嘗試使用主頁的職位搜尋功能'
+            }), 503
         
         # 使用LLM智能意圖分析器進行分析和決策
         try:

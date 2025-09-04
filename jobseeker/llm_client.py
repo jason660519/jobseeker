@@ -65,14 +65,28 @@ class OpenAIClient(BaseLLMClient):
             # 嘗試導入OpenAI庫
             import openai
             
-            # 初始化客戶端
-            self.client = openai.OpenAI(
-                api_key=self.config.api_key,
-                base_url=self.config.api_base,
-                timeout=self.config.timeout
-            )
+            # 根據提供商設置不同的配置
+            client_kwargs = {
+                "api_key": self.config.api_key,
+                "timeout": self.config.timeout
+            }
             
-            self.logger.info(f"OpenAI客戶端初始化成功: {self.config.model_name}")
+            # 如果是 OpenRouter，設置特定的 base_url 和 headers
+            if self.config.provider == LLMProvider.OPENROUTER:
+                client_kwargs["base_url"] = "https://openrouter.ai/api/v1"
+                # OpenRouter 需要特定的 headers
+                client_kwargs["default_headers"] = {
+                    "HTTP-Referer": "https://github.com/your-repo/jobseeker",  # 可選：您的網站 URL
+                    "X-Title": "JobSeeker"  # 可選：您的應用名稱
+                }
+            elif self.config.api_base:
+                client_kwargs["base_url"] = self.config.api_base
+            
+            # 初始化客戶端
+            self.client = openai.OpenAI(**client_kwargs)
+            
+            provider_name = "OpenRouter" if self.config.provider == LLMProvider.OPENROUTER else "OpenAI"
+            self.logger.info(f"{provider_name}客戶端初始化成功: {self.config.model_name}")
             
         except ImportError:
             self.logger.warning("OpenAI庫未安裝，請運行: pip install openai")
@@ -102,9 +116,12 @@ class OpenAIClient(BaseLLMClient):
                 "model": self.config.model_name,
                 "messages": messages,
                 "temperature": kwargs.get("temperature", self.config.temperature),
-                "max_tokens": kwargs.get("max_tokens", self.config.max_tokens),
-                "response_format": kwargs.get("response_format", {"type": "json_object"})
+                "max_tokens": kwargs.get("max_tokens", self.config.max_tokens)
             }
+            
+            # 只有在明確要求 JSON 格式時才添加 response_format
+            if "response_format" in kwargs:
+                request_params["response_format"] = kwargs["response_format"]
             
             # 調用API
             response = self.client.chat.completions.create(**request_params)
@@ -436,211 +453,7 @@ class DeepseekerClient(BaseLLMClient):
         return await loop.run_in_executor(None, self.call, messages, **kwargs)
 
 
-class MockLLMClient(BaseLLMClient):
-    """模擬LLM客戶端（用於測試和演示）"""
-    
-    def __init__(self, config: LLMConfig):
-        """初始化模擬客戶端"""
-        super().__init__(config)
-        self.logger.info("模擬LLM客戶端初始化成功")
-    
-    def call(self, messages: List[Dict[str, str]], **kwargs) -> LLMResponse:
-        """模擬LLM調用"""
-        start_time = time.time()
-        
-        # 模擬處理延遲
-        time.sleep(0.1)
-        
-        # 提取用戶查詢
-        user_query = ""
-        for msg in messages:
-            if msg["role"] == "user":
-                user_query = msg["content"]
-                break
-        
-        # 生成模擬響應
-        mock_response = self._generate_mock_response(user_query)
-        
-        response_time = time.time() - start_time
-        
-        return LLMResponse(
-            content=json.dumps(mock_response, ensure_ascii=False),
-            usage={"prompt_tokens": 100, "completion_tokens": 200, "total_tokens": 300},
-            model=self.config.model_name,
-            provider=self.config.provider,
-            response_time=response_time,
-            success=True
-        )
-    
-    async def acall(self, messages: List[Dict[str, str]], **kwargs) -> LLMResponse:
-        """異步模擬LLM調用"""
-        await asyncio.sleep(0.1)  # 模擬異步延遲
-        return self.call(messages, **kwargs)
-    
-    def _generate_mock_response(self, query: str) -> Dict[str, Any]:
-        """生成模擬響應"""
-        query_lower = query.lower()
-        
-        # 檢查是否為非求職相關查詢
-        non_job_keywords = ['天氣', '電影', '音樂', '食譜', '烹飪', '遊戲', '娛樂']
-        if any(keyword in query_lower for keyword in non_job_keywords):
-            return {
-                "is_job_related": False,
-                "intent_type": "non_job_related",
-                "confidence": 0.9,
-                "reasoning": "查詢內容與求職無關，涉及日常生活話題",
-                "structured_intent": None,
-                "search_suggestions": [],
-                "response_message": "抱歉，我是AI助手，僅能協助您處理求職相關問題。您可以嘗試搜索：'軟體工程師 台北'、'產品經理 薪資'等求職相關內容。"
-            }
-        
-        # 模擬求職相關分析
-        job_titles = []
-        skills = []
-        locations = []
-        soft_preferences = []
-        
-        # 智能提取職位
-        if any(title in query_lower for title in ['工程師', 'engineer', '開發', 'developer']):
-            if 'frontend' in query_lower or '前端' in query_lower:
-                job_titles.append('前端工程師')
-                skills.extend(['JavaScript', 'React', 'Vue'])
-            elif 'backend' in query_lower or '後端' in query_lower:
-                job_titles.append('後端工程師')
-                skills.extend(['Python', 'Java', 'Node.js'])
-            elif 'ai' in query_lower or '人工智慧' in query_lower or '機器學習' in query_lower:
-                job_titles.append('AI工程師')
-                skills.extend(['Python', 'TensorFlow', 'PyTorch', 'Machine Learning'])
-            else:
-                job_titles.append('軟體工程師')
-        
-        if '產品經理' in query or 'product manager' in query_lower:
-            job_titles.append('產品經理')
-            skills.extend(['產品規劃', '用戶研究', '數據分析'])
-        
-        if '資料科學' in query or 'data scientist' in query_lower:
-            job_titles.append('資料科學家')
-            skills.extend(['Python', 'R', 'SQL', '機器學習', '統計分析'])
-        
-        # 智能提取地點
-        location_keywords = {
-            '台北': '台北市',
-            '新北': '新北市',
-            '台中': '台中市',
-            '高雄': '高雄市',
-            '新竹': '新竹市',
-            'sydney': '雪梨',
-            'melbourne': '墨爾本',
-            'brisbane': '布里斯本',
-            'singapore': '新加坡'
-        }
-        
-        for keyword, location in location_keywords.items():
-            if keyword in query_lower:
-                locations.append(location)
-        
-        if '遠程' in query or 'remote' in query_lower or '在家工作' in query_lower:
-            locations.append('遠程工作')
-        
-        # 智能提取軟性偏好
-        if '不加班' in query or '不想加班' in query or 'work life balance' in query_lower:
-            soft_preferences.extend(['工作生活平衡', '正常工時', '不加班'])
-        
-        if '團隊氛圍' in query or '文化' in query or 'culture' in query_lower:
-            soft_preferences.extend(['團隊氛圍好', '企業文化佳'])
-        
-        if '學習' in query or '成長' in query or 'learning' in query_lower:
-            soft_preferences.extend(['學習機會多', '職業發展'])
-        
-        if '彈性' in query or 'flexible' in query_lower:
-            soft_preferences.extend(['彈性工時', '彈性工作'])
-        
-        # 提取薪資信息
-        import re
-        salary_patterns = [
-            r'(\d+)[-到~]?(\d+)?[萬k萬元]',
-            r'薪水.*?(\d+)',
-            r'salary.*?(\d+)',
-            r'(\d+)k'
-        ]
-        
-        salary_range = None
-        for pattern in salary_patterns:
-            match = re.search(pattern, query_lower)
-            if match:
-                if match.group(2):
-                    salary_range = f"{match.group(1)}-{match.group(2)}萬"
-                else:
-                    salary_range = f"{match.group(1)}萬以上"
-                break
-        
-        # 提取工作模式
-        work_mode = None
-        if '遠程' in query or 'remote' in query_lower:
-            work_mode = "遠程"
-        elif '混合' in query or 'hybrid' in query_lower:
-            work_mode = "混合"
-        elif '線下' in query or 'onsite' in query_lower:
-            work_mode = "線下"
-        
-        # 提取經驗要求
-        experience_level = None
-        exp_patterns = {
-            r'(\d+)[-到~]?(\d+)?年': lambda m: f"{m.group(1)}-{m.group(2) or m.group(1)}年" if m.group(2) else f"{m.group(1)}年以上",
-            r'新手|junior|初級': "1-2年",
-            r'資深|senior|高級': "5年以上",
-            r'主管|manager|lead': "主管級",
-            r'實習|intern': "實習生"
-        }
-        
-        for pattern, result in exp_patterns.items():
-            if callable(result):
-                match = re.search(pattern, query_lower)
-                if match:
-                    experience_level = result(match)
-                    break
-            else:
-                if re.search(pattern, query_lower):
-                    experience_level = result
-                    break
-        
-        # 生成搜索建議
-        search_suggestions = []
-        if job_titles and locations:
-            search_suggestions.append(f"{job_titles[0]} {locations[0]}")
-        if job_titles and skills:
-            search_suggestions.append(f"{job_titles[0]} {' '.join(skills[:2])}")
-        if job_titles and salary_range:
-            search_suggestions.append(f"{job_titles[0]} {salary_range}")
-        
-        # 如果沒有明確的求職意圖，提供通用建議
-        if not job_titles and not skills:
-            search_suggestions = [
-                "軟體工程師 台北",
-                "產品經理 遠程工作",
-                "資料科學家 新竹"
-            ]
-        
-        return {
-            "is_job_related": bool(job_titles or skills or locations or '工作' in query or 'job' in query_lower),
-            "intent_type": "job_search",
-            "confidence": 0.8 if job_titles else 0.6,
-            "reasoning": "基於關鍵詞和語義分析，識別出求職相關意圖並提取結構化信息",
-            "structured_intent": {
-                "job_titles": job_titles,
-                "skills": skills,
-                "locations": locations,
-                "salary_range": salary_range,
-                "work_mode": work_mode,
-                "company_size": None,
-                "industry": None,
-                "experience_level": experience_level,
-                "soft_preferences": soft_preferences,
-                "urgency": None
-            },
-            "search_suggestions": search_suggestions,
-            "response_message": "已為您分析查詢意圖，正在搜索相關職位..."
-        }
+# MockLLMClient 已移除 - 不再支持模擬LLM功能
 
 
 class LLMClientFactory:
@@ -656,8 +469,11 @@ class LLMClientFactory:
             
         Returns:
             BaseLLMClient: LLM客戶端實例
+            
+        Raises:
+            ValueError: 當提供商不支持或配置無效時
         """
-        if config.provider in [LLMProvider.OPENAI, LLMProvider.AZURE_OPENAI]:
+        if config.provider in [LLMProvider.OPENAI, LLMProvider.AZURE_OPENAI, LLMProvider.OPENROUTER]:
             return OpenAIClient(config)
         elif config.provider == LLMProvider.ANTHROPIC:
             return AnthropicClient(config)
@@ -665,11 +481,8 @@ class LLMClientFactory:
             return GoogleClient(config)
         elif config.provider == LLMProvider.DEEPSEEKER:
             return DeepseekerClient(config)
-        elif config.provider == LLMProvider.MOCK:
-            return MockLLMClient(config)
         else:
-            # 默認返回Mock客戶端
-            return MockLLMClient(config)
+            raise ValueError(f"不支持的LLM提供商: {config.provider}。目前LLM服務暫時不可用，請使用主頁的智能職位搜尋功能，這將幫助您更精準地找到理想工作。")
 
 
 # 便捷函數

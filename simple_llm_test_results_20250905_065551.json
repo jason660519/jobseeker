@@ -1,0 +1,66 @@
+{
+  "summary": {
+    "total_tests": 5,
+    "passed": 4,
+    "failed": 1,
+    "pass_rate": 80.0,
+    "timestamp": "2025-09-05T06:55:51.992109"
+  },
+  "results": [
+    {
+      "test_case": "明確求職查詢",
+      "query": "Python工程師 台北",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.60，置信度高",
+      "timestamp": "2025-09-05T06:55:51.986759"
+    },
+    {
+      "test_case": "技能查詢",
+      "query": "React開發 遠程",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "passed": true,
+      "intent_type": "job_search",
+      "confidence": 0.7,
+      "reasoning": "求職相關性得分0.20，置信度中",
+      "timestamp": "2025-09-05T06:55:51.988088"
+    },
+    {
+      "test_case": "非求職查詢",
+      "query": "今天天氣如何",
+      "expected_job_related": false,
+      "actual_job_related": false,
+      "passed": true,
+      "intent_type": "non_job_related",
+      "confidence": 0.9,
+      "reasoning": "查詢包含非求職關鍵字且求職相關性得分僅0.00",
+      "timestamp": "2025-09-05T06:55:51.989093"
+    },
+    {
+      "test_case": "娛樂查詢",
+      "query": "推薦一部好電影",
+      "expected_job_related": false,
+      "actual_job_related": false,
+      "passed": true,
+      "intent_type": "non_job_related",
+      "confidence": 0.9,
+      "reasoning": "查詢包含非求職關鍵字且求職相關性得分僅0.00",
+      "timestamp": "2025-09-05T06:55:51.989872"
+    },
+    {
+      "test_case": "邊界案例 - 僅地點",
+      "query": "台北",
+      "expected_job_related": false,
+      "actual_job_related": true,
+      "passed": false,
+      "intent_type": "job_search",
+      "confidence": 0.5,
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "timestamp": "2025-09-05T06:55:51.990896"
+    }
+  ]
+}

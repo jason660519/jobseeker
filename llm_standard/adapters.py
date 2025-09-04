@@ -75,7 +75,7 @@ class BaseLLMAdapter(ABC):
             formatted_instruction = self.format_instruction(instruction)
             
             # 添加輸入文本
-            full_prompt = f"{formatted_instruction}\n\n輸入內容：{input_text}"
+            full_prompt = f"{formatted_instruction}\n\nInput Content: {input_text}"
             
             # 執行API調用
             raw_response = self._make_api_call(full_prompt, **kwargs)
@@ -184,19 +184,19 @@ class OpenAIAdapter(BaseLLMAdapter):
         context = task.get('context', '')
         constraints = task.get('constraints', [])
         
-        prompt = f"任務描述：{description}\n"
+        prompt = f"Task Description: {description}\n"
         
         if context:
-            prompt += f"上下文：{context}\n"
+            prompt += f"Context: {context}\n"
         
         if constraints:
-            prompt += f"約束條件：{', '.join(constraints)}\n"
+            prompt += f"Constraints: {', '.join(constraints)}\n"
         
         # 添加輸出格式要求
         if 'output_schema' in standard_instruction:
             schema_str = json.dumps(standard_instruction['output_schema'], ensure_ascii=False, indent=2)
-            prompt += f"\n請按照以下JSON Schema格式輸出結果：\n{schema_str}\n"
-            prompt += "\n請確保輸出是有效的JSON格式，不要包含任何額外的文字說明。"
+            prompt += f"\nPlease output results according to the following JSON Schema format:\n{schema_str}\n"
+            prompt += "\nPlease ensure the output is valid JSON format without any additional text explanations."
         
         return prompt
     
@@ -206,7 +206,7 @@ class OpenAIAdapter(BaseLLMAdapter):
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "你是一個專業的AI助手，請嚴格按照用戶要求的格式輸出結果。"},
+                    {"role": "system", "content": "You are a professional AI assistant. Please strictly follow the user's required format for output."},
                     {"role": "user", "content": formatted_instruction}
                 ],
                 temperature=kwargs.get('temperature', 0.1),
@@ -284,8 +284,8 @@ class AnthropicAdapter(BaseLLMAdapter):
         # 添加輸出格式要求
         if 'output_schema' in standard_instruction:
             schema_str = json.dumps(standard_instruction['output_schema'], ensure_ascii=False, indent=2)
-            prompt += f"\n<output_format>\n請按照以下JSON Schema格式輸出結果：\n{schema_str}\n</output_format>\n"
-            prompt += "\n請確保輸出是有效的JSON格式，不要包含任何額外的文字說明。"
+            prompt += f"\n<output_format>\nPlease output results according to the following JSON Schema format:\n{schema_str}\n</output_format>\n"
+            prompt += "\nPlease ensure the output is valid JSON format without any additional text explanations."
         
         return prompt
     
@@ -362,19 +362,19 @@ class GoogleAdapter(BaseLLMAdapter):
         context = task.get('context', '')
         constraints = task.get('constraints', [])
         
-        prompt = f"任務：{description}\n"
+        prompt = f"Task: {description}\n"
         
         if context:
-            prompt += f"背景：{context}\n"
+            prompt += f"Background: {context}\n"
         
         if constraints:
-            prompt += f"要求：{', '.join(constraints)}\n"
+            prompt += f"Requirements: {', '.join(constraints)}\n"
         
         # 添加輸出格式要求
         if 'output_schema' in standard_instruction:
             schema_str = json.dumps(standard_instruction['output_schema'], ensure_ascii=False, indent=2)
-            prompt += f"\n輸出格式（JSON Schema）：\n{schema_str}\n"
-            prompt += "\n請嚴格按照上述JSON格式輸出，不要包含任何額外說明。"
+            prompt += f"\nOutput Format (JSON Schema):\n{schema_str}\n"
+            prompt += "\nPlease strictly follow the above JSON format for output, without any additional explanations."
         
         return prompt
     
@@ -453,19 +453,19 @@ class DeepSeekAdapter(BaseLLMAdapter):
         context = task.get('context', '')
         constraints = task.get('constraints', [])
         
-        prompt = f"任務：{description}\n"
+        prompt = f"Task: {description}\n"
         
         if context:
-            prompt += f"上下文：{context}\n"
+            prompt += f"Context: {context}\n"
         
         if constraints:
-            prompt += f"約束：{', '.join(constraints)}\n"
+            prompt += f"Constraints: {', '.join(constraints)}\n"
         
         # 添加輸出格式要求
         if 'output_schema' in standard_instruction:
             schema_str = json.dumps(standard_instruction['output_schema'], ensure_ascii=False, indent=2)
-            prompt += f"\n輸出格式要求（JSON Schema）：\n{schema_str}\n"
-            prompt += "\n請嚴格按照JSON格式輸出，不要添加任何解釋文字。"
+            prompt += f"\nOutput Format Requirements (JSON Schema):\n{schema_str}\n"
+            prompt += "\nPlease strictly follow JSON format for output, without adding any explanatory text."
         
         return prompt
     

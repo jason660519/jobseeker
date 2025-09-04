@@ -135,6 +135,7 @@ class IntelligentDecisionEngine:
                      user_context: Optional[Dict[str, Any]] = None) -> DecisionResult:
         """
         根據意圖分析結果做出智能決策
+        包含二次驗證機制以減少誤判
         
         Args:
             intent_result: LLM意圖分析結果
@@ -146,9 +147,19 @@ class IntelligentDecisionEngine:
         start_time = datetime.now()
         
         try:
-            # 1. 檢查是否為求職相關查詢
+            # 1. 檢查是否為求職相關查詢（含二次驗證）
             if not intent_result.is_job_related:
-                return self._create_rejection_decision(intent_result)
+                # 二次驗證：檢查是否為誤判
+                override_result = self._check_job_intent_override(intent_result)
+                if override_result:
+                    self.logger.info(f"覆蓋原始決策：{override_result['reason']}")
+                    # 修改意圖結果
+                    intent_result.is_job_related = True
+                    intent_result.confidence = override_result['confidence']
+                    if hasattr(intent_result, 'llm_reasoning'):
+                        intent_result.llm_reasoning += f" [覆蓋: {override_result['reason']}]"
+                else:
+                    return self._create_rejection_decision(intent_result)
             
             # 2. 分析查詢複雜度和特異性
             complexity_score = self._analyze_query_complexity(intent_result)
@@ -224,19 +235,102 @@ class IntelligentDecisionEngine:
             self.logger.error(f"決策過程中發生錯誤: {e}")
             return self._create_fallback_decision(intent_result)
     
+    def _check_job_intent_override(self, intent_result: Any) -> Optional[Dict[str, Any]]:
+        """
+        檢查是否需要覆蓋非求職判斷
+        用於減少誤判，特別是對明顯的求職查詢
+        
+        Args:
+            intent_result: LLM意圖分析結果
+            
+        Returns:
+            Optional[Dict]: 如果需要覆蓋，返回覆蓋信息；否則返回None
+        """
+        # 檢查結構化意圖中是否包含明顯的求職信息
+        if hasattr(intent_result, 'structured_intent') and intent_result.structured_intent:
+            intent = intent_result.structured_intent
+            
+            # 如果提取到了職位、技能或地點，很可能是求職查詢
+            job_indicators = 0
+            
+            # 檢查職位名稱
+            if hasattr(intent, 'job_titles') and intent.job_titles:
+                job_indicators += 2  # 職位名稱權重較高
+            
+            # 檢查技能
+            if hasattr(intent, 'skills') and intent.skills:
+                job_indicators += 1
+            
+            # 檢查地點
+            if hasattr(intent, 'locations') and intent.locations:
+                job_indicators += 1
+            
+            # 檢查薪資信息
+            if hasattr(intent, 'salary_range') and intent.salary_range:
+                job_indicators += 1
+            
+            # 如果有足夠的求職指標，覆蓋原始判斷
+            if job_indicators >= 2:
+                return {
+                    'reason': f'檢測到{job_indicators}個求職指標，覆蓋為求職查詢',
+                    'confidence': min(0.7, 0.3 + job_indicators * 0.1)
+                }
+        
+        # 檢查原始查詢中的關鍵字
+        if hasattr(intent_result, 'original_query'):
+            query_lower = intent_result.original_query.lower()
+            
+            # 強求職關鍵字
+            strong_job_keywords = [
+                '工程師', '開發者', '程式設計師', '設計師', '經理', '分析師', '科學家',
+                'engineer', 'developer', 'programmer', 'designer', 'manager', 'analyst', 'scientist'
+            ]
+            
+            for keyword in strong_job_keywords:
+                if keyword in query_lower:
+                    return {
+                        'reason': f'檢測到強求職關鍵字「{keyword}」',
+                        'confidence': 0.8
+                    }
+        
+        return None
+    
     def _create_rejection_decision(self, intent_result: Any) -> DecisionResult:
-        """創建拒絕決策"""
+        """
+        創建改進的拒絕決策
+        提供更友善和具體的拒絕訊息
+        
+        Args:
+            intent_result: LLM意圖分析結果
+            
+        Returns:
+            DecisionResult: 拒絕決策結果
+        """
+        # 分析拒絕原因並提供相應的建議
+        if intent_result.confidence > 0.8:
+            # 高置信度非求職查詢
+            message = "抱歉，我專門協助求職相關問題。您可以嘗試搜索：\n" + \
+                     "• '軟體工程師 台北'\n" + \
+                     "• 'Python開發者 薪資'\n" + \
+                     "• '前端工程師 遠程工作'"
+        else:
+            # 低置信度或不明確查詢
+            message = "請提供更具體的求職需求，例如：\n" + \
+                     "• 職位名稱 + 地點\n" + \
+                     "• 技能關鍵字 + 工作類型\n" + \
+                     "• 行業 + 經驗要求"
+        
         return DecisionResult(
             strategy=ProcessingStrategy.REJECT_QUERY,
             platform_selection_mode=PlatformSelectionMode.FALLBACK,
             recommended_platforms=[],
             search_parameters={},
             priority_score=0.0,
-            confidence=1.0,
-            reasoning="查詢不是求職相關，拒絕處理",
+            confidence=intent_result.confidence,
+            reasoning=f"查詢非求職相關 (置信度: {intent_result.confidence:.2f})",
             fallback_options=[],
             estimated_results=0,
-            processing_hints={'rejection_message': intent_result.rejection_message}
+            processing_hints={'rejection_message': message}
         )
     
     def _analyze_query_complexity(self, intent_result: Any) -> float:

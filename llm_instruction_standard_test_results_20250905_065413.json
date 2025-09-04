@@ -1,0 +1,224 @@
+{
+  "test_summary": {
+    "total_tests": 13,
+    "passed_tests": 7,
+    "failed_tests": 6,
+    "overall_pass_rate": 53.84615384615385,
+    "category_stats": {
+      "標準求職查詢": {
+        "total": 3,
+        "passed": 3,
+        "failed": 0,
+        "pass_rate": 100.0
+      },
+      "JSON格式驗證": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "pass_rate": 0.0
+      },
+      "邊界案例": {
+        "total": 3,
+        "passed": 1,
+        "failed": 2,
+        "pass_rate": 33.33333333333333
+      },
+      "非求職相關": {
+        "total": 3,
+        "passed": 2,
+        "failed": 1,
+        "pass_rate": 66.66666666666666
+      },
+      "指令遵循驗證": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "pass_rate": 50.0
+      }
+    },
+    "timestamp": "2025-09-05T06:54:13.850512"
+  },
+  "detailed_results": [
+    {
+      "test_case": "基本職位查詢",
+      "query": "軟體工程師",
+      "location": "台北",
+      "full_query": "軟體工程師 台北",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "expected_intent_type": "job_search",
+      "actual_intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "basic_passed": true,
+      "timestamp": "2025-09-05T06:54:13.844153",
+      "overall_passed": true
+    },
+    {
+      "test_case": "技能導向查詢",
+      "query": "Python開發者",
+      "location": "新竹",
+      "full_query": "Python開發者 新竹",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "expected_intent_type": "job_search",
+      "actual_intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.60，置信度高",
+      "basic_passed": true,
+      "timestamp": "2025-09-05T06:54:13.844446",
+      "overall_passed": true
+    },
+    {
+      "test_case": "經驗級別查詢",
+      "query": "資深前端工程師",
+      "location": "台中",
+      "full_query": "資深前端工程師 台中",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "expected_intent_type": "job_search",
+      "actual_intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "basic_passed": true,
+      "timestamp": "2025-09-05T06:54:13.844652",
+      "overall_passed": true
+    },
+    {
+      "test_case": "驗證JSON結構完整性",
+      "query": "數據分析師",
+      "location": "高雄",
+      "full_query": "數據分析師 高雄",
+      "error": "'LLMIntentResult' object has no attribute 'search_suggestions'",
+      "basic_passed": false,
+      "overall_passed": false,
+      "timestamp": "2025-09-05T06:54:13.845249"
+    },
+    {
+      "test_case": "驗證特殊字符處理",
+      "query": "UI/UX設計師",
+      "location": "台南",
+      "full_query": "UI/UX設計師 台南",
+      "error": "'LLMIntentResult' object has no attribute 'search_suggestions'",
+      "basic_passed": false,
+      "overall_passed": false,
+      "timestamp": "2025-09-05T06:54:13.845542"
+    },
+    {
+      "test_case": "模糊求職關鍵詞",
+      "query": "工作",
+      "location": "台北",
+      "full_query": "工作 台北",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "expected_intent_type": "job_search",
+      "actual_intent_type": "job_search",
+      "confidence": 0.7,
+      "reasoning": "求職相關性得分0.30，置信度中",
+      "basic_passed": true,
+      "timestamp": "2025-09-05T06:54:13.846324",
+      "overall_passed": true
+    },
+    {
+      "test_case": "薪資相關但非求職查詢",
+      "query": "薪水",
+      "location": "台中",
+      "full_query": "薪水 台中",
+      "expected_job_related": false,
+      "actual_job_related": true,
+      "expected_intent_type": "non_job_related",
+      "actual_intent_type": "job_search",
+      "confidence": 0.5,
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "basic_passed": false,
+      "timestamp": "2025-09-05T06:54:13.846828",
+      "overall_passed": false
+    },
+    {
+      "test_case": "僅地點名稱",
+      "query": "台北",
+      "location": "",
+      "full_query": "台北",
+      "expected_job_related": false,
+      "actual_job_related": true,
+      "expected_intent_type": "non_job_related",
+      "actual_intent_type": "job_search",
+      "confidence": 0.5,
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "basic_passed": false,
+      "timestamp": "2025-09-05T06:54:13.847240",
+      "overall_passed": false
+    },
+    {
+      "test_case": "天氣查詢",
+      "query": "今天天氣如何",
+      "location": "",
+      "full_query": "今天天氣如何",
+      "expected_job_related": false,
+      "actual_job_related": false,
+      "expected_intent_type": "non_job_related",
+      "actual_intent_type": "non_job_related",
+      "confidence": 0.9,
+      "reasoning": "查詢包含非求職關鍵字且求職相關性得分僅0.00",
+      "basic_passed": true,
+      "timestamp": "2025-09-05T06:54:13.848182",
+      "overall_passed": true
+    },
+    {
+      "test_case": "娛樂推薦",
+      "query": "推薦一部好電影",
+      "location": "",
+      "full_query": "推薦一部好電影",
+      "expected_job_related": false,
+      "actual_job_related": false,
+      "expected_intent_type": "non_job_related",
+      "actual_intent_type": "non_job_related",
+      "confidence": 0.9,
+      "reasoning": "查詢包含非求職關鍵字且求職相關性得分僅0.00",
+      "basic_passed": true,
+      "timestamp": "2025-09-05T06:54:13.848341",
+      "overall_passed": true
+    },
+    {
+      "test_case": "學習諮詢",
+      "query": "學習Python的最佳方法",
+      "location": "",
+      "full_query": "學習Python的最佳方法",
+      "expected_job_related": false,
+      "actual_job_related": true,
+      "expected_intent_type": "non_job_related",
+      "actual_intent_type": "job_search",
+      "confidence": 0.5,
+      "reasoning": "求職相關性得分0.10，置信度低",
+      "basic_passed": false,
+      "timestamp": "2025-09-05T06:54:13.848693",
+      "overall_passed": false
+    },
+    {
+      "test_case": "驗證職業分析師角色",
+      "query": "機器學習工程師",
+      "location": "遠程",
+      "full_query": "機器學習工程師 遠程",
+      "expected_job_related": true,
+      "actual_job_related": true,
+      "expected_intent_type": "job_search",
+      "actual_intent_type": "job_search",
+      "confidence": 0.9,
+      "reasoning": "求職相關性得分0.50，置信度高",
+      "basic_passed": true,
+      "timestamp": "2025-09-05T06:54:13.849865",
+      "role_compliance": true,
+      "overall_passed": true
+    },
+    {
+      "test_case": "驗證結構化輸出",
+      "query": "全端開發者",
+      "location": "混合辦公",
+      "full_query": "全端開發者 混合辦公",
+      "error": "argument of type 'JobSearchIntent' is not iterable",
+      "basic_passed": false,
+      "overall_passed": false,
+      "timestamp": "2025-09-05T06:54:13.850168"
+    }
+  ]
+}
