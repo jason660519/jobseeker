@@ -484,6 +484,14 @@ endblock %} {% block content %}
           error: function (xhr, status, error) {
             hideLoading();
 
+            // 檢查是否為意圖分析錯誤（400狀態碼且有intent_analysis）
+            if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.intent_analysis) {
+              showIntentAnalysisAlert(xhr.responseJSON.error, xhr.responseJSON.intent_analysis);
+              // 顯示功能介紹區塊
+              $("#featuresSection").show();
+              return;
+            }
+
             let errorMessage = "搜尋過程中發生錯誤";
             if (status === "timeout") {
               errorMessage = "搜尋超時，請稍後再試";
@@ -492,7 +500,7 @@ endblock %} {% block content %}
             }
 
             showAlert(errorMessage, "danger");
-          },
+          }
         });
       }
 

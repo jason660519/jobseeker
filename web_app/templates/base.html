@@ -2522,14 +2522,22 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(formData)
           })
-          .then(response => response.json())
-          .then(data => {
+          .then(response => {
               if (window.searchProgressInterval) {
                   clearInterval(window.searchProgressInterval);
               }
               
               const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
               if (modal) modal.hide();
+              
+              return response.json().then(data => ({ response, data }));
+          })
+          .then(({ response, data }) => {
+              // 檢查是否為400錯誤且有意圖分析
+              if (response.status === 400 && data.intent_analysis) {
+                  showIntentAnalysisAlert(data.error, data.intent_analysis);
+                  return;
+              }
               
               showHeaderSearchResults(data, query);
           })
