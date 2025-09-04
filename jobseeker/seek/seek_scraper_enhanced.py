@@ -18,7 +18,7 @@ from typing import Dict, List, Optional, Any, Union
 from .seek_crawler_engine import SeekCrawlerEngine
 from .etl_processor import SeekETLProcessor
 from ..model import JobPost, JobType, Country
-from .util import SeekJobScraper
+from . import SeekScraper
 from .constant import *
 
 

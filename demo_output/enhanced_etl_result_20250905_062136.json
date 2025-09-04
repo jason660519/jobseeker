@@ -1,0 +1,45 @@
+{
+  "success": true,
+  "strategy_used": "traditional_primary",
+  "total_jobs": 0,
+  "jobs": [],
+  "execution_time": 0.0016324520111083984,
+  "data_sources_summary": {
+    "traditional_scraper": {
+      "success": true,
+      "job_count": 0,
+      "execution_time": 0.0004794597625732422
+    }
+  },
+  "quality_report": {
+    "total_processed": 10,
+    "valid_jobs": 0,
+    "invalid_jobs": 0,
+    "duplicates_removed": 0,
+    "salary_extracted": 0,
+    "emails_extracted": 0,
+    "data_enriched": 0,
+    "success_rate": 0.0,
+    "duplicate_rate": 0.0,
+    "salary_extraction_rate": 0.0,
+    "email_extraction_rate": 0.0
+  },
+  "config": {
+    "search_term": "machine learning",
+    "location": "Perth WA",
+    "job_type": "all",
+    "max_results": 8,
+    "max_pages": 5,
+    "strategy": "ScrapingStrategy.HYBRID",
+    "high_quality_required": false,
+    "large_volume_required": false,
+    "timeout": 300,
+    "retry_attempts": 3,
+    "enable_cross_validation": true,
+    "output_formats": [
+      "json"
+    ],
+    "include_metadata": true
+  },
+  "timestamp": "2025-09-05T06:21:36.225251"
+}

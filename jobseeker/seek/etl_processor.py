@@ -16,8 +16,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any, Union
 from dataclasses import asdict
 
-from ..model import JobPost, JobType, Country, Currency
-from ..util import extract_emails_from_text, extract_salary_from_text
+from ..model import JobPost, JobType, Country, Compensation, CompensationInterval
+from ..util import extract_emails_from_text, extract_salary
 
 
 class SeekETLProcessor:
@@ -358,7 +358,7 @@ class SeekETLProcessor:
                 job_type=cleaned_data.get('job_type', JobType.FULL_TIME),
                 salary_min=salary_info.get('min_amount'),
                 salary_max=salary_info.get('max_amount'),
-                currency=Currency.AUD,
+                currency="AUD",
                 interval=salary_info.get('interval'),
                 description=cleaned_data.get('description', ''),
                 job_url=cleaned_data.get('url', ''),

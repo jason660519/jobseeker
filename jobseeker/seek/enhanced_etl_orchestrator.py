@@ -23,7 +23,7 @@ from .etl_processor import SeekETLProcessor
 from .seek_scraper_enhanced import SeekScraperEnhanced
 from ..model import JobPost, JobType, Country
 from ..enhanced_logging import get_enhanced_logger, LogCategory
-from ..enhanced_error_handler import EnhancedErrorHandler, ErrorRecoveryStrategy
+from ..enhanced_error_handler import EnhancedErrorHandler, RecoveryAction
 
 # 導入視覺爬蟲（需要調整路徑）
 try:
@@ -74,21 +74,38 @@ class ScrapingJobConfig:
 
 class ScrapingStrategySelector:
     """
-    爬蟲策略選擇器
-    根據任務需求和網站狀態智能選擇最佳策略
+    增強型爬蟲策略選擇器
+    根據任務需求、網站狀態和動態性能智能選擇最佳策略
     """
     
     def __init__(self):
-        self.logger = get_enhanced_logger(self.__class__.__name__, LogCategory.SCRAPING)
+        self.logger = get_enhanced_logger(self.__class__.__name__)
+        # 使用滑動窗口統計近期性能
+        self.performance_window_size = 20
         self.strategy_performance = {
-            ScrapingStrategy.VISUAL_PRIMARY: {'success_rate': 0.85, 'avg_time': 45},
-            ScrapingStrategy.TRADITIONAL_PRIMARY: {'success_rate': 0.75, 'avg_time': 15},
-            ScrapingStrategy.HYBRID: {'success_rate': 0.90, 'avg_time': 30}
+            ScrapingStrategy.VISUAL_PRIMARY: {
+                'success_rate': 0.85, 'avg_time': 45, 'recent_results': [],
+                'quality_score': 0.9, 'stability_score': 0.8
+            },
+            ScrapingStrategy.TRADITIONAL_PRIMARY: {
+                'success_rate': 0.75, 'avg_time': 15, 'recent_results': [],
+                'quality_score': 0.7, 'stability_score': 0.9
+            },
+            ScrapingStrategy.HYBRID: {
+                'success_rate': 0.90, 'avg_time': 30, 'recent_results': [],
+                'quality_score': 0.85, 'stability_score': 0.85
+            }
+        }
+        # 網站狀態監控
+        self.website_health = {
+            'response_time': 1.0,
+            'anti_bot_level': 0.3,
+            'last_check': time.time()
         }
     
     def select_strategy(self, job_config: ScrapingJobConfig) -> ScrapingStrategy:
         """
-        選擇最佳爬蟲策略
+        智能選擇最佳爬蟲策略
         
         Args:
             job_config: 任務配置
@@ -100,39 +117,198 @@ class ScrapingStrategySelector:
         if job_config.strategy != ScrapingStrategy.HYBRID:
             return job_config.strategy
         
-        # 智能策略選擇邏輯
-        if job_config.high_quality_required:
-            self.logger.info("高質量需求，選擇視覺爬蟲為主")
-            return ScrapingStrategy.VISUAL_PRIMARY
+        # 更新網站健康狀態
+        self._update_website_health()
         
-        if job_config.large_volume_required and job_config.max_results > 100:
-            self.logger.info("大量數據需求，選擇傳統爬蟲為主")
-            return ScrapingStrategy.TRADITIONAL_PRIMARY
+        # 計算各策略的綜合評分
+        strategy_scores = self._calculate_strategy_scores(job_config)
         
-        # 根據歷史性能選擇
-        best_strategy = max(
-            self.strategy_performance.keys(),
-            key=lambda s: self.strategy_performance[s]['success_rate']
-        )
+        # 選擇評分最高的策略
+        best_strategy = max(strategy_scores.keys(), key=lambda s: strategy_scores[s])
         
-        self.logger.info(f"根據性能指標選擇策略: {best_strategy}")
+        self.logger.info(f"策略評分: {strategy_scores}")
+        self.logger.info(f"選擇策略: {best_strategy} (評分: {strategy_scores[best_strategy]:.3f})")
+        
         return best_strategy
     
-    def update_strategy_performance(self, strategy: ScrapingStrategy, 
-                                  success: bool, execution_time: float):
+    def _calculate_strategy_scores(self, job_config: ScrapingJobConfig) -> Dict[ScrapingStrategy, float]:
         """
-        更新策略性能統計
+        計算各策略的綜合評分
+        
+        Args:
+            job_config: 任務配置
+            
+        Returns:
+            Dict: 策略評分字典
+        """
+        scores = {}
+        
+        for strategy in [ScrapingStrategy.VISUAL_PRIMARY, 
+                        ScrapingStrategy.TRADITIONAL_PRIMARY, 
+                        ScrapingStrategy.HYBRID]:
+            
+            perf = self.strategy_performance[strategy]
+            
+            # 基礎性能評分 (40%)
+            recent_success_rate = self._get_recent_success_rate(strategy)
+            performance_score = recent_success_rate * 0.4
+            
+            # 質量評分 (30%)
+            quality_weight = 0.5 if job_config.high_quality_required else 0.3
+            quality_score = perf['quality_score'] * quality_weight
+            
+            # 速度評分 (20%)
+            speed_weight = 0.3 if job_config.large_volume_required else 0.2
+            # 時間越短評分越高
+            speed_score = (1.0 / (perf['avg_time'] / 10)) * speed_weight
+            
+            # 穩定性評分 (10%)
+            stability_score = perf['stability_score'] * 0.1
+            
+            # 網站狀態適應性評分
+            adaptability_score = self._get_adaptability_score(strategy)
+            
+            # 綜合評分
+            total_score = performance_score + quality_score + speed_score + stability_score + adaptability_score
+            scores[strategy] = total_score
+            
+        return scores
+    
+    def _get_recent_success_rate(self, strategy: ScrapingStrategy) -> float:
+        """
+        獲取策略的近期成功率
+        
+        Args:
+            strategy: 策略類型
+            
+        Returns:
+            float: 近期成功率
+        """
+        recent_results = self.strategy_performance[strategy]['recent_results']
+        
+        if not recent_results:
+            return self.strategy_performance[strategy]['success_rate']
+        
+        # 計算滑動窗口內的成功率
+        recent_successes = sum(1 for result in recent_results if result['success'])
+        return recent_successes / len(recent_results)
+    
+    def _get_adaptability_score(self, strategy: ScrapingStrategy) -> float:
+        """
+        根據網站狀態計算策略適應性評分
+        
+        Args:
+            strategy: 策略類型
+            
+        Returns:
+            float: 適應性評分
+        """
+        response_time = self.website_health['response_time']
+        anti_bot_level = self.website_health['anti_bot_level']
+        
+        if strategy == ScrapingStrategy.VISUAL_PRIMARY:
+            # 視覺爬蟲在反爬蟲強度高時表現更好
+            return (anti_bot_level * 0.1) + (max(0, 2.0 - response_time) * 0.05)
+        elif strategy == ScrapingStrategy.TRADITIONAL_PRIMARY:
+            # 傳統爬蟲在響應快、反爬蟲弱時表現更好
+            return (max(0, 1.0 - anti_bot_level) * 0.1) + (max(0, 2.0 - response_time) * 0.1)
+        else:  # HYBRID
+            # 混合模式適應性較為均衡
+            return 0.08
+    
+    def _update_website_health(self):
+        """
+        更新網站健康狀態
+        """
+        current_time = time.time()
+        
+        # 每5分鐘更新一次
+        if current_time - self.website_health['last_check'] > 300:
+            # 這裡可以添加實際的網站健康檢查邏輯
+            # 目前使用模擬數據
+            import random
+            self.website_health.update({
+                'response_time': random.uniform(0.5, 3.0),
+                'anti_bot_level': random.uniform(0.1, 0.8),
+                'last_check': current_time
+            })
+            
+            self.logger.debug(f"網站健康狀態更新: {self.website_health}")
+    
+    def update_strategy_performance(self, strategy: ScrapingStrategy, 
+                                  success: bool, execution_time: float, 
+                                  data_quality: float = 0.8, job_count: int = 0):
+        """
+        更新策略性能統計（支持滑動窗口）
         
         Args:
             strategy: 策略類型
             success: 是否成功
             execution_time: 執行時間
+            data_quality: 數據質量評分 (0-1)
+            job_count: 獲取的職位數量
         """
-        if strategy in self.strategy_performance:
-            stats = self.strategy_performance[strategy]
-            # 簡單的移動平均更新
-            stats['success_rate'] = stats['success_rate'] * 0.9 + (1.0 if success else 0.0) * 0.1
-            stats['avg_time'] = stats['avg_time'] * 0.9 + execution_time * 0.1
+        if strategy not in self.strategy_performance:
+            return
+            
+        perf = self.strategy_performance[strategy]
+        
+        # 添加到近期結果
+        result_record = {
+            'success': success,
+            'execution_time': execution_time,
+            'data_quality': data_quality,
+            'job_count': job_count,
+            'timestamp': time.time()
+        }
+        
+        perf['recent_results'].append(result_record)
+        
+        # 維護滑動窗口大小
+        if len(perf['recent_results']) > self.performance_window_size:
+            perf['recent_results'].pop(0)
+        
+        # 更新平均指標
+        self._update_average_metrics(strategy)
+        
+        self.logger.debug(f"策略 {strategy} 性能已更新: 成功={success}, 時間={execution_time:.2f}s, 質量={data_quality:.2f}")
+    
+    def _update_average_metrics(self, strategy: ScrapingStrategy):
+        """
+        更新策略的平均性能指標
+        
+        Args:
+            strategy: 策略類型
+        """
+        perf = self.strategy_performance[strategy]
+        recent_results = perf['recent_results']
+        
+        if not recent_results:
+            return
+        
+        # 計算近期平均值
+        successful_results = [r for r in recent_results if r['success']]
+        
+        if successful_results:
+            perf['avg_time'] = sum(r['execution_time'] for r in successful_results) / len(successful_results)
+            perf['quality_score'] = sum(r['data_quality'] for r in successful_results) / len(successful_results)
+        
+        # 計算穩定性評分（基於成功率的一致性）
+        success_rates_by_time = []
+        window_size = 5
+        for i in range(0, len(recent_results), window_size):
+            window = recent_results[i:i+window_size]
+            if window:
+                window_success_rate = sum(1 for r in window if r['success']) / len(window)
+                success_rates_by_time.append(window_success_rate)
+        
+        if len(success_rates_by_time) > 1:
+            # 穩定性 = 1 - 成功率的標準差
+            import statistics
+            std_dev = statistics.stdev(success_rates_by_time)
+            perf['stability_score'] = max(0, 1.0 - std_dev)
+        
+        self.logger.debug(f"策略 {strategy} 平均指標已更新")
 
 
 class MultiSourceDataCollector:
@@ -142,7 +318,7 @@ class MultiSourceDataCollector:
     """
     
     def __init__(self):
-        self.logger = get_enhanced_logger(self.__class__.__name__, LogCategory.SCRAPING)
+        self.logger = get_enhanced_logger(self.__class__.__name__)
         self.visual_scraper = None
         self.traditional_scraper = None
         
@@ -291,7 +467,7 @@ class DataFusionProcessor:
     """
     
     def __init__(self):
-        self.logger = get_enhanced_logger(self.__class__.__name__, LogCategory.DATA_PROCESSING)
+        self.logger = get_enhanced_logger(self.__class__.__name__)
     
     def merge_multi_source_data(self, data_sources: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
@@ -557,7 +733,7 @@ class EnhancedETLOrchestrator:
         self.output_path = Path(output_path) if output_path else Path("./enhanced_etl_output")
         self.output_path.mkdir(exist_ok=True)
         
-        self.logger = get_enhanced_logger(self.__class__.__name__, LogCategory.ORCHESTRATION)
+        self.logger = get_enhanced_logger(self.__class__.__name__)
         
         # 初始化組件
         self.strategy_selector = ScrapingStrategySelector()
@@ -677,21 +853,185 @@ class EnhancedETLOrchestrator:
                 data_sources.append(visual_data)
                 
         elif strategy == ScrapingStrategy.HYBRID:
-            # 混合模式，並行執行
-            tasks = [
-                self.data_collector.collect_visual_data(job_config),
-                self.data_collector.collect_traditional_data(job_config)
-            ]
-            
-            results = await asyncio.gather(*tasks, return_exceptions=True)
-            
-            for result in results:
-                if isinstance(result, Exception):
-                    self.logger.error(f"並行抓取出錯: {result}")
-                else:
-                    data_sources.append(result)
+            # 智能混合模式，根據任務特性選擇執行方式
+            data_sources = await self._execute_smart_hybrid(job_config)
         
         return data_sources
+    
+    async def _execute_smart_hybrid(self, job_config: ScrapingJobConfig) -> List[Dict[str, Any]]:
+        """
+        智能混合模式執行
+        根據任務特性和資源狀況選擇最佳執行方式
+        
+        Args:
+            job_config: 任務配置
+            
+        Returns:
+            List[Dict]: 數據源列表
+        """
+        data_sources = []
+        
+        # 根據任務特性決定執行策略
+        if job_config.max_results <= 20:
+            # 小量數據：漸進式執行，先快後慢
+            self.logger.info("小量數據任務，採用漸進式執行")
+            data_sources = await self._execute_progressive(job_config)
+        elif job_config.large_volume_required:
+            # 大量數據：並行執行，最大化效率
+            self.logger.info("大量數據任務，採用並行執行")
+            data_sources = await self._execute_parallel(job_config)
+        else:
+            # 中等數據：智能選擇
+            self.logger.info("中等數據任務，採用智能選擇")
+            data_sources = await self._execute_adaptive(job_config)
+        
+        return data_sources
+    
+    async def _execute_progressive(self, job_config: ScrapingJobConfig) -> List[Dict[str, Any]]:
+        """
+        漸進式執行：先執行快速策略，根據結果決定是否執行慢速策略
+        
+        Args:
+            job_config: 任務配置
+            
+        Returns:
+            List[Dict]: 數據源列表
+        """
+        data_sources = []
+        
+        # 第一階段：執行傳統爬蟲（快速）
+        self.logger.info("漸進式執行 - 第一階段：傳統爬蟲")
+        traditional_data = await self.data_collector.collect_traditional_data(job_config)
+        data_sources.append(traditional_data)
+        
+        # 評估第一階段結果
+        if traditional_data.get('success', False):
+            job_count = len(traditional_data.get('data', []))
+            data_quality = self._estimate_data_quality(traditional_data)
+            
+            # 如果結果足夠好，可能不需要第二階段
+            if job_count >= job_config.max_results * 0.8 and data_quality >= 0.7:
+                self.logger.info(f"第一階段結果良好 (數量: {job_count}, 質量: {data_quality:.2f})，跳過第二階段")
+                return data_sources
+        
+        # 第二階段：執行視覺爬蟲（慢速但高質量）
+        self.logger.info("漸進式執行 - 第二階段：視覺爬蟲")
+        visual_data = await self.data_collector.collect_visual_data(job_config)
+        data_sources.append(visual_data)
+        
+        return data_sources
+    
+    async def _execute_parallel(self, job_config: ScrapingJobConfig) -> List[Dict[str, Any]]:
+        """
+        並行執行：同時執行兩種策略，最大化數據收集效率
+        
+        Args:
+            job_config: 任務配置
+            
+        Returns:
+            List[Dict]: 數據源列表
+        """
+        self.logger.info("並行執行兩種爬蟲策略")
+        
+        # 並行執行
+        tasks = [
+            self.data_collector.collect_visual_data(job_config),
+            self.data_collector.collect_traditional_data(job_config)
+        ]
+        
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        data_sources = []
+        for i, result in enumerate(results):
+            if isinstance(result, Exception):
+                strategy_name = "視覺爬蟲" if i == 0 else "傳統爬蟲"
+                self.logger.error(f"{strategy_name}執行出錯: {result}")
+            else:
+                data_sources.append(result)
+        
+        return data_sources
+    
+    async def _execute_adaptive(self, job_config: ScrapingJobConfig) -> List[Dict[str, Any]]:
+        """
+        自適應執行：根據實時性能動態調整執行策略
+        
+        Args:
+            job_config: 任務配置
+            
+        Returns:
+            List[Dict]: 數據源列表
+        """
+        data_sources = []
+        
+        # 獲取策略性能評估
+        visual_perf = self.strategy_selector.strategy_performance[ScrapingStrategy.VISUAL_PRIMARY]
+        traditional_perf = self.strategy_selector.strategy_performance[ScrapingStrategy.TRADITIONAL_PRIMARY]
+        
+        visual_score = visual_perf['success_rate'] * visual_perf['quality_score']
+        traditional_score = traditional_perf['success_rate'] * (1.0 / (traditional_perf['avg_time'] / 10))
+        
+        # 根據評分決定執行順序
+        if visual_score > traditional_score * 1.2:
+            # 視覺爬蟲明顯更優，優先執行
+            self.logger.info("自適應執行：視覺爬蟲優先")
+            visual_data = await self.data_collector.collect_visual_data(job_config)
+            data_sources.append(visual_data)
+            
+            if not visual_data.get('success', False):
+                traditional_data = await self.data_collector.collect_traditional_data(job_config)
+                data_sources.append(traditional_data)
+        elif traditional_score > visual_score * 1.2:
+            # 傳統爬蟲明顯更優，優先執行
+            self.logger.info("自適應執行：傳統爬蟲優先")
+            traditional_data = await self.data_collector.collect_traditional_data(job_config)
+            data_sources.append(traditional_data)
+            
+            if not traditional_data.get('success', False):
+                visual_data = await self.data_collector.collect_visual_data(job_config)
+                data_sources.append(visual_data)
+        else:
+            # 性能相近，並行執行
+            self.logger.info("自適應執行：並行執行")
+            data_sources = await self._execute_parallel(job_config)
+        
+        return data_sources
+    
+    def _estimate_data_quality(self, data_source: Dict[str, Any]) -> float:
+        """
+        估算數據源的質量評分
+        
+        Args:
+            data_source: 數據源
+            
+        Returns:
+            float: 質量評分 (0-1)
+        """
+        if not data_source.get('success', False):
+            return 0.0
+        
+        jobs = data_source.get('data', [])
+        if not jobs:
+            return 0.0
+        
+        # 基於數據完整性評估質量
+        total_score = 0
+        for job in jobs:
+            score = 0
+            # 檢查關鍵字段
+            if job.get('title'):
+                score += 0.3
+            if job.get('company'):
+                score += 0.2
+            if job.get('location'):
+                score += 0.2
+            if job.get('description'):
+                score += 0.2
+            if job.get('salary'):
+                score += 0.1
+            
+            total_score += score
+        
+        return total_score / len(jobs) if jobs else 0.0
     
     def _generate_execution_result(self, job_config: ScrapingJobConfig, 
                                  strategy: ScrapingStrategy,
@@ -763,9 +1103,6 @@ class EnhancedETLOrchestrator:
         if strategy_key not in self.execution_stats['strategy_usage']:
             self.execution_stats['strategy_usage'][strategy_key] = 0
         self.execution_stats['strategy_usage'][strategy_key] += 1
-        
-        # 更新策略選擇器的性能統計
-        self.strategy_selector.update_strategy_performance(strategy, success, execution_time)
     
     def get_performance_report(self) -> Dict[str, Any]:
         """

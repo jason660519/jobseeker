@@ -27,8 +27,8 @@ except ImportError:
     logging.warning("PaddleOCR not installed. OCR functionality will be disabled.")
 
 from ..model import JobPost
-from ..util import extract_emails_from_text, extract_salary_from_text
-from .constant import SeekJobScraper
+from ..util import extract_emails_from_text, extract_salary
+from . import SeekScraper
 
 
 class SeekCrawlerEngine:

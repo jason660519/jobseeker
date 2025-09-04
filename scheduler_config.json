@@ -1,0 +1,313 @@
+{
+  "scheduler": {
+    "name": "LLM JSON Processing Scheduler",
+    "version": "1.0.0",
+    "description": "智能調度器，用於處理LLM生成的JSON檔案"
+  },
+  
+  "directories": {
+    "watch_directory": "./data/llm_generated/raw",
+    "output_directory": "./data/llm_generated/processed",
+    "archive_directory": "./data/llm_generated/archive",
+    "error_directory": "./data/llm_generated/errors",
+    "temp_directory": "./data/llm_generated/temp"
+  },
+  
+  "processing": {
+    "mode": "hybrid",
+    "max_workers": 10,
+    "max_concurrent_tasks": 50,
+    "task_timeout": 300,
+    "retry_attempts": 3,
+    "retry_delay_base": 2,
+    "enable_priority_queue": true
+  },
+  
+  "batch_processing": {
+    "enabled": true,
+    "batch_size": 20,
+    "batch_timeout": 300,
+    "max_batch_wait_time": 600,
+    "batch_priority_threshold": "normal"
+  },
+  
+  "realtime_processing": {
+    "enabled": true,
+    "priority_threshold": "high",
+    "max_realtime_workers": 5,
+    "realtime_timeout": 60
+  },
+  
+  "queue": {
+    "type": "redis",
+    "redis_url": "redis://localhost:6379/0",
+    "fallback_to_memory": true,
+    "queue_persistence": true,
+    "max_queue_size": 1000,
+    "queue_cleanup_interval": 3600
+  },
+  
+  "file_monitoring": {
+    "enabled": true,
+    "recursive": true,
+    "file_patterns": ["*.json"],
+    "ignore_patterns": ["*_temp.json", "*_processing.json"],
+    "min_file_size": 10,
+    "max_file_size": 10485760,
+    "file_stability_check": true,
+    "stability_wait_time": 1.0
+  },
+  
+  "task_types": {
+    "intent_analysis": {
+      "priority": "high",
+      "timeout": 30,
+      "max_retries": 2,
+      "processing_mode": "realtime"
+    },
+    "job_extraction": {
+      "priority": "normal",
+      "timeout": 60,
+      "max_retries": 3,
+      "processing_mode": "batch"
+    },
+    "data_enrichment": {
+      "priority": "normal",
+      "timeout": 120,
+      "max_retries": 2,
+      "processing_mode": "batch"
+    },
+    "quality_validation": {
+      "priority": "low",
+      "timeout": 90,
+      "max_retries": 1,
+      "processing_mode": "batch"
+    },
+    "data_transformation": {
+      "priority": "low",
+      "timeout": 180,
+      "max_retries": 2,
+      "processing_mode": "batch"
+    }
+  },
+  
+  "user_tiers": {
+    "free": {
+      "max_concurrent_tasks": 2,
+      "priority_boost": 0.0,
+      "rate_limit": 10,
+      "rate_limit_window": 3600
+    },
+    "premium": {
+      "max_concurrent_tasks": 10,
+      "priority_boost": 0.5,
+      "rate_limit": 100,
+      "rate_limit_window": 3600
+    },
+    "enterprise": {
+      "max_concurrent_tasks": 50,
+      "priority_boost": 1.0,
+      "rate_limit": 1000,
+      "rate_limit_window": 3600
+    }
+  },
+  
+  "routing": {
+    "intelligent_routing": {
+      "enabled": true,
+      "load_balancing": true,
+      "geographic_routing": true,
+      "skill_based_routing": true
+    },
+    "smart_router": {
+      "enabled": true,
+      "platform_selection": "auto",
+      "concurrent_searches": true,
+      "result_aggregation": true,
+      "fallback_enabled": true
+    }
+  },
+  
+  "performance": {
+    "monitoring": {
+      "enabled": true,
+      "metrics_collection": true,
+      "performance_alerts": true,
+      "slow_task_threshold": 60.0
+    },
+    "optimization": {
+      "auto_scaling": true,
+      "worker_pool_adjustment": true,
+      "memory_management": true,
+      "cache_enabled": true,
+      "cache_ttl": 3600
+    }
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file_logging": {
+      "enabled": true,
+      "log_file": "./logs/scheduler.log",
+      "max_file_size": 10485760,
+      "backup_count": 5,
+      "rotation": "daily"
+    },
+    "console_logging": {
+      "enabled": true,
+      "colored_output": true
+    },
+    "structured_logging": {
+      "enabled": true,
+      "format": "json"
+    }
+  },
+  
+  "security": {
+    "file_validation": {
+      "enabled": true,
+      "max_file_size": 10485760,
+      "allowed_extensions": [".json"],
+      "virus_scanning": false,
+      "content_validation": true
+    },
+    "access_control": {
+      "enabled": true,
+      "api_key_required": false,
+      "rate_limiting": true,
+      "ip_whitelist": []
+    }
+  },
+  
+  "health_check": {
+    "enabled": true,
+    "interval": 30,
+    "endpoints": {
+      "status": "/health/status",
+      "metrics": "/health/metrics",
+      "ready": "/health/ready"
+    },
+    "alerts": {
+      "email_notifications": false,
+      "webhook_notifications": false,
+      "slack_notifications": false
+    }
+  },
+  
+  "database": {
+    "enabled": false,
+    "type": "postgresql",
+    "connection_string": "postgresql://user:password@localhost:5432/scheduler_db",
+    "pool_size": 10,
+    "task_history_retention": 30
+  },
+  
+  "api": {
+    "enabled": true,
+    "host": "0.0.0.0",
+    "port": 8080,
+    "cors_enabled": true,
+    "rate_limiting": {
+      "enabled": true,
+      "requests_per_minute": 60
+    },
+    "authentication": {
+      "enabled": false,
+      "type": "jwt",
+      "secret_key": "your-secret-key-here"
+    }
+  },
+  
+  "deployment": {
+    "environment": "development",
+    "debug_mode": true,
+    "auto_restart": true,
+    "graceful_shutdown_timeout": 30,
+    "startup_checks": {
+      "directory_permissions": true,
+      "redis_connection": true,
+      "disk_space": true,
+      "memory_availability": true
+    }
+  },
+  
+  "scheduling": {
+    "global_scheduling": {
+      "enabled": true,
+      "timezone_aware": true,
+      "peak_hours": {
+        "start": "09:00",
+        "end": "17:00",
+        "timezone": "UTC"
+      },
+      "off_peak_processing": {
+        "enabled": true,
+        "batch_size_multiplier": 2.0,
+        "worker_count_multiplier": 1.5
+      }
+    },
+    "regional_scheduling": {
+      "enabled": true,
+      "regions": {
+        "asia_pacific": {
+          "timezone": "Asia/Tokyo",
+          "peak_hours": ["09:00-12:00", "13:00-18:00"],
+          "worker_allocation": 0.4
+        },
+        "europe": {
+          "timezone": "Europe/London",
+          "peak_hours": ["08:00-12:00", "13:00-17:00"],
+          "worker_allocation": 0.3
+        },
+        "north_america": {
+          "timezone": "America/New_York",
+          "peak_hours": ["09:00-12:00", "13:00-17:00"],
+          "worker_allocation": 0.3
+        }
+      }
+    }
+  },
+  
+  "integration": {
+    "llm_providers": {
+      "openai": {
+        "enabled": true,
+        "api_key_env": "OPENAI_API_KEY",
+        "rate_limit": 100,
+        "timeout": 30
+      },
+      "anthropic": {
+        "enabled": true,
+        "api_key_env": "ANTHROPIC_API_KEY",
+        "rate_limit": 50,
+        "timeout": 30
+      },
+      "google": {
+        "enabled": false,
+        "api_key_env": "GOOGLE_API_KEY",
+        "rate_limit": 60,
+        "timeout": 30
+      }
+    },
+    "external_services": {
+      "job_platforms": {
+        "seek": {
+          "enabled": true,
+          "rate_limit": 10,
+          "timeout": 15
+        },
+        "indeed": {
+          "enabled": true,
+          "rate_limit": 20,
+          "timeout": 15
+        },
+        "linkedin": {
+          "enabled": false,
+          "rate_limit": 5,
+          "timeout": 20
+        }
+      }
+    }
+  }
+}
