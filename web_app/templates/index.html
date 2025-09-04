@@ -436,12 +436,6 @@ endblock %} {% block content %}
           return;
         }
 
-        // 顯示載入動畫
-        showLoading();
-
-        // 模擬進度條
-        simulateProgress();
-
         // 發送搜尋請求
         $.ajax({
           url: "/search",
@@ -449,6 +443,11 @@ endblock %} {% block content %}
           contentType: "application/json",
           data: JSON.stringify(formData),
           timeout: 120000, // 2分鐘超時
+          beforeSend: function() {
+            // 只有在發送請求時才顯示載入動畫
+            showLoading();
+            simulateProgress();
+          },
           success: function (response) {
             hideLoading();
 
@@ -478,6 +477,8 @@ endblock %} {% block content %}
               } else {
                 showAlert(response.error || "搜尋失敗", "danger");
               }
+              // 顯示功能介紹區塊
+              $("#featuresSection").show();
             }
           },
           error: function (xhr, status, error) {

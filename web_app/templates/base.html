@@ -2553,7 +2553,14 @@
               return;
           }
           
-          if (!data.success || !data.jobs || data.jobs.length === 0) {
+          // 如果請求失敗但不是意圖分析錯誤，顯示具體錯誤訊息
+          if (!data.success) {
+              showHeaderAlert(data.error || '搜尋失敗，請稍後再試', 'danger');
+              return;
+          }
+          
+          // 如果成功但沒有找到職位
+          if (!data.jobs || data.jobs.length === 0) {
               showHeaderAlert('未找到相關職位，請嘗試其他關鍵字', 'warning');
               return;
           }
