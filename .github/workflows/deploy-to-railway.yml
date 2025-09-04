@@ -72,3 +72,4 @@ jobs:
             environment_url: '${{ steps.get-url.outputs.deployment_url }}',
             description: 'Railway deployment completed successfully'
           })
+

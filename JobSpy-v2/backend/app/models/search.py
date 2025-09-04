@@ -4,7 +4,7 @@ Search logging and user analytics models
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Boolean, Integer, String, Text, Float, Index
+from sqlalchemy import Boolean, Integer, String, Text, Float, Index, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -19,6 +19,7 @@ class SearchLog(Base):
     # User association (optional for anonymous searches)
     user_id: Mapped[Optional[str]] = mapped_column(
         String,
+        ForeignKey("users.id"),
         index=True
     )
     
@@ -76,6 +77,7 @@ class UserAnalytics(Base):
     
     user_id: Mapped[str] = mapped_column(
         String,
+        ForeignKey("users.id"),
         nullable=False,
         index=True
     )

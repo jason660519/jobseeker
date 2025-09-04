@@ -222,7 +222,7 @@ class StorageService:
                     } if job_data.get('salary_min') or job_data.get('salary_max') else None,
                     source_url=job_data.get('url'),
                     source=job_data.get('site', 'unknown'),
-                    posted_date=job_data.get('date_posted'),
+                    posted_date=datetime.strptime(job_data.get('date_posted'), '%Y-%m-%d').date() if job_data.get('date_posted') else None,
                     job_type=job_data.get('job_type'),
                     # 存儲 MinIO 文件路徑作為參考
                     raw_data={'minio_file_path': cleaned_file_path}

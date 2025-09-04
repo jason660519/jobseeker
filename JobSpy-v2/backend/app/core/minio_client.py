@@ -270,7 +270,7 @@ class MinIOClient:
         for bucket_type, bucket_name in self.buckets.items():
             try:
                 objects = list(self.client.list_objects(bucket_name))
-                total_size = sum(obj.size for obj in objects)
+                total_size = sum(obj.size for obj in objects if obj.size is not None)
                 object_count = len(objects)
                 
                 stats[bucket_type] = {

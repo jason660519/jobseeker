@@ -4,7 +4,7 @@ Job listing model for storing scraped job information
 from datetime import datetime
 from typing import Optional, List
 
-from sqlalchemy import Boolean, Integer, String, Text, Index, ARRAY
+from sqlalchemy import Boolean, Integer, String, Text, Index, ARRAY, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -99,12 +99,14 @@ class JobBookmark(Base):
     
     user_id: Mapped[str] = mapped_column(
         String, 
+        ForeignKey("users.id"),
         nullable=False,
         index=True
     )
     
     job_id: Mapped[str] = mapped_column(
         String,
+        ForeignKey("job_listings.id"),
         nullable=False,
         index=True
     )
