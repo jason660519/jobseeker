@@ -1,0 +1,55 @@
+{
+  "test_results": [
+    [
+      "首頁互動功能測試",
+      "通過",
+      null
+    ],
+    [
+      "職位搜索和數據抓取測試",
+      "通過",
+      null
+    ],
+    [
+      "高級用戶行為測試",
+      "通過",
+      null
+    ]
+  ],
+  "scraped_data": [
+    {
+      "title": "Senior Python Developer (Automation)",
+      "company": "Ethos BeathChapman",
+      "location": "Sydney NSW",
+      "scraped_at": "2025-09-05T03:24:23.031653"
+    },
+    {
+      "title": "Product Engineering Lead - Backend (Python) , Remote Working",
+      "company": "The Decipher Bureau",
+      "location": "Sydney NSW",
+      "scraped_at": "2025-09-05T03:24:23.065198"
+    },
+    {
+      "title": "Senior Software Engineer - Python - Platform - Data",
+      "company": "Aurec",
+      "location": "Sydney NSW",
+      "scraped_at": "2025-09-05T03:24:23.096859"
+    },
+    {
+      "title": "Graduate Programmer 2025 Position",
+      "company": "Milton Data",
+      "location": "North Sydney",
+      "scraped_at": "2025-09-05T03:24:23.129782"
+    },
+    {
+      "title": "Staff Software Engineer-Python",
+      "company": "Hays | Technology",
+      "location": "Sydney NSW",
+      "scraped_at": "2025-09-05T03:24:23.160275"
+    }
+  ],
+  "performance_metrics": {
+    "homepage_load_time": 6.237886667251587
+  },
+  "test_timestamp": "2025-09-05T03:24:47.166932"
+}

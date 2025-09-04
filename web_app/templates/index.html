@@ -472,7 +472,12 @@ endblock %} {% block content %}
               renderJobs(currentJobs);
               updateLoadMore();
             } else {
-              showAlert(response.error || "搜尋失敗", "danger");
+              // 檢查是否為意圖分析錯誤
+              if (response.intent_analysis) {
+                showIntentAnalysisAlert(response.error, response.intent_analysis);
+              } else {
+                showAlert(response.error || "搜尋失敗", "danger");
+              }
             }
           },
           error: function (xhr, status, error) {

@@ -1,1 +1,0 @@
-export const ResultsPage = () => <div>Results Page - Coming Soon</div>;

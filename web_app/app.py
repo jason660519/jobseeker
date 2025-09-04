@@ -43,6 +43,9 @@ try:
     from jobseeker.smart_router import smart_router
     from jobseeker.model import Site, Country
     from jobseeker.query_parser import parse_user_query_smart
+    from jobseeker.intent_analyzer import analyze_user_intent, is_job_related
+    from jobseeker.llm_intent_analyzer import LLMIntentAnalyzer
+    from jobseeker.intelligent_decision_engine import DecisionResult, ProcessingStrategy, PlatformSelectionMode
 except ImportError as e:
     print(f"警告: 無法導入 jobseeker 模組: {e}")
     print("請確保已正確安裝 jobseeker 套件")
@@ -71,6 +74,9 @@ os.makedirs(project_root / 'web_app' / 'db', exist_ok=True)
 
 # 全域變數儲存搜尋結果
 search_results_cache = {}
+
+# 初始化LLM意圖分析器
+llm_intent_analyzer = LLMIntentAnalyzer()
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -229,8 +235,13 @@ def search_jobs():
         # 處理選擇的網站
         site_name = None
         if selected_sites:
-            # 如果有選擇特定網站，將逗號分隔的字符串轉換為列表
-            sites_list = [site.strip() for site in selected_sites.split(',') if site.strip()]
+            # 如果selected_sites是字符串，轉換為列表
+            if isinstance(selected_sites, str):
+                sites_list = [site.strip() for site in selected_sites.split(',') if site.strip()]
+            else:
+                # 如果已經是列表，直接使用
+                sites_list = [site.strip() for site in selected_sites if site.strip()]
+            
             if len(sites_list) == 1:
                 # 如果只選擇了一個網站，使用該網站
                 site_name = sites_list[0]
@@ -249,6 +260,75 @@ def search_jobs():
                 'success': False,
                 'error': '請輸入搜尋關鍵字'
             }), 400
+        
+        # 使用LLM智能意圖分析器進行分析和決策
+        try:
+            llm_intent_result, decision_result = llm_intent_analyzer.analyze_intent_with_decision(user_query)
+            
+            # 檢查是否為求職相關查詢
+            if not llm_intent_result.is_job_related:
+                return jsonify({
+                    'success': False,
+                    'error': llm_intent_result.rejection_message or '抱歉，我是AI助手，僅能協助您處理求職相關問題，無法進行一般聊天。',
+                    'intent_analysis': {
+                        'intent_type': llm_intent_result.intent_type.value if llm_intent_result.intent_type else 'unclear',
+                        'confidence': llm_intent_result.confidence,
+                        'analysis_method': 'llm' if llm_intent_result.llm_used else 'basic'
+                    },
+                    'decision_analysis': {
+                        'strategy': decision_result.strategy.value if decision_result else 'unknown',
+                        'confidence': decision_result.confidence if decision_result else 0.0,
+                        'reasoning': decision_result.reasoning if decision_result else ''
+                    }
+                }), 400
+            
+            # 根據決策結果調整搜索參數
+            if decision_result and decision_result.strategy != ProcessingStrategy.REJECT_QUERY:
+                # 使用決策引擎推薦的平台
+                if decision_result.recommended_platforms:
+                    # 將平台名稱映射到Site枚舉
+                    platform_mapping = {
+                        'indeed': 'indeed',
+                        'linkedin': 'linkedin', 
+                        'seek': 'seek',
+                        '104': '104',
+                        'ziprecruiter': 'zip_recruiter'
+                    }
+                    
+                    recommended_sites = []
+                    for platform in decision_result.recommended_platforms:
+                        if platform in platform_mapping:
+                            recommended_sites.append(platform_mapping[platform])
+                    
+                    if recommended_sites and not selected_sites:
+                        selected_sites = recommended_sites
+                
+                # 使用決策結果中的搜索參數
+                if 'max_results' in decision_result.search_parameters:
+                    results_wanted = min(decision_result.search_parameters['max_results'], results_wanted)
+            
+            # 如果LLM成功分析出結構化意圖，使用LLM的搜索條件
+            if llm_intent_result.llm_used and llm_intent_result.structured_intent:
+                structured_intent = llm_intent_result.structured_intent
+                
+                # 使用LLM提取的搜索條件覆蓋原始解析結果
+                if structured_intent.job_titles:
+                    # 將職位標題組合為搜索詞
+                    parsed.search_term = ' OR '.join(structured_intent.job_titles)
+                
+                if structured_intent.location and not location:
+                    # 如果LLM識別出地點且用戶未明確指定地點，使用LLM的地點
+                    derived_location = structured_intent.location
+                
+                print(f"LLM意圖分析成功: 職位={structured_intent.job_titles}, 技能={structured_intent.skills}, 地點={structured_intent.location}")
+                print(f"決策結果: 策略={decision_result.strategy.value if decision_result else 'unknown'}, 推薦平台={decision_result.recommended_platforms if decision_result else []}")
+            else:
+                print(f"使用基礎意圖分析: {parsed.search_term}")
+                
+        except Exception as e:
+            print(f"智能意圖分析失敗: {e}")
+            llm_intent_result = None
+            decision_result = None
         
         if results_wanted < 1 or results_wanted > 100:
             return jsonify({

@@ -1,53 +1,115 @@
-﻿# Seek.com.au Job Scraper
+# Seek爬蟲引擎 🚀
 
-A comprehensive Python scraper for extracting job postings from Seek.com.au, Australia's leading job board.
+一個智能化的Seek求職網站數據抓取與ETL處理引擎，集成了多種先進技術，提供高效、可靠的職位數據採集解決方案。
 
-## Features
+## ✨ 核心特色
 
-- 🔍 **Advanced Search**: Search by keywords, location, job type, and remote work options
-- 📊 **Structured Data**: Extract detailed job information including salary, company, location
-- 🚀 **Fast & Reliable**: Built-in retry mechanisms and rate limiting
-- 📁 **Multiple Formats**: Export results to CSV or JSON
-- 🛡️ **Proxy Support**: Use proxies to avoid rate limiting
-- 📝 **Comprehensive Logging**: Detailed logging for debugging and monitoring
+### 🎯 多模式爬蟲架構
+- **Traditional模式**: 基於Beautiful Soup的輕量級爬蟲
+- **Enhanced模式**: 集成Playwright的動態內容處理
+- **Hybrid模式**: 智能切換，兼顧效率與準確性
 
-## Installation
+### 🔍 智能OCR處理
+- 集成PaddleOCR，支持80+種語言
+- 自動截圖與文字識別
+- 智能內容提取與驗證
 
-This scraper is part of the jobseeker package. Make sure you have the required dependencies:
+### 📊 完整ETL流程
+- 數據清洗與標準化
+- 薪資信息智能解析
+- 工作類型自動識別
+- 多格式數據導出
 
-```bash
-pip install requests beautifulsoup4 lxml
+### ⚡ 高性能設計
+- 異步並發處理
+- 智能重試機制
+- 內存優化管理
+- 分佈式任務調度
+
+## 🛠️ 技術架構
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Seek爬蟲引擎架構                          │
+├─────────────────────────────────────────────────────────────┤
+│  CLI接口層     │  命令行工具 │ 配置管理 │ 示例腳本          │
+├─────────────────────────────────────────────────────────────┤
+│  業務邏輯層    │  爬蟲引擎   │ ETL處理  │ 數據模型          │
+├─────────────────────────────────────────────────────────────┤
+│  技術組件層    │ Playwright  │ OCR引擎  │ 數據存儲          │
+├─────────────────────────────────────────────────────────────┤
+│  基礎設施層    │  異步框架   │ 日誌系統 │ 性能監控          │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-## Quick Start
+## 📦 安裝指南
 
-### Command Line Usage
+### 環境要求
+- Python 3.8+
+- Windows 10/11 或 Linux/macOS
+- 至少 4GB RAM
+- 2GB 可用磁盤空間
+
+### 快速安裝
 
 ```bash
-# Basic search
-python main.py --search "python developer" --location "Sydney"
+# 1. 安裝核心依賴
+pip install -r requirements.txt
 
-# Advanced search with filters
-python main.py --search "data scientist" --location "Melbourne" --job-type "full-time" --max-results 100
+# 2. 安裝Playwright瀏覽器
+playwright install
 
-# Remote work search
-python main.py --search "software engineer" --remote --output remote_jobs.json
-
-# Part-time jobs in Brisbane
-python main.py --search "marketing" --location "Brisbane" --job-type "part-time"
+# 3. 安裝PaddleOCR（可選）
+pip install paddlepaddle paddleocr
 ```
 
-### Python API Usage
+## 🚀 快速開始
+
+### 命令行使用
+
+```bash
+# 搜索Python開發職位
+python cli.py search "python developer" --location "Sydney" --pages 3
+
+# 使用增強模式搜索
+python cli.py search "data scientist" --mode enhanced --ocr
+
+# 批量搜索多個關鍵詞
+python cli.py search "software engineer" --location "Melbourne" --results 50
+```
+
+### Python API使用
 
 ```python
-from seek import SeekScraper
-from jobseeker.model import JobType
+import asyncio
+from seek_scraper_enhanced import SeekScraperEnhanced
 
-# Initialize scraper
-scraper = SeekScraper()
+async def main():
+    # 創建爬蟲實例
+    scraper = SeekScraperEnhanced(
+        scraping_mode='hybrid',
+        headless=True,
+        enable_ocr=True
+    )
+    
+    # 初始化
+    await scraper.initialize()
+    
+    # 搜索職位
+    jobs = await scraper.scrape_jobs(
+        search_term="python developer",
+        location="Sydney",
+        max_pages=5
+    )
+    
+    # 導出結果
+    await scraper.export_results(jobs, 'json', 'results.json')
+    
+    # 清理資源
+    await scraper.cleanup()
 
-# Search for jobs
-jobs = scraper.scrape_jobs(
+# 運行
+asyncio.run(main())
     search_term="python developer",
     location="Sydney",
     max_results=50,

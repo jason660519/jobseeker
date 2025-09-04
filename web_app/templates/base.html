@@ -2547,6 +2547,12 @@
       }
 
       function showHeaderSearchResults(data, query) {
+          // 檢查是否為意圖分析錯誤
+          if (!data.success && data.intent_analysis) {
+              showIntentAnalysisAlert(data.error, data.intent_analysis);
+              return;
+          }
+          
           if (!data.success || !data.jobs || data.jobs.length === 0) {
               showHeaderAlert('未找到相關職位，請嘗試其他關鍵字', 'warning');
               return;
@@ -2642,6 +2648,93 @@
                   bsAlert.close();
               }
           }, 5000);
+      }
+      
+      function showIntentAnalysisAlert(message, intentAnalysis) {
+          const modalHtml = `
+              <div class="modal fade" id="intentAnalysisModal" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-header bg-warning text-dark">
+                              <h5 class="modal-title">
+                                  <i class="fas fa-exclamation-triangle me-2"></i>
+                                  查詢意圖提醒
+                              </h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                          </div>
+                          <div class="modal-body">
+                              <div class="alert alert-warning mb-3">
+                                  <i class="fas fa-robot me-2"></i>
+                                  ${message}
+                              </div>
+                              
+                              <div class="intent-details">
+                                  <h6 class="mb-3">分析詳情：</h6>
+                                  <div class="row">
+                                      <div class="col-sm-4"><strong>意圖類型：</strong></div>
+                                      <div class="col-sm-8">
+                                          <span class="badge bg-secondary">${intentAnalysis.intent_type}</span>
+                                      </div>
+                                  </div>
+                                  <div class="row mt-2">
+                                      <div class="col-sm-4"><strong>信心度：</strong></div>
+                                      <div class="col-sm-8">${(intentAnalysis.confidence * 100).toFixed(1)}%</div>
+                                  </div>
+                                  ${intentAnalysis.keywords_matched && intentAnalysis.keywords_matched.length > 0 ? `
+                                  <div class="row mt-2">
+                                      <div class="col-sm-4"><strong>匹配關鍵詞：</strong></div>
+                                      <div class="col-sm-8">
+                                          ${intentAnalysis.keywords_matched.map(kw => `<span class="badge bg-light text-dark me-1">${kw}</span>`).join('')}
+                                      </div>
+                                  </div>
+                                  ` : ''}
+                              </div>
+                              
+                              <div class="mt-4">
+                                  <h6>建議搜尋範例：</h6>
+                                  <div class="example-queries">
+                                      <button class="btn btn-outline-primary btn-sm me-2 mb-2" onclick="fillSearchExample('NSW AI Engineer 薪資10萬澳幣以上')">
+                                          NSW AI Engineer 薪資10萬澳幣以上
+                                      </button>
+                                      <button class="btn btn-outline-primary btn-sm me-2 mb-2" onclick="fillSearchExample('Sydney Civil Engineer 近7日更新')">
+                                          Sydney Civil Engineer 近7日更新
+                                      </button>
+                                      <button class="btn btn-outline-primary btn-sm me-2 mb-2" onclick="fillSearchExample('軟體工程師 台北 遠端工作')">
+                                          軟體工程師 台北 遠端工作
+                                      </button>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">了解</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          `;
+          
+          // 移除現有的模態框
+          const existingModal = document.getElementById('intentAnalysisModal');
+          if (existingModal) {
+              existingModal.remove();
+          }
+          
+          document.body.insertAdjacentHTML('beforeend', modalHtml);
+          const modal = new bootstrap.Modal(document.getElementById('intentAnalysisModal'));
+          modal.show();
+      }
+      
+      function fillSearchExample(example) {
+          const navQuery = document.getElementById('navQuery');
+          if (navQuery) {
+              navQuery.value = example;
+          }
+          
+          // 關閉模態框
+          const modal = bootstrap.Modal.getInstance(document.getElementById('intentAnalysisModal'));
+          if (modal) {
+              modal.hide();
+          }
       }
 
       function showAISearchProgress(query) {
