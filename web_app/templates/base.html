@@ -2740,9 +2740,16 @@
       }
       
       function fillSearchExample(example) {
+          // 填充導航欄搜索框
           const navQuery = document.getElementById('navQuery');
           if (navQuery) {
               navQuery.value = example;
+          }
+          
+          // 填充主頁面搜索框
+          const jobTitle = document.getElementById('jobTitle');
+          if (jobTitle) {
+              jobTitle.value = example;
           }
           
           // 關閉模態框
