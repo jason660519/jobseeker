@@ -1,20 +1,12 @@
 # Railway deployment configuration
 # Force Railway to use Procfile + automatic Python detection
 
-# Ignore all Docker files to prevent Railway from using Docker
-Dockerfile*
-docker-compose.yml
-docker-compose.yaml
-.dockerignore
+# Docker files have been removed - Railway uses Procfile + automatic Python detection
 
-# Backup configuration files (not used for deployment)
-*.backup
-nixpacks.toml.backup
-railway.toml.backup
+# Backup configuration files have been removed
 
 # Test files and directories
 tests/
-tests_collection/
 *.log
 logs/
 
@@ -29,7 +21,6 @@ docs/
 
 # Data directories (too large for deployment)
 data/
-static_frontend/
 
 # Cache and temporary files
 __pycache__/
