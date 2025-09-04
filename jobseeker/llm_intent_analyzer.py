@@ -471,7 +471,10 @@ JSON輸出格式：
         
         # 智能提取職位
         if any(title in query_lower for title in ['工程師', 'engineer', '開發', 'developer']):
-            if 'frontend' in query_lower or '前端' in query_lower:
+            if 'ai' in query_lower or '人工智慧' in query_lower or '機器學習' in query_lower:
+                job_titles.append('AI工程師')
+                skills.extend(['Python', 'TensorFlow', 'PyTorch', 'Machine Learning'])
+            elif 'frontend' in query_lower or '前端' in query_lower:
                 job_titles.append('前端工程師')
                 skills.extend(['JavaScript', 'React', 'Vue'])
             elif 'backend' in query_lower or '後端' in query_lower:
@@ -482,6 +485,10 @@ JSON輸出格式：
         
         if '產品經理' in query or 'product manager' in query_lower:
             job_titles.append('產品經理')
+        
+        if 'ai' in query_lower and '工程師' not in query_lower:
+            job_titles.append('AI工程師')
+            skills.extend(['Python', 'Machine Learning', 'Deep Learning'])
         
         # 智能提取地點
         for location in ['台北', '新北', '台中', '高雄', 'sydney', 'melbourne']:

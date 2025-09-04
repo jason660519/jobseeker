@@ -2887,14 +2887,24 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(formData)
           })
-          .then(response => response.json())
-          .then(data => {
+          .then(response => {
               if (window.searchProgressInterval) {
                   clearInterval(window.searchProgressInterval);
               }
               
               const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
               if (modal) modal.hide();
+              
+              return response.json().then(data => ({ data, status: response.status }));
+          })
+          .then(({ data, status }) => {
+              if (status === 400 && data.intent_analysis) {
+                  // 處理意圖分析錯誤
+                  console.log('意圖分析結果:', data.intent_analysis);
+                  console.log('決策分析結果:', data.decision_analysis);
+                  showIntentAnalysisAlert(data.error, data.intent_analysis);
+                  return;
+              }
               
               showHeaderSearchResults(data, query);
           })
