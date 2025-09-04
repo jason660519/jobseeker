@@ -2533,8 +2533,14 @@
               return response.json().then(data => ({ response, data }));
           })
           .then(({ response, data }) => {
+              // 調試信息
+              console.log('Header Fetch Response - Status:', response.status);
+              console.log('Header Fetch Response - Data:', data);
+              console.log('Header Fetch Response - Has intent_analysis:', data.intent_analysis);
+              
               // 檢查是否為400錯誤且有意圖分析
               if (response.status === 400 && data.intent_analysis) {
+                  console.log('Calling showIntentAnalysisAlert from header with:', data.error, data.intent_analysis);
                   showIntentAnalysisAlert(data.error, data.intent_analysis);
                   return;
               }
@@ -2666,6 +2672,9 @@
       }
       
       function showIntentAnalysisAlert(message, intentAnalysis) {
+          console.log('showIntentAnalysisAlert called with message:', message);
+          console.log('showIntentAnalysisAlert called with intentAnalysis:', intentAnalysis);
+          
           const modalHtml = `
               <div class="modal fade" id="intentAnalysisModal" tabindex="-1" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered">

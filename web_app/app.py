@@ -185,6 +185,14 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/debug')
+def debug_test():
+    """
+    調試測試頁面
+    """
+    return render_template('debug_test.html')
+
+
 @app.route('/search', methods=['POST'])
 def search_jobs():
     """

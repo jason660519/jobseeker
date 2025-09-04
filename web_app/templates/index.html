@@ -483,9 +483,15 @@ endblock %} {% block content %}
           },
           error: function (xhr, status, error) {
             hideLoading();
+            
+            // 調試信息
+            console.log('AJAX Error - Status:', xhr.status);
+            console.log('AJAX Error - Response:', xhr.responseJSON);
+            console.log('AJAX Error - Has intent_analysis:', xhr.responseJSON && xhr.responseJSON.intent_analysis);
 
             // 檢查是否為意圖分析錯誤（400狀態碼且有intent_analysis）
             if (xhr.status === 400 && xhr.responseJSON && xhr.responseJSON.intent_analysis) {
+              console.log('Calling showIntentAnalysisAlert with:', xhr.responseJSON.error, xhr.responseJSON.intent_analysis);
               showIntentAnalysisAlert(xhr.responseJSON.error, xhr.responseJSON.intent_analysis);
               // 顯示功能介紹區塊
               $("#featuresSection").show();
