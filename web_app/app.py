@@ -76,7 +76,31 @@ os.makedirs(project_root / 'web_app' / 'db', exist_ok=True)
 search_results_cache = {}
 
 # 初始化LLM意圖分析器
-llm_intent_analyzer = LLMIntentAnalyzer()
+# 嘗試使用真實的LLM提供商，如果沒有API密鑰則回退到模擬模式
+try:
+    from jobseeker.llm_intent_analyzer import LLMProvider
+    
+    # 檢查是否有OpenAI API密鑰
+    openai_api_key = os.getenv('OPENAI_API_KEY')
+    if openai_api_key:
+        llm_intent_analyzer = LLMIntentAnalyzer(
+            provider=LLMProvider.OPENAI_GPT35,
+            api_key=openai_api_key,
+            fallback_to_basic=True
+        )
+        print("✅ LLM意圖分析器已啟用 - 使用OpenAI GPT-3.5")
+    else:
+        # 沒有API密鑰，使用模擬模式
+        llm_intent_analyzer = LLMIntentAnalyzer(
+            provider=LLMProvider.OPENAI_GPT35,  # 提供商設置但沒有API密鑰會自動回退到模擬
+            api_key=None,
+            fallback_to_basic=True
+        )
+        print("⚠️  LLM意圖分析器使用模擬模式 - 請設置OPENAI_API_KEY環境變量以啟用真實LLM")
+except Exception as e:
+    # 如果導入失敗，使用默認初始化
+    llm_intent_analyzer = LLMIntentAnalyzer()
+    print(f"⚠️  LLM意圖分析器初始化失敗，使用默認模式: {e}")
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
