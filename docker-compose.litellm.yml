@@ -1,0 +1,87 @@
+# Docker Compose 配置文件 - LiteLLM 代理服務器
+# 用於統一調用多個LLM提供商的API
+
+version: '3.8'
+
+services:
+  litellm-proxy:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: litellm-proxy
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml:ro
+    environment:
+      - LITELLM_MASTER_KEY=sk-litellm-master-key
+      - LITELLM_LOG=INFO
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - GOOGLE_API_KEY=${jobseeker_GOOGLE_API_KEY}
+      - DATABASE_URL=postgresql://litellm:password123@litellm-postgres:5432/litellm
+      - REDIS_URL=redis://litellm-redis:6379
+      - UI_USERNAME=admin
+      - UI_PASSWORD=admin123
+      - LITELLM_SALT_KEY=sk-salt-1234
+    command: [
+      "--config", "/app/config.yaml",
+      "--port", "4000",
+      "--num_workers", "1",
+      "--detailed_debug"
+    ]
+    restart: unless-stopped
+    networks:
+      - litellm-network
+    depends_on:
+      - litellm-postgres
+      - litellm-redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  litellm-postgres:
+    image: postgres:15-alpine
+    container_name: litellm-postgres
+    environment:
+      - POSTGRES_DB=litellm
+      - POSTGRES_USER=litellm
+      - POSTGRES_PASSWORD=password123
+    ports:
+      - "5434:5432"
+    volumes:
+      - litellm_postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - litellm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U litellm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  litellm-redis:
+    image: redis:7-alpine
+    container_name: litellm-redis
+    ports:
+      - "6381:6379"
+    volumes:
+      - litellm_redis_data:/data
+    restart: unless-stopped
+    networks:
+      - litellm-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  litellm_postgres_data:
+  litellm_redis_data:
+
+networks:
+  litellm-network:
+    driver: bridge

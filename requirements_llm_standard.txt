@@ -1,0 +1,105 @@
+# LLM指令遵循與結構化輸出標準庫依賴
+
+# 核心依賴
+jsonschema>=4.17.0          # JSON Schema驗證
+requests>=2.28.0            # HTTP請求
+typing-extensions>=4.4.0    # 類型提示擴展
+
+# LLM提供商SDK
+openai>=1.0.0               # OpenAI API
+anthropic>=0.8.0            # Anthropic API
+google-generativeai>=0.3.0 # Google Gemini API
+
+# 數據處理
+pydantic>=2.0.0             # 數據驗證和序列化
+dataclasses-json>=0.6.0     # 數據類JSON序列化
+
+# 異步支持
+aiohttp>=3.8.0              # 異步HTTP客戶端
+aiofiles>=23.0.0            # 異步文件操作
+
+# 緩存
+cachetools>=5.3.0           # 內存緩存工具
+redis>=4.5.0                # Redis緩存（可選）
+
+# 日誌和監控
+structlog>=23.0.0           # 結構化日誌
+prometheus-client>=0.16.0   # Prometheus指標（可選）
+
+# 重試機制
+tenacity>=8.2.0             # 重試裝飾器
+backoff>=2.2.0              # 退避重試
+
+# 配置管理
+python-dotenv>=1.0.0        # 環境變量加載
+PyYAML>=6.0                 # YAML配置文件支持
+toml>=0.10.0                # TOML配置文件支持
+
+# 安全
+cryptography>=40.0.0        # 加密支持
+
+# 測試依賴（開發環境）
+pytest>=7.0.0               # 測試框架
+pytest-asyncio>=0.21.0      # 異步測試支持
+pytest-cov>=4.0.0           # 測試覆蓋率
+pytest-mock>=3.10.0         # 測試模擬
+responses>=0.23.0           # HTTP請求模擬
+
+# 代碼質量（開發環境）
+black>=23.0.0               # 代碼格式化
+isort>=5.12.0               # 導入排序
+flake8>=6.0.0               # 代碼檢查
+mypy>=1.0.0                 # 類型檢查
+pre-commit>=3.0.0           # Git鉤子
+
+# 文檔生成（開發環境）
+sphinx>=6.0.0               # 文檔生成
+sphinx-rtd-theme>=1.2.0     # 文檔主題
+mkdocs>=1.4.0               # Markdown文檔
+mkdocs-material>=9.0.0      # Material主題
+
+# 性能分析（開發環境）
+memory-profiler>=0.60.0     # 內存分析
+line-profiler>=4.0.0        # 行級性能分析
+py-spy>=0.3.0               # Python性能分析
+
+# 實用工具
+click>=8.1.0                # 命令行界面
+rich>=13.0.0                # 豐富的終端輸出
+tqdm>=4.65.0                # 進度條
+
+# 數據科學（可選）
+numpy>=1.24.0               # 數值計算
+pandas>=2.0.0               # 數據分析
+matplotlib>=3.7.0           # 數據可視化
+seaborn>=0.12.0             # 統計可視化
+
+# 並發處理
+concurrent-futures>=3.1.1   # 並發執行
+multiprocessing-logging>=0.3.4  # 多進程日誌
+
+# 時間處理
+python-dateutil>=2.8.0      # 日期時間工具
+pytz>=2023.3                # 時區支持
+
+# 網絡工具
+httpx>=0.24.0               # 現代HTTP客戶端
+websockets>=11.0.0          # WebSocket支持
+
+# 序列化
+orjson>=3.8.0               # 快速JSON序列化
+msgpack>=1.0.0              # MessagePack序列化
+
+# 驗證和清理
+bleach>=6.0.0               # HTML清理
+validators>=0.20.0          # 數據驗證器
+
+# 國際化
+babel>=2.12.0               # 國際化支持
+
+# 系統監控
+psutil>=5.9.0               # 系統資源監控
+
+# 版本兼容性
+packaging>=23.0             # 版本解析
+six>=1.16.0                 # Python 2/3兼容性

@@ -1,0 +1,186 @@
+{
+  "models": {
+    "openai_gpt4": {
+      "provider": "openai",
+      "model": "gpt-4",
+      "api_key": "${OPENAI_API_KEY}",
+      "base_url": "https://api.openai.com/v1",
+      "max_tokens": 4000,
+      "temperature": 0.7,
+      "timeout": 30,
+      "rate_limit": {
+        "requests_per_minute": 60,
+        "tokens_per_minute": 90000
+      }
+    },
+    "openai_gpt35": {
+      "provider": "openai",
+      "model": "gpt-3.5-turbo",
+      "api_key": "${OPENAI_API_KEY}",
+      "base_url": "https://api.openai.com/v1",
+      "max_tokens": 4000,
+      "temperature": 0.7,
+      "timeout": 30,
+      "rate_limit": {
+        "requests_per_minute": 120,
+        "tokens_per_minute": 120000
+      }
+    },
+    "anthropic_claude": {
+      "provider": "anthropic",
+      "model": "claude-3-haiku-20240307",
+      "api_key": "${ANTHROPIC_API_KEY}",
+      "base_url": "https://api.anthropic.com",
+      "max_tokens": 4000,
+      "temperature": 0.7,
+      "timeout": 30,
+      "rate_limit": {
+        "requests_per_minute": 50,
+        "tokens_per_minute": 50000
+      }
+    },
+    "google_gemini": {
+      "provider": "google",
+      "model": "gemini-pro",
+      "api_key": "${GOOGLE_API_KEY}",
+      "base_url": "https://generativelanguage.googleapis.com",
+      "max_tokens": 4000,
+      "temperature": 0.7,
+      "timeout": 30,
+      "rate_limit": {
+        "requests_per_minute": 60,
+        "tokens_per_minute": 60000
+      }
+    },
+    "deepseek_chat": {
+      "provider": "deepseek",
+      "model": "deepseek-chat",
+      "api_key": "${DEEPSEEK_API_KEY}",
+      "base_url": "https://api.deepseek.com",
+      "max_tokens": 4000,
+      "temperature": 0.7,
+      "timeout": 30,
+      "rate_limit": {
+        "requests_per_minute": 100,
+        "tokens_per_minute": 100000
+      }
+    },
+    "litellm_proxy": {
+      "provider": "openai",
+      "model": "claude-3-haiku",
+      "api_key": "sk-1234",
+      "base_url": "http://localhost:4000",
+      "max_tokens": 4000,
+      "temperature": 0.7,
+      "timeout": 30,
+      "rate_limit": {
+        "requests_per_minute": 200,
+        "tokens_per_minute": 200000
+      }
+    }
+  },
+  "validation": {
+    "validate_instructions": true,
+    "validate_responses": true,
+    "strict_schema": true,
+    "allow_additional_properties": false,
+    "custom_formats": {
+      "datetime-iso8601": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{3})?Z?$",
+      "phone-number": "^\\+?[1-9]\\d{1,14}$",
+      "chinese-name": "^[\\u4e00-\\u9fa5]{2,10}$",
+      "email-address": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+      "url-http": "^https?://[^\\s/$.?#].[^\\s]*$"
+    }
+  },
+  "retry": {
+    "max_retries": 3,
+    "base_delay": 1.0,
+    "max_delay": 60.0,
+    "exponential_base": 2.0,
+    "jitter": true,
+    "retry_on_timeout": true,
+    "retry_on_rate_limit": true,
+    "retry_on_server_error": true,
+    "retry_status_codes": [429, 500, 502, 503, 504]
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "log_requests": false,
+    "log_responses": false,
+    "log_performance": true,
+    "log_errors": true,
+    "log_file": "llm_standard.log",
+    "max_log_size": "10MB",
+    "backup_count": 5,
+    "structured_logging": true
+  },
+  "performance": {
+    "enable_caching": true,
+    "cache_type": "memory",
+    "cache_ttl": 3600,
+    "cache_max_size": 1000,
+    "enable_metrics": true,
+    "metrics_interval": 60,
+    "enable_profiling": false,
+    "profile_threshold": 1.0,
+    "concurrent_requests": 10,
+    "request_timeout": 30
+  },
+  "security": {
+    "mask_api_keys": true,
+    "log_sensitive_data": false,
+    "validate_ssl": true,
+    "allowed_hosts": [
+      "api.openai.com",
+      "api.anthropic.com",
+      "generativelanguage.googleapis.com",
+      "api.deepseek.com",
+      "localhost"
+    ],
+    "max_input_length": 100000,
+    "max_output_length": 50000
+  },
+  "client_pool": {
+    "load_balancing_strategy": "round_robin",
+    "health_check_interval": 300,
+    "failure_threshold": 3,
+    "recovery_timeout": 600,
+    "enable_circuit_breaker": true,
+    "circuit_breaker_threshold": 5,
+    "circuit_breaker_timeout": 60
+  },
+  "monitoring": {
+    "enable_health_checks": true,
+    "health_check_timeout": 10,
+    "collect_usage_stats": true,
+    "export_metrics": false,
+    "metrics_endpoint": "/metrics",
+    "alert_on_errors": false,
+    "alert_threshold": 0.1
+  },
+  "features": {
+    "enable_streaming": false,
+    "enable_function_calling": true,
+    "enable_vision": false,
+    "enable_embeddings": false,
+    "enable_fine_tuning": false
+  },
+  "defaults": {
+    "instruction_type": "structured_output",
+    "version": "1.0",
+    "priority": "medium",
+    "timeout": 30,
+    "retry_count": 3,
+    "temperature": 0.7,
+    "max_tokens": 4000
+  },
+  "development": {
+    "debug_mode": false,
+    "mock_responses": false,
+    "test_mode": false,
+    "verbose_errors": true,
+    "save_requests": false,
+    "save_responses": false
+  }
+}

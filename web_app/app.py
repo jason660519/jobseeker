@@ -75,28 +75,98 @@ os.makedirs(project_root / 'web_app' / 'db', exist_ok=True)
 # 全域變數儲存搜尋結果
 search_results_cache = {}
 
-# 初始化LLM意圖分析器
-# 嘗試使用真實的LLM提供商，如果沒有API密鑰則回退到模擬模式
+# 初始化LLM意圖分析器 - 支持多個提供商
 try:
-    from jobseeker.llm_intent_analyzer import LLMProvider
-    
-    # 檢查是否有OpenAI API密鑰
-    openai_api_key = os.getenv('OPENAI_API_KEY')
-    if openai_api_key:
-        llm_intent_analyzer = LLMIntentAnalyzer(
-            provider=LLMProvider.OPENAI_GPT35,
-            api_key=openai_api_key,
-            fallback_to_basic=True
-        )
-        print("✅ LLM意圖分析器已啟用 - 使用OpenAI GPT-3.5")
+    if LLMProvider and LLMConfig:
+        openai_api_key = os.getenv('OPENAI_API_KEY')
+        anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
+        
+        llm_config = None
+        
+        # 優先使用Anthropic（更穩定）
+        if anthropic_api_key:
+            print("🤖 正在初始化LLM意圖分析器 (Anthropic模式)...")
+            try:
+                llm_config = LLMConfig(
+                    provider=LLMProvider.ANTHROPIC,
+                    api_key=anthropic_api_key,
+                    model_name="anthropic/claude-3-haiku-20240307",
+                    temperature=0.1,
+                    max_tokens=1000
+                )
+                llm_intent_analyzer = LLMIntentAnalyzer(llm_config)
+                print("✅ LLM意圖分析器初始化成功 (Anthropic模式)")
+            except Exception as e:
+                print(f"⚠️  Anthropic LLM初始化失敗: {e}")
+                llm_config = None
+        
+        # 備用OpenAI
+        if not llm_config and openai_api_key:
+            print("🤖 正在初始化LLM意圖分析器 (OpenAI模式)...")
+            try:
+                llm_config = LLMConfig(
+                    provider=LLMProvider.OPENAI,
+                    api_key=openai_api_key,
+                    temperature=0.1,
+                    max_tokens=1000
+                )
+                llm_intent_analyzer = LLMIntentAnalyzer(llm_config)
+                print("✅ LLM意圖分析器初始化成功 (OpenAI模式)")
+            except Exception as e:
+                print(f"⚠️  OpenAI LLM初始化失敗: {e}")
+                llm_config = None
+        
+        # 如果沒有可用的API密鑰，使用模擬模式
+        if not llm_config:
+            print("⚠️  未檢測到可用的API密鑰，使用模擬模式")
+            print("💡 提示: 設置OPENAI_API_KEY或ANTHROPIC_API_KEY環境變量以啟用真實LLM分析")
+            llm_intent_analyzer = LLMIntentAnalyzer()
     else:
-        # 沒有API密鑰，使用模擬模式
-        llm_intent_analyzer = LLMIntentAnalyzer(
-            provider=LLMProvider.OPENAI_GPT35,  # 提供商設置但沒有API密鑰會自動回退到模擬
-            api_key=None,
-            fallback_to_basic=True
-        )
-        print("⚠️  LLM意圖分析器使用模擬模式 - 請設置OPENAI_API_KEY環境變量以啟用真實LLM")
+        print("⚠️  LLM配置類未可用，使用基本意圖分析器")
+        llm_intent_analyzer = LLMIntentAnalyzer()
+except ImportError as e:
+    print(f"⚠️  LLM意圖分析器導入失敗: {e}")
+    print("使用基本意圖分析器")
+    try:
+        from jobseeker.intent_analyzer import IntentAnalyzer as LLMIntentAnalyzer
+        llm_intent_analyzer = LLMIntentAnalyzer()
+    except ImportError:
+        # 如果連基本分析器都無法導入，創建一個簡單的替代品
+        class MockLLMIntentAnalyzer:
+            def analyze_intent_with_decision(self, query):
+                from jobseeker.intent_analyzer import analyze_user_intent, is_job_related
+                from jobseeker.intelligent_decision_engine import DecisionResult, ProcessingStrategy
+                
+                # 使用基本意圖分析
+                is_job = is_job_related(query)
+                intent = analyze_user_intent(query)
+                
+                # 創建模擬結果
+                class MockIntentResult:
+                    def __init__(self, is_job_related, rejection_message=None):
+                        self.is_job_related = is_job_related
+                        self.rejection_message = rejection_message
+                        self.intent_type = None
+                        self.confidence = 0.8
+                        self.llm_used = False
+                        self.structured_intent = None
+                
+                intent_result = MockIntentResult(
+                    is_job_related=is_job,
+                    rejection_message=None if is_job else "抱歉，我是AI助手，僅能協助您處理求職相關問題。"
+                )
+                
+                decision_result = DecisionResult(
+                    strategy=ProcessingStrategy.STANDARD_SEARCH if is_job else ProcessingStrategy.REJECT_QUERY,
+                    confidence=0.8,
+                    reasoning="基本意圖分析",
+                    recommended_platforms=[],
+                    search_parameters={}
+                )
+                
+                return intent_result, decision_result
+        
+        llm_intent_analyzer = MockLLMIntentAnalyzer()
 except Exception as e:
     # 如果導入失敗，使用默認初始化
     llm_intent_analyzer = LLMIntentAnalyzer()
