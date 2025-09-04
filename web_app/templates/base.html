@@ -2412,6 +2412,14 @@
                               <h5 class="modal-title">
                                   <i class="fas fa-robot me-2"></i>AI 正在為您搜尋工作
                               </h5>
+                              <div class="d-flex gap-2">
+                                  <button type="button" class="btn btn-sm btn-outline-light" onclick="minimizeAISearchModal()" title="縮小">
+                                      <i class="fas fa-minus"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-sm btn-outline-light" onclick="closeAISearchModal()" title="關閉">
+                                      <i class="fas fa-times"></i>
+                                  </button>
+                              </div>
                           </div>
                           <div class="modal-body text-center py-4">
                               <div class="ai-avatar mb-3">
@@ -2451,7 +2459,13 @@
                                   </div>
                               </div>
                               
-                              <p class="text-muted mt-3 mb-0" id="searchStatus">AI 正在分析您的需求...</p>
+                              <p class="text-muted mt-3 mb-2" id="searchStatus">AI 正在分析您的需求...</p>
+                              
+                              <div class="mt-3">
+                                  <button type="button" class="btn btn-danger btn-sm" onclick="stopAISearch()">
+                                      <i class="fas fa-stop me-2"></i>停止搜尋
+                                  </button>
+                              </div>
                           </div>
                       </div>
                   </div>
@@ -2509,6 +2523,117 @@
           window.searchProgressInterval = interval;
       }
 
+      // AI 搜尋彈窗控制函數
+      function closeAISearchModal() {
+          // 停止搜尋進度
+          if (window.searchProgressInterval) {
+              clearInterval(window.searchProgressInterval);
+          }
+          
+          // 關閉彈窗
+          const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
+          if (modal) {
+              modal.hide();
+          }
+      }
+
+      function minimizeAISearchModal() {
+          // 縮小彈窗（隱藏但不停止搜尋）
+          const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
+          if (modal) {
+              modal.hide();
+          }
+          
+          // 顯示縮小狀態提示
+          showMinimizedSearchIndicator();
+      }
+
+      function stopAISearch() {
+          // 停止搜尋進度
+          if (window.searchProgressInterval) {
+              clearInterval(window.searchProgressInterval);
+          }
+          
+          // 更新狀態顯示
+          const statusEl = document.getElementById('searchStatus');
+          if (statusEl) {
+              statusEl.textContent = '搜尋已停止';
+              statusEl.className = 'text-danger mt-3 mb-2';
+          }
+          
+          // 隱藏停止按鈕，顯示重新搜尋按鈕
+          const stopBtn = event.target;
+          stopBtn.style.display = 'none';
+          
+          const restartBtn = document.createElement('button');
+          restartBtn.type = 'button';
+          restartBtn.className = 'btn btn-primary btn-sm';
+          restartBtn.innerHTML = '<i class="fas fa-redo me-2"></i>重新搜尋';
+          restartBtn.onclick = function() {
+              closeAISearchModal();
+              // 重新觸發搜尋
+              const query = document.getElementById('navQuery').value;
+              if (query) {
+                  performHeaderSearch(query);
+              }
+          };
+          
+          stopBtn.parentNode.appendChild(restartBtn);
+      }
+
+      function showMinimizedSearchIndicator() {
+          // 創建縮小狀態指示器
+          const indicatorHtml = `
+              <div id="minimizedSearchIndicator" class="position-fixed" style="bottom: 20px; right: 20px; z-index: 1050;">
+                  <div class="card shadow-sm" style="width: 300px;">
+                      <div class="card-body p-3">
+                          <div class="d-flex align-items-center justify-content-between">
+                              <div class="d-flex align-items-center">
+                                  <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                                  <span class="small">AI 搜尋進行中...</span>
+                              </div>
+                              <div class="d-flex gap-1">
+                                  <button type="button" class="btn btn-sm btn-outline-primary" onclick="restoreAISearchModal()" title="展開">
+                                      <i class="fas fa-expand"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-sm btn-outline-danger" onclick="stopMinimizedSearch()" title="停止">
+                                      <i class="fas fa-times"></i>
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          `;
+          
+          // 移除現有指示器
+          const existingIndicator = document.getElementById('minimizedSearchIndicator');
+          if (existingIndicator) existingIndicator.remove();
+          
+          document.body.insertAdjacentHTML('beforeend', indicatorHtml);
+      }
+
+      function restoreAISearchModal() {
+          // 移除縮小指示器
+          const indicator = document.getElementById('minimizedSearchIndicator');
+          if (indicator) indicator.remove();
+          
+          // 重新顯示彈窗
+          const modal = new bootstrap.Modal(document.getElementById('aiSearchModal'));
+          modal.show();
+      }
+
+      function stopMinimizedSearch() {
+          // 停止搜尋
+          if (window.searchProgressInterval) {
+              clearInterval(window.searchProgressInterval);
+          }
+          
+          // 移除指示器
+          const indicator = document.getElementById('minimizedSearchIndicator');
+          if (indicator) indicator.remove();
+      }
+
       function performHeaderSearch(query) {
           const formData = {
               query: query,
@@ -2527,9 +2652,6 @@
                   clearInterval(window.searchProgressInterval);
               }
               
-              const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
-              if (modal) modal.hide();
-              
               return response.json().then(data => ({ response, data }));
           })
           .then(({ response, data }) => {
@@ -2538,11 +2660,26 @@
               console.log('Header Fetch Response - Data:', data);
               console.log('Header Fetch Response - Has intent_analysis:', data.intent_analysis);
               
-              // 檢查是否為400錯誤且有意圖分析
-              if (response.status === 400 && data.intent_analysis) {
-                  console.log('Calling showIntentAnalysisAlert from header with:', data.error, data.intent_analysis);
-                  showIntentAnalysisAlert(data.error, data.intent_analysis);
-                  return;
+              // 隱藏AI搜尋彈窗
+              const modal = bootstrap.Modal.getInstance(document.getElementById('aiSearchModal'));
+              if (modal) {
+                  modal.hide();
+                  
+                  // 如果是400錯誤且有意圖分析，等待彈窗隱藏後再顯示意圖分析彈窗
+                  if (response.status === 400 && data.intent_analysis) {
+                      setTimeout(() => {
+                          console.log('Calling showIntentAnalysisAlert from header with:', data.error, data.intent_analysis);
+                          showIntentAnalysisAlert(data.error, data.intent_analysis);
+                      }, 300); // 等待300ms讓AI搜尋彈窗完全隱藏
+                      return;
+                  }
+              } else {
+                  // 如果沒有AI搜尋彈窗，直接處理400錯誤
+                  if (response.status === 400 && data.intent_analysis) {
+                      console.log('Calling showIntentAnalysisAlert from header with:', data.error, data.intent_analysis);
+                      showIntentAnalysisAlert(data.error, data.intent_analysis);
+                      return;
+                  }
               }
               
               showHeaderSearchResults(data, query);
@@ -2777,6 +2914,14 @@
                               <h5 class="modal-title">
                                   <i class="fas fa-robot me-2"></i>AI 正在為您搜尋工作
                               </h5>
+                              <div class="d-flex gap-2">
+                                  <button type="button" class="btn btn-sm btn-outline-light" onclick="minimizeAISearchModal()" title="縮小">
+                                      <i class="fas fa-minus"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-sm btn-outline-light" onclick="closeAISearchModal()" title="關閉">
+                                      <i class="fas fa-times"></i>
+                                  </button>
+                              </div>
                           </div>
                           <div class="modal-body text-center py-4">
                               <div class="ai-avatar mb-3">
@@ -2816,7 +2961,13 @@
                                   </div>
                               </div>
                               
-                              <p class="text-muted mt-3 mb-0" id="searchStatus">AI 正在分析您的需求...</p>
+                              <p class="text-muted mt-3 mb-2" id="searchStatus">AI 正在分析您的需求...</p>
+                              
+                              <div class="mt-3">
+                                  <button type="button" class="btn btn-danger btn-sm" onclick="stopAISearch()">
+                                      <i class="fas fa-stop me-2"></i>停止搜尋
+                                  </button>
+                              </div>
                           </div>
                       </div>
                   </div>
