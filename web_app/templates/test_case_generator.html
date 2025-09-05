@@ -327,6 +327,18 @@
                     <button id="exportCsvBtn" class="btn btn-info">
                         <i class="fas fa-file-csv me-2"></i>Export CSV
                     </button>
+                    <button id="exportEnglishBtn" class="btn btn-warning">
+                        <i class="fas fa-language me-2"></i>Export to pure English
+                    </button>
+                    <button id="generateEnglishBtn" class="btn btn-success">
+                        <i class="fas fa-magic me-2"></i>Generate Pure English Cases
+                    </button>
+                    <button id="runETLBtn" class="btn btn-info">
+                        <i class="fas fa-cogs me-2"></i>Run ETL Pipeline
+                    </button>
+                    <button id="etlStatusBtn" class="btn btn-secondary">
+                        <i class="fas fa-info-circle me-2"></i>ETL Status
+                    </button>
                     <button id="clearResultsBtn" class="btn btn-outline-danger">
                         <i class="fas fa-trash me-2"></i>Clear Results
                     </button>
@@ -456,6 +468,10 @@ class TestCaseGenerator {
         // 導出按鈕
         document.getElementById('exportJsonBtn').addEventListener('click', () => this.exportTestCases('json'));
         document.getElementById('exportCsvBtn').addEventListener('click', () => this.exportTestCases('csv'));
+        document.getElementById('exportEnglishBtn').addEventListener('click', () => this.exportPureEnglish());
+            document.getElementById('generateEnglishBtn').addEventListener('click', () => this.generatePureEnglishCases());
+            document.getElementById('runETLBtn').addEventListener('click', () => this.runETLPipeline());
+            document.getElementById('etlStatusBtn').addEventListener('click', () => this.getETLStatus());
         document.getElementById('clearResultsBtn').addEventListener('click', () => this.clearResults());
     }
 
@@ -667,6 +683,163 @@ class TestCaseGenerator {
             }
         } catch (error) {
             alert('Export error: ' + error.message);
+        }
+    }
+
+    async exportPureEnglish() {
+        if (this.currentTestCases.length === 0) {
+            alert('No test cases to export');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/export-pure-english', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    test_cases: this.currentTestCases
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // 創建下載連結
+                const link = document.createElement('a');
+                link.href = result.download_url;
+                link.download = '';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert('Export failed: ' + result.error);
+            }
+        } catch (error) {
+            alert('Export error: ' + error.message);
+        }
+    }
+
+    async runETLPipeline() {
+        try {
+            // 顯示載入狀態
+            const runEtlBtn = document.getElementById('runEtlBtn');
+            const originalText = runEtlBtn.innerHTML;
+            runEtlBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Running ETL...';
+            runEtlBtn.disabled = true;
+            
+            const response = await fetch('/api/run-etl-pipeline', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(`ETL流程執行成功！\n` +
+                      `處理時間: ${result.duration_seconds?.toFixed(2)} 秒\n` +
+                      `提取文件: ${result.stats.extracted_files}\n` +
+                      `轉換記錄: ${result.stats.transformed_records}\n` +
+                      `載入記錄: ${result.stats.loaded_records}\n` +
+                      `失敗記錄: ${result.stats.failed_records}`);
+            } else {
+                alert('ETL流程執行失敗: ' + result.message);
+            }
+        } catch (error) {
+            alert('ETL流程執行錯誤: ' + error.message);
+        } finally {
+            // 恢復按鈕狀態
+            const runEtlBtn = document.getElementById('runEtlBtn');
+            runEtlBtn.innerHTML = '<i class="fas fa-cogs me-2"></i>Run ETL Pipeline';
+            runEtlBtn.disabled = false;
+        }
+    }
+
+    async generatePureEnglishCases() {
+        try {
+            // 顯示載入狀態
+            const generateEnglishBtn = document.getElementById('generateEnglishBtn');
+            const originalText = generateEnglishBtn.innerHTML;
+            generateEnglishBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Generating English Cases...';
+            generateEnglishBtn.disabled = true;
+            
+            const requestData = {
+                num_cases: 20,
+                categories: ['job_search', 'skill_query', 'location_based', 'salary_inquiry'],
+                complexity_levels: ['simple', 'medium', 'complex']
+            };
+            
+            const response = await fetch('/api/generate-english-test-cases', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // 更新測試案例數據
+                this.currentTestCases = result.test_cases;
+                
+                // 顯示結果
+                this.displayResults(result.test_cases, result.statistics);
+                
+                alert(`LLM純英文生成完成！\n` +
+                      `生成方法: ${result.method}\n` +
+                      `LLM提供商: ${result.llm_provider}\n` +
+                      `生成案例數: ${result.test_cases.length}\n` +
+                      `語言: 純英文 (en-US)`);
+                
+            } else {
+                alert('LLM生成失敗: ' + result.error);
+            }
+        } catch (error) {
+            alert('LLM生成錯誤: ' + error.message);
+        } finally {
+            // 恢復按鈕狀態
+            const generateEnglishBtn = document.getElementById('generateEnglishBtn');
+            generateEnglishBtn.innerHTML = '<i class="fas fa-magic me-2"></i>Generate Pure English Cases';
+            generateEnglishBtn.disabled = false;
+        }
+    }
+
+    async getETLStatus() {
+        try {
+            const response = await fetch('/api/etl-status', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                const status = result.status;
+                const dirStatus = status.directories_exist;
+                
+                alert(`ETL系統狀態:\n` +
+                      `基礎路徑: ${status.config.base_path}\n` +
+                      `原始數據目錄: ${dirStatus.raw_data ? '✅' : '❌'}\n` +
+                      `處理數據目錄: ${dirStatus.processed_data ? '✅' : '❌'}\n` +
+                      `暫存目錄: ${dirStatus.staging ? '✅' : '❌'}\n` +
+                      `歸檔目錄: ${dirStatus.archive ? '✅' : '❌'}\n` +
+                      `日誌目錄: ${dirStatus.logs ? '✅' : '❌'}\n` +
+                      `統計信息:\n` +
+                      `- 提取文件: ${status.stats.extracted_files}\n` +
+                      `- 轉換記錄: ${status.stats.transformed_records}\n` +
+                      `- 載入記錄: ${status.stats.loaded_records}\n` +
+                      `- 失敗記錄: ${status.stats.failed_records}`);
+            } else {
+                alert('獲取ETL狀態失敗: ' + result.error);
+            }
+        } catch (error) {
+            alert('獲取ETL狀態錯誤: ' + error.message);
         }
     }
 

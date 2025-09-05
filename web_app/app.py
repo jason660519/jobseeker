@@ -1411,6 +1411,364 @@ def download_test_cases(filename):
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/export-pure-english', methods=['POST'])
+def api_export_pure_english():
+    """
+    API端點：使用LLM生成純英文測試案例
+    """
+    try:
+        from jobseeker.llm_intent_analyzer import LLMIntentAnalyzer, LLMProvider
+        from etl_pipeline.etl_manager import ETLManager
+        from etl_pipeline.etl_config import ETLConfig
+        import os
+        
+        data = request.get_json()
+        test_cases_data = data.get('test_cases', [])
+        
+        if not test_cases_data:
+            return jsonify({
+                'success': False,
+                'error': '沒有測試案例可導出'
+            }), 400
+        
+        # 初始化LLM分析器
+        openai_key = os.getenv('OPENAI_API_KEY')
+        anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+        
+        if openai_key:
+            analyzer = LLMIntentAnalyzer(provider=LLMProvider.OPENAI_GPT35, api_key=openai_key)
+        elif anthropic_key:
+            analyzer = LLMIntentAnalyzer(provider=LLMProvider.ANTHROPIC_CLAUDE, api_key=anthropic_key)
+        else:
+            return jsonify({
+                'success': False,
+                'error': '需要設置 OPENAI_API_KEY 或 ANTHROPIC_API_KEY 環境變量'
+            }), 400
+        
+        # 使用LLM生成純英文測試案例
+        english_test_cases = []
+        
+        for case in test_cases_data:
+            try:
+                # 構建LLM提示詞
+                prompt = f"""
+Please convert the following job search query to pure English while maintaining the same intent and meaning:
+
+Original Query: {case['query']}
+Category: {case['category']}
+Complexity: {case['complexity']}
+
+Requirements:
+1. Generate a natural, fluent English query that expresses the same job search intent
+2. Maintain the same level of complexity
+3. Use professional job search terminology
+4. Ensure the query sounds like something a real job seeker would ask
+5. Do not translate literally - create a natural English equivalent
+
+Respond with only the English query, no explanations or additional text.
+"""
+                
+                # 調用LLM API
+                response = analyzer._call_llm_api(prompt)
+                
+                if response.get('success'):
+                    english_query = response.get('content', '').strip()
+                    
+                    # 創建英文版本的測試案例
+                    english_case = {
+                        'id': case['id'] + '_en',
+                        'query': english_query,
+                        'category': case['category'],
+                        'complexity': case['complexity'],
+                        'language': 'en-US',
+                        'expected_intent': case['expected_intent'],
+                        'expected_entities': case['expected_entities'],
+                        'metadata': {
+                            **case.get('metadata', {}),
+                            'original_query': case['query'],
+                            'translation_method': 'llm_generated',
+                            'llm_provider': analyzer.provider.value
+                        }
+                    }
+                    english_test_cases.append(english_case)
+                else:
+                    print(f"LLM轉換失敗: {case['query']}")
+                    
+            except Exception as e:
+                print(f"處理案例時發生錯誤: {e}")
+                continue
+        
+        if not english_test_cases:
+            return jsonify({
+                'success': False,
+                'error': 'LLM轉換失敗，無法生成英文測試案例'
+            }), 500
+        
+        # 創建臨時文件
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f'test_cases_llm_english_{timestamp}.csv'
+        filepath = app.config['UPLOAD_FOLDER'] / filename
+        
+        # 轉換為DataFrame並導出CSV
+        df_data = []
+        for case in english_test_cases:
+            df_data.append({
+                'ID': case['id'],
+                'Query': case['query'],
+                'Category': case['category'],
+                'Complexity': case['complexity'],
+                'Language': case['language'],
+                'Expected_Intent': case['expected_intent'],
+                'Expected_Entities': json.dumps(case['expected_entities'], ensure_ascii=False),
+                'Metadata': json.dumps(case['metadata'], ensure_ascii=False),
+                'Original_Query': case['metadata'].get('original_query', '')
+            })
+        
+        df = pd.DataFrame(df_data)
+        df.to_csv(filepath, index=False, encoding='utf-8-sig')
+        
+        return jsonify({
+            'success': True,
+            'download_url': f'/download-test-cases/{filename}',
+            'translated_count': len(english_test_cases),
+            'method': 'llm_generated',
+            'llm_provider': analyzer.provider.value
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+def _is_pure_english(text: str) -> bool:
+    """
+    檢查文本是否為純英文（只包含英文字母、數字、標點符號和空格）
+    """
+    import re
+    # 允許英文字母、數字、常見標點符號和空格
+    english_pattern = re.compile(r'^[a-zA-Z0-9\s\.,;:!?\-\'"()\[\]{}/@#$%^&*+=<>|~`]*$')
+    return bool(english_pattern.match(text))
+
+@app.route('/api/generate-english-test-cases', methods=['POST'])
+def api_generate_english_test_cases():
+    """
+    API端點：使用LLM直接生成純英文測試案例
+    """
+    try:
+        from jobseeker.llm_intent_analyzer import LLMIntentAnalyzer, LLMProvider
+        import os
+        
+        data = request.get_json()
+        num_cases = data.get('num_cases', 20)
+        categories = data.get('categories', ['job_search', 'skill_query', 'location_based', 'salary_inquiry'])
+        complexity_levels = data.get('complexity_levels', ['simple', 'medium', 'complex'])
+        
+        # 初始化LLM分析器
+        openai_key = os.getenv('OPENAI_API_KEY')
+        anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+        
+        if openai_key:
+            analyzer = LLMIntentAnalyzer(provider=LLMProvider.OPENAI_GPT35, api_key=openai_key)
+        elif anthropic_key:
+            analyzer = LLMIntentAnalyzer(provider=LLMProvider.ANTHROPIC_CLAUDE, api_key=anthropic_key)
+        else:
+            return jsonify({
+                'success': False,
+                'error': '需要設置 OPENAI_API_KEY 或 ANTHROPIC_API_KEY 環境變量'
+            }), 400
+        
+        # 生成純英文測試案例
+        english_test_cases = []
+        
+        for i in range(num_cases):
+            category = random.choice(categories)
+            complexity = random.choice(complexity_levels)
+            
+            # 構建LLM提示詞
+            prompt = f"""
+Generate a realistic job search query in PURE ENGLISH ONLY for the following specifications:
+
+Category: {category}
+Complexity: {complexity}
+
+**CRITICAL REQUIREMENTS - ENGLISH ONLY:**
+- Output MUST contain ONLY English words and characters
+- ABSOLUTELY NO Chinese, Japanese, Korean, or any non-English characters
+- ALL job titles must be in English (e.g., "Software Engineer", "Data Scientist", "Marketing Manager")
+- ALL locations must be in English (e.g., "New York", "London", "Taipei", "Tokyo")
+- ALL skills and technologies must be in English (e.g., "Python", "Machine Learning", "Project Management")
+- ALL company types must be in English (e.g., "startup", "tech company", "consulting firm")
+
+**CONTENT GUIDELINES:**
+1. Create a natural, fluent English query that a real job seeker would ask
+2. Match the complexity level:
+   - Simple: Basic job title searches ("software engineer jobs")
+   - Medium: Queries with 1-2 filters ("remote software engineer jobs in tech")
+   - Complex: Detailed queries with multiple criteria ("senior full-stack developer positions at startups with equity compensation")
+3. Use professional job search terminology
+4. Make it sound conversational and natural
+5. Ensure it clearly fits the specified category
+
+**EXAMPLES OF CORRECT OUTPUT:**
+- "Software engineer jobs in San Francisco"
+- "Remote data scientist positions with machine learning focus"
+- "Senior marketing manager roles at tech startups with growth opportunities"
+
+**FORBIDDEN - DO NOT USE:**
+- Any Chinese characters (軟體工程師, 資料科學家, etc.)
+- Any Japanese characters (ソフトウェアエンジニア, etc.)
+- Any Korean characters (소프트웨어 엔지니어, etc.)
+- Any non-Latin script characters
+
+Respond with ONLY the English query, no explanations or additional text. The output must be 100% English.
+"""
+            
+            try:
+                # 直接調用LLM客戶端，不使用JSON格式
+                messages = [
+                    {
+                        "role": "system",
+                        "content": "You are a professional job search query generator. Generate only pure English job search queries as requested. Do not include any explanations, formatting, or additional text."
+                    },
+                    {
+                        "role": "user", 
+                        "content": prompt
+                    }
+                ]
+                
+                # 調用LLM API（不使用JSON格式）
+                response = analyzer.llm_client.call(
+                    messages=messages,
+                    temperature=0.1,
+                    max_tokens=200
+                )
+                
+                if response.success:
+                    english_query = response.content.strip()
+                    
+                    # 驗證輸出是否為純英文
+                     if _is_pure_english(english_query):
+                        # 創建測試案例
+                        test_case = {
+                            'id': f'llm_en_{category}_{complexity}_{i+1}',
+                            'query': english_query,
+                            'category': category,
+                            'complexity': complexity,
+                            'language': 'en-US',
+                            'expected_intent': 'job_search' if category in ['job_search', 'skill_query', 'location_based', 'salary_inquiry'] else category,
+                            'expected_entities': [],
+                            'metadata': {
+                                'generation_method': 'llm_native',
+                                'llm_provider': analyzer.provider.value,
+                                'generated_at': datetime.now().isoformat()
+                            }
+                        }
+                        english_test_cases.append(test_case)
+                    else:
+                        print(f"生成的查詢包含非英文字符，跳過: {english_query}")
+                    
+            except Exception as e:
+                print(f"生成案例時發生錯誤: {e}")
+                continue
+        
+        if not english_test_cases:
+            return jsonify({
+                'success': False,
+                'error': 'LLM生成失敗，無法創建英文測試案例'
+            }), 500
+        
+        # 生成統計資訊
+        stats = {
+            'total_generated': len(english_test_cases),
+            'category_distribution': {},
+            'complexity_distribution': {},
+            'language_distribution': {'en-US': len(english_test_cases)}
+        }
+        
+        # 計算分佈統計
+        for case in english_test_cases:
+            category = case['category']
+            stats['category_distribution'][category] = stats['category_distribution'].get(category, 0) + 1
+            
+            complexity = case['complexity']
+            stats['complexity_distribution'][complexity] = stats['complexity_distribution'].get(complexity, 0) + 1
+        
+        return jsonify({
+            'success': True,
+            'test_cases': english_test_cases,
+            'statistics': stats,
+            'method': 'llm_native_generation',
+            'llm_provider': analyzer.provider.value
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/run-etl-pipeline', methods=['POST'])
+def run_etl_pipeline():
+    """
+    運行完整的ETL流程
+    將Web上傳的測試案例轉換為純英文並載入到ETL系統
+    """
+    try:
+        # 初始化ETL管理器
+        etl_config = ETLConfig()
+        etl_manager = ETLManager(etl_config)
+        
+        # 運行完整的ETL流程
+        result = etl_manager.run_full_pipeline()
+        
+        if result['success']:
+            return jsonify({
+                'success': True,
+                'message': result['message'],
+                'stats': result['stats'],
+                'duration_seconds': result['duration_seconds'],
+                'timestamp': result['timestamp']
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': result['message'],
+                'stats': result['stats']
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'ETL流程執行失敗: {str(e)}'
+        }), 500
+
+
+@app.route('/api/etl-status', methods=['GET'])
+def get_etl_status():
+    """
+    獲取ETL流程狀態信息
+    """
+    try:
+        etl_config = ETLConfig()
+        etl_manager = ETLManager(etl_config)
+        
+        status = etl_manager.get_pipeline_status()
+        
+        return jsonify({
+            'success': True,
+            'status': status
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'獲取ETL狀態失敗: {str(e)}'
+        }), 500
+
+
 # 註冊增強版 API Blueprint
 try:
     from .enhanced_api import enhanced_api_bp
