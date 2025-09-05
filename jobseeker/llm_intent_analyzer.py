@@ -20,7 +20,8 @@ from datetime import datetime
 # 導入現有的意圖分析器作為備選方案
 from .intent_analyzer import IntentAnalyzer as BasicIntentAnalyzer, IntentType, IntentAnalysisResult
 from .llm_client import create_llm_client, LLMResponse
-from .llm_config import LLMConfig
+from .llm_config import LLMConfig, LLMConfigManager
+from .llm_auto_switcher import LLMAutoSwitcher
 from .intelligent_decision_engine import (
     IntelligentDecisionEngine, 
     DecisionResult, 
@@ -79,13 +80,14 @@ class LLMIntentResult:
 
 
 class LLMIntentAnalyzer:
-    """LLM驅動的智能意圖分析器，具備決策功能"""
+    """LLM驅動的智能意圖分析器，具備自動切換功能"""
     
     def __init__(self, 
                  provider: LLMProvider = LLMProvider.OPENAI_GPT35,
                  api_key: Optional[str] = None,
                  fallback_to_basic: bool = True,
-                 cache_enabled: bool = True):
+                 cache_enabled: bool = True,
+                 enable_auto_switch: bool = True):
         """
         初始化LLM智能意圖分析器
         
@@ -94,11 +96,13 @@ class LLMIntentAnalyzer:
             api_key: API密鑰
             fallback_to_basic: 是否在LLM失敗時回退到基礎分析器
             cache_enabled: 是否啟用緩存
+            enable_auto_switch: 是否啟用自動切換功能
         """
         self.provider = provider
         self.api_key = api_key
         self.fallback_to_basic = fallback_to_basic
         self.cache_enabled = cache_enabled
+        self.enable_auto_switch = enable_auto_switch
         
         # 初始化基礎分析器作為備選方案
         if fallback_to_basic:
@@ -116,11 +120,76 @@ class LLMIntentAnalyzer:
         # 初始化提示詞模板
         self._init_prompt_templates()
         
-        # 初始化LLM客戶端
-        self._init_llm_client()
+        # 初始化LLM配置管理器和自動切換器
+        self._init_llm_system()
+        
+        self.logger.info(f"LLM意圖分析器初始化完成，自動切換: {'啟用' if enable_auto_switch else '禁用'}")
     
-    def _init_llm_client(self):
-        """初始化LLM客戶端"""
+    def get_llm_status(self) -> Dict[str, Any]:
+        """獲取LLM系統狀態"""
+        if self.auto_switcher:
+            return self.auto_switcher.get_status_report()
+        elif self.llm_client:
+            return {
+                "auto_switch_enabled": False,
+                "current_provider": self.provider.value,
+                "client_available": True,
+                "total_calls": 0,
+                "total_errors": 0
+            }
+        else:
+            return {
+                "auto_switch_enabled": False,
+                "current_provider": None,
+                "client_available": False,
+                "total_calls": 0,
+                "total_errors": 0
+            }
+    
+    def switch_provider(self, provider: str) -> bool:
+        """手動切換LLM提供商"""
+        if self.auto_switcher:
+            return self.auto_switcher.manual_switch(provider)
+        else:
+            self.logger.warning("自動切換功能未啟用，無法手動切換提供商")
+            return False
+    
+    def get_available_providers(self) -> List[str]:
+        """獲取可用的LLM提供商列表"""
+        if self.auto_switcher:
+            return self.auto_switcher.get_available_providers()
+        else:
+            return [self.provider.value] if self.llm_client else []
+    
+    def _init_llm_system(self):
+        """初始化LLM系統（配置管理器和自動切換器）"""
+        try:
+            # 初始化配置管理器
+            self.config_manager = LLMConfigManager()
+            
+            # 如果啟用自動切換，初始化自動切換器
+            if self.enable_auto_switch:
+                self.auto_switcher = LLMAutoSwitcher(
+                    config_manager=self.config_manager,
+                    max_retries=3,
+                    retry_delay=1.0,
+                    enable_fallback=self.fallback_to_basic
+                )
+                self.llm_client = None  # 自動切換模式下不使用單一客戶端
+                self.logger.info("LLM自動切換器初始化成功")
+            else:
+                # 不使用自動切換，使用傳統單一客戶端
+                self.auto_switcher = None
+                self._init_single_llm_client()
+                
+        except Exception as e:
+            self.logger.error(f"LLM系統初始化失敗: {e}")
+            self.auto_switcher = None
+            self.config_manager = None
+            self.llm_client = None
+    
+    def _init_single_llm_client(self):
+        """初始化單一LLM客戶端（不使用自動切換時）"""
         self.llm_client = None
         
         if not self.api_key:
@@ -350,7 +419,7 @@ Output must be standard JSON structure containing all necessary parameters so th
     
     def _analyze_with_llm(self, query: str) -> LLMIntentResult:
         """
-        使用LLM進行意圖分析
+        使用LLM進行意圖分析（支援自動切換）
         
         Args:
             query: 用戶查詢字符串
@@ -359,18 +428,14 @@ Output must be standard JSON structure containing all necessary parameters so th
             LLMIntentResult: 分析結果
             
         Raises:
-            Exception: 當LLM服務不可用時
+            Exception: 當所有LLM服務都不可用時
         """
-        # 檢查LLM客戶端是否可用
-        if not self.llm_client:
-            raise Exception("目前LLM服務暫時不可用，請使用主頁的智能職位搜尋功能，這將幫助您更精準地找到理想工作。")
-        
         # 構建提示詞
         prompt = self.analysis_prompt_template.format(user_input=query)
         
-        # 調用LLM API
+        # 調用LLM API（支援自動切換）
         try:
-            llm_response = self._call_llm_api(prompt)
+            llm_response = self._call_llm_api_with_auto_switch(prompt)
         except Exception as e:
             self.logger.error(f"LLM分析失敗: {e}")
             raise Exception("目前LLM服務暫時不可用，請使用主頁的智能職位搜尋功能，這將幫助您更精準地找到理想工作。")
@@ -415,9 +480,9 @@ Output must be standard JSON structure containing all necessary parameters so th
             fallback_used=True
         )
     
-    def _call_llm_api(self, prompt: str) -> Dict[str, Any]:
+    def _call_llm_api_with_auto_switch(self, prompt: str) -> Dict[str, Any]:
         """
-        調用LLM API進行意圖分析
+        調用LLM API進行意圖分析（支援自動切換）
         
         Args:
             prompt: 完整的提示詞
@@ -425,19 +490,65 @@ Output must be standard JSON structure containing all necessary parameters so th
         Returns:
             Dict: LLM響應的結構化數據
         """
-        try:
-            # 準備消息
-            messages = [
-                {
-                    "role": "system",
-                    "content": self.system_prompt
-                },
-                {
-                    "role": "user", 
-                    "content": prompt
-                }
-            ]
+        # 準備消息
+        messages = [
+            {
+                "role": "system",
+                "content": self.system_prompt
+            },
+            {
+                "role": "user", 
+                "content": prompt
+            }
+        ]
+        
+        # 如果啟用自動切換，使用自動切換器
+        if self.auto_switcher:
+            try:
+                response = self.auto_switcher.call_with_auto_switch(
+                    messages=messages,
+                    temperature=0.1,
+                    max_tokens=1000,
+                    response_format={"type": "json_object"}
+                )
+                
+                if not response.success:
+                    self.logger.error(f"自動切換LLM API調用失敗: {response.error_message}")
+                    raise Exception(response.error_message)
+                
+                # 解析LLM響應
+                try:
+                    llm_result = json.loads(response.content)
+                    self.logger.info(f"自動切換LLM API調用成功，當前提供商: {self.auto_switcher.get_current_provider()}, 響應時間: {response.response_time:.2f}s")
+                    return llm_result
+                except json.JSONDecodeError as e:
+                    self.logger.error(f"LLM響應JSON解析失敗: {e}")
+                    self.logger.debug(f"原始響應內容: {response.content}")
+                    raise Exception(f"JSON解析失敗: {e}")
+                    
+            except Exception as e:
+                self.logger.error(f"自動切換LLM API調用異常: {e}")
+                raise
+        else:
+            # 使用傳統單一客戶端
+            return self._call_single_llm_api(prompt, messages)
+    
+    def _call_single_llm_api(self, prompt: str, messages: list) -> Dict[str, Any]:
+        """
+        調用單一LLM API（不使用自動切換）
+        
+        Args:
+            prompt: 完整的提示詞
+            messages: 消息列表
             
+        Returns:
+            Dict: LLM響應的結構化數據
+        """
+        # 檢查LLM客戶端是否可用
+        if not self.llm_client:
+            raise Exception("LLM客戶端未初始化")
+            
+        try:
             # 調用LLM API
             response: LLMResponse = self.llm_client.call(
                 messages=messages,

@@ -38,6 +38,10 @@ import time
 from flask_cors import CORS
 import pandas as pd
 
+# 載入環境變數
+from dotenv import load_dotenv
+load_dotenv()
+
 # 導入 jobseeker 核心功能
 try:
     from jobseeker.smart_router import smart_router
@@ -45,7 +49,8 @@ try:
     from jobseeker.query_parser import parse_user_query_smart
     from jobseeker.intent_analyzer import analyze_user_intent, is_job_related
     from jobseeker.llm_intent_analyzer import LLMIntentAnalyzer
-    from jobseeker.llm_config import LLMConfig, LLMProvider
+    from jobseeker.llm_config import LLMConfig, LLMProvider, LLMConfigManager
+    from jobseeker.llm_auto_switcher import LLMAutoSwitcher
     from jobseeker.intelligent_decision_engine import DecisionResult, ProcessingStrategy, PlatformSelectionMode
     from jobseeker.test_case_generator import TestCaseGenerator
 except ImportError as e:
@@ -77,59 +82,74 @@ os.makedirs(project_root / 'web_app' / 'db', exist_ok=True)
 # 全域變數儲存搜尋結果
 search_results_cache = {}
 
-# 初始化LLM意圖分析器 - 支持多個提供商
+# 初始化LLM意圖分析器 - 支持自動切換
 try:
+    print("🤖 正在初始化LLM意圖分析器 (自動切換模式)...")
+    
+    # 檢查環境變數
+    openai_api_key = os.getenv('OPENAI_API_KEY')
+    anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
+    google_api_key = os.getenv('GOOGLE_API_KEY')
+    
+    print(f"環境變數檢查:")
+    print(f"  OPENAI_API_KEY: {'✅ 已設置' if openai_api_key else '❌ 未設置'}")
+    print(f"  ANTHROPIC_API_KEY: {'✅ 已設置' if anthropic_api_key else '❌ 未設置'}")
+    print(f"  GOOGLE_API_KEY: {'✅ 已設置' if google_api_key else '❌ 未設置'}")
+    
     if LLMProvider and LLMConfig:
-        openai_api_key = os.getenv('OPENAI_API_KEY')
-        anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
-        
         llm_config = None
         
-        # 優先使用Anthropic（更穩定）
-        if anthropic_api_key:
-            print("🤖 正在初始化LLM意圖分析器 (Anthropic模式)...")
-            try:
-                from jobseeker.llm_intent_analyzer import LLMProvider as IntentLLMProvider
-                llm_intent_analyzer = LLMIntentAnalyzer(
-                    provider=IntentLLMProvider.ANTHROPIC_CLAUDE,
-                    api_key=anthropic_api_key,
-                    fallback_to_basic=True
-                )
-                print("✅ LLM意圖分析器初始化成功 (Anthropic模式)")
-                llm_config = True  # 標記成功
-            except Exception as e:
-                print(f"⚠️  Anthropic LLM初始化失敗: {e}")
-                llm_config = None
+        try:
+            from jobseeker.llm_intent_analyzer import LLMProvider as IntentLLMProvider
+            
+            # 使用自動切換模式初始化
+            llm_intent_analyzer = LLMIntentAnalyzer(
+                provider=IntentLLMProvider.OPENAI_GPT35,  # 預設提供商
+                api_key=None,  # 讓系統自動從環境變數讀取
+                fallback_to_basic=True,
+                cache_enabled=True,
+                enable_auto_switch=True  # 啟用自動切換
+            )
+            
+            # 檢查LLM系統狀態
+            llm_status = llm_intent_analyzer.get_llm_status()
+            print(f"✅ LLM意圖分析器初始化成功 (自動切換模式)")
+            print(f"   自動切換: {'啟用' if llm_status.get('auto_switch_enabled') else '禁用'}")
+            print(f"   可用提供商: {llm_intent_analyzer.get_available_providers()}")
+            
+            llm_config = True  # 標記成功
+            
+        except Exception as e:
+            print(f"⚠️  LLM自動切換初始化失敗: {e}")
+            print("💡 提示: 請檢查環境變數設置或網路連接")
+            llm_config = None
         
-        # 備用OpenAI
-        if not llm_config and openai_api_key:
-            print("🤖 正在初始化LLM意圖分析器 (OpenAI模式)...")
+        # 如果自動切換初始化失敗，嘗試基本模式
+        if not llm_config:
+            print("🔄 嘗試基本模式初始化...")
             try:
-                from jobseeker.llm_intent_analyzer import LLMProvider as IntentLLMProvider
                 llm_intent_analyzer = LLMIntentAnalyzer(
                     provider=IntentLLMProvider.OPENAI_GPT35,
-                    api_key=openai_api_key,
-                    fallback_to_basic=True
+                    api_key=None,
+                    fallback_to_basic=True,
+                    cache_enabled=True,
+                    enable_auto_switch=False  # 禁用自動切換
                 )
-                print("✅ LLM意圖分析器初始化成功 (OpenAI模式)")
-                llm_config = True  # 標記成功
+                print("✅ LLM意圖分析器初始化成功 (基本模式)")
+                llm_config = True
             except Exception as e:
-                print(f"⚠️  OpenAI LLM初始化失敗: {e}")
-                llm_config = None
-        
-        # 如果沒有可用的API密鑰，使用模擬模式
-        if not llm_config:
-            print("⚠️  未檢測到可用的API密鑰，使用模擬模式")
-            print("💡 提示: 設置OPENAI_API_KEY或ANTHROPIC_API_KEY環境變量以啟用真實LLM分析")
-            llm_intent_analyzer = LLMIntentAnalyzer()
+                print(f"⚠️  基本模式初始化也失敗: {e}")
+                llm_intent_analyzer = None
     else:
-        print("⚠️  LLM配置類未可用，使用基本意圖分析器")
-        llm_intent_analyzer = LLMIntentAnalyzer()
+        print("⚠️  LLM配置類未可用，將在運行時使用基本意圖分析器")
+        llm_intent_analyzer = None
 except ImportError as e:
     print(f"⚠️  LLM意圖分析器導入失敗: {e}")
-    print("使用基本意圖分析器")
-    # 移除模擬LLM相關邏輯，當LLM服務不可用時將在搜索時提示用戶
-llm_intent_analyzer = None
+    print("將在運行時使用基本意圖分析器")
+    llm_intent_analyzer = None
+except Exception as e:
+    print(f"⚠️  LLM系統初始化過程中發生未預期錯誤: {e}")
+    llm_intent_analyzer = None
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -1766,6 +1786,104 @@ def get_etl_status():
         return jsonify({
             'success': False,
             'error': f'獲取ETL狀態失敗: {str(e)}'
+        }), 500
+
+
+@app.route('/api/llm-status', methods=['GET'])
+def get_llm_status():
+    """
+    獲取LLM系統狀態
+    """
+    try:
+        if llm_intent_analyzer:
+            status = llm_intent_analyzer.get_llm_status()
+            return jsonify({
+                'success': True,
+                'status': status
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'LLM意圖分析器未初始化',
+                'status': {
+                    'auto_switch_enabled': False,
+                    'current_provider': None,
+                    'client_available': False,
+                    'total_calls': 0,
+                    'total_errors': 0
+                }
+            })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'獲取LLM狀態失敗: {str(e)}'
+        }), 500
+
+
+@app.route('/api/llm-switch', methods=['POST'])
+def switch_llm_provider():
+    """
+    手動切換LLM提供商
+    """
+    try:
+        data = request.get_json()
+        provider = data.get('provider')
+        
+        if not provider:
+            return jsonify({
+                'success': False,
+                'error': '請提供提供商名稱'
+            }), 400
+        
+        if llm_intent_analyzer:
+            success = llm_intent_analyzer.switch_provider(provider)
+            if success:
+                return jsonify({
+                    'success': True,
+                    'message': f'成功切換到 {provider}',
+                    'current_provider': provider
+                })
+            else:
+                return jsonify({
+                    'success': False,
+                    'error': f'切換到 {provider} 失敗'
+                }), 400
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'LLM意圖分析器未初始化'
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'切換LLM提供商失敗: {str(e)}'
+        }), 500
+
+
+@app.route('/api/llm-providers', methods=['GET'])
+def get_available_providers():
+    """
+    獲取可用的LLM提供商列表
+    """
+    try:
+        if llm_intent_analyzer:
+            providers = llm_intent_analyzer.get_available_providers()
+            return jsonify({
+                'success': True,
+                'providers': providers
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'LLM意圖分析器未初始化',
+                'providers': []
+            })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'獲取可用提供商失敗: {str(e)}',
+            'providers': []
         }), 500
 
 
