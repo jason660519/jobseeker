@@ -1649,7 +1649,7 @@ Respond with ONLY the English query, no explanations or additional text. The out
                     english_query = response.content.strip()
                     
                     # 驗證輸出是否為純英文
-                     if _is_pure_english(english_query):
+                    if _is_pure_english(english_query):
                         # 創建測試案例
                         test_case = {
                             'id': f'llm_en_{category}_{complexity}_{i+1}',
