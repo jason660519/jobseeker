@@ -1,0 +1,29 @@
+{
+  "total_cases": 100,
+  "category_distribution": {
+    "job_search": 31,
+    "skill_query": 18,
+    "location_search": 14,
+    "salary_inquiry": 13,
+    "career_advice": 5,
+    "company_info": 3,
+    "interview_prep": 6,
+    "resume_help": 6,
+    "general_chat": 2,
+    "edge_case": 2
+  },
+  "complexity_distribution": {
+    "simple": 30,
+    "moderate": 48,
+    "complex": 19,
+    "extreme": 3
+  },
+  "language_distribution": {
+    "zh-TW": 56,
+    "zh-CN": 7,
+    "en-US": 34,
+    "ja-JP": 3,
+    "ko-KR": 0
+  },
+  "generation_time": "2025-09-05T10:31:19.148646"
+}

@@ -1898,6 +1898,23 @@
                       </div>
                     </a>
                   </li>
+                  <li>
+                    <a
+                      href="{{ url_for('test_case_generator') }}"
+                      class="{% if request.endpoint == 'test_case_generator' %}active{% endif %}"
+                    >
+                      <div class="nav-icon">
+                        <i class="fas fa-flask"></i>
+                      </div>
+                      <div class="nav-content">
+                        <span class="nav-text">測試案例生成器</span>
+                        <small class="nav-desc">生成LLM測試案例</small>
+                      </div>
+                      <div class="nav-badge">
+                        <span class="badge bg-success">AI</span>
+                      </div>
+                    </a>
+                  </li>
                 </ul>
               </div>
 

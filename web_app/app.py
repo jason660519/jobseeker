@@ -47,6 +47,7 @@ try:
     from jobseeker.llm_intent_analyzer import LLMIntentAnalyzer
     from jobseeker.llm_config import LLMConfig, LLMProvider
     from jobseeker.intelligent_decision_engine import DecisionResult, ProcessingStrategy, PlatformSelectionMode
+    from jobseeker.test_case_generator import TestCaseGenerator
 except ImportError as e:
     print(f"警告: 無法導入 jobseeker 模組: {e}")
     print("請確保已正確安裝 jobseeker 套件")
@@ -1170,6 +1171,244 @@ def search_results():
     resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     resp.headers['Pragma'] = 'no-cache'
     return resp
+
+
+@app.route('/test-case-generator')
+def test_case_generator():
+    """
+    測試案例生成器頁面
+    提供快速生成多樣化LLM測試案例的功能
+    """
+    return render_template('test_case_generator.html')
+
+
+@app.route('/api/generate-test-cases', methods=['POST'])
+def api_generate_test_cases():
+    """
+    API端點：生成測試案例
+    """
+    try:
+        data = request.get_json()
+        
+        # 獲取參數 - 支援複選模式
+        generation_modes = data.get('generation_modes', ['balanced'])  # 改為複數形式
+        if isinstance(generation_modes, str):  # 向後兼容單選
+            generation_modes = [generation_modes]
+        
+        num_cases = data.get('num_cases', 50)
+        languages = data.get('languages', ['zh-TW'])
+        complexity_distribution = data.get('complexity_distribution', {
+            'simple': 0.3,
+            'medium': 0.5,
+            'complex': 0.2
+        })
+        
+        # 創建測試案例生成器
+        from jobseeker.test_case_generator import TestCaseGenerator, GenerationConfig
+        generator = TestCaseGenerator()
+        
+        # 根據選中的模式創建配置
+        config = GenerationConfig(
+            total_cases=num_cases,
+            complexity_distribution=complexity_distribution
+        )
+        
+        # 根據選中的模式調整類別權重
+        category_weights = {}
+        
+        if 'balanced' in generation_modes:
+            category_weights.update({
+                "job_search": 0.25,
+                "skill_query": 0.15,
+                "location_based": 0.15,
+                "salary_inquiry": 0.1,
+                "career_advice": 0.1,
+                "company_info": 0.1,
+                "edge_cases": 0.05,
+                "multilingual": 0.05,
+                "ambiguous": 0.03,
+                "complex_query": 0.02
+            })
+        
+        if 'job_focused' in generation_modes:
+            category_weights.update({
+                "job_search": category_weights.get("job_search", 0) + 0.4,
+                "skill_query": category_weights.get("skill_query", 0) + 0.2,
+                "location_based": category_weights.get("location_based", 0) + 0.15,
+                "salary_inquiry": category_weights.get("salary_inquiry", 0) + 0.15,
+                "career_advice": category_weights.get("career_advice", 0) + 0.1
+            })
+        
+        if 'skill_focused' in generation_modes:
+            category_weights.update({
+                "skill_query": category_weights.get("skill_query", 0) + 0.4,
+                "job_search": category_weights.get("job_search", 0) + 0.3,
+                "career_advice": category_weights.get("career_advice", 0) + 0.2,
+                "company_info": category_weights.get("company_info", 0) + 0.1
+            })
+        
+        if 'multilingual' in generation_modes:
+            category_weights.update({
+                "multilingual": category_weights.get("multilingual", 0) + 0.4,
+                "job_search": category_weights.get("job_search", 0) + 0.3,
+                "skill_query": category_weights.get("skill_query", 0) + 0.3
+            })
+        
+        if 'edge_cases' in generation_modes:
+            category_weights.update({
+                "edge_cases": category_weights.get("edge_cases", 0) + 0.4,
+                "ambiguous": category_weights.get("ambiguous", 0) + 0.3,
+                "complex_query": category_weights.get("complex_query", 0) + 0.3
+            })
+        
+        # 正規化權重
+        total_weight = sum(category_weights.values())
+        if total_weight > 0:
+            category_weights = {k: v / total_weight for k, v in category_weights.items()}
+            config.category_weights = category_weights
+        
+        # 設置語言分佈
+        if languages:
+            language_dist = {}
+            weight_per_lang = 1.0 / len(languages)
+            for lang in languages:
+                language_dist[lang.lower().replace('-', '_')] = weight_per_lang
+            config.language_distribution = language_dist
+        
+        # 生成測試案例
+        test_cases = generator.generate_test_cases(config)
+        
+        # 轉換為可序列化的格式
+        cases_data = []
+        for case in test_cases:
+            cases_data.append({
+                'id': case.id,
+                'query': case.query,
+                'category': case.category,
+                'complexity': case.complexity,
+                'language': case.language,
+                'expected_intent': case.expected_intent,
+                'expected_entities': case.expected_entities,
+                'metadata': case.metadata
+            })
+        
+        # 生成統計資訊
+        stats = {
+            'total_generated': len(test_cases),
+            'category_distribution': {},
+            'complexity_distribution': {},
+            'language_distribution': {}
+        }
+        
+        # 計算分佈統計
+        for case in test_cases:
+            # 類別分佈
+            category = case.category
+            stats['category_distribution'][category] = stats['category_distribution'].get(category, 0) + 1
+            
+            # 複雜度分佈
+            complexity = case.complexity
+            stats['complexity_distribution'][complexity] = stats['complexity_distribution'].get(complexity, 0) + 1
+            
+            # 語言分佈
+            language = case.language
+            stats['language_distribution'][language] = stats['language_distribution'].get(language, 0) + 1
+        
+        return jsonify({
+            'success': True,
+            'test_cases': cases_data,
+            'statistics': stats
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/export-test-cases', methods=['POST'])
+def api_export_test_cases():
+    """
+    API端點：導出測試案例
+    """
+    try:
+        data = request.get_json()
+        test_cases_data = data.get('test_cases', [])
+        export_format = data.get('format', 'json')
+        
+        if not test_cases_data:
+            return jsonify({
+                'success': False,
+                'error': '沒有測試案例可導出'
+            }), 400
+        
+        # 創建臨時文件
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        if export_format == 'json':
+            filename = f'test_cases_{timestamp}.json'
+            filepath = app.config['UPLOAD_FOLDER'] / filename
+            
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(test_cases_data, f, ensure_ascii=False, indent=2)
+                
+        elif export_format == 'csv':
+            filename = f'test_cases_{timestamp}.csv'
+            filepath = app.config['UPLOAD_FOLDER'] / filename
+            
+            # 轉換為DataFrame並導出CSV
+            df_data = []
+            for case in test_cases_data:
+                df_data.append({
+                    'ID': case['id'],
+                    '查詢': case['query'],
+                    '類別': case['category'],
+                    '複雜度': case['complexity'],
+                    '語言': case['language'],
+                    '預期意圖': case['expected_intent'],
+                    '預期實體': json.dumps(case['expected_entities'], ensure_ascii=False),
+                    '元數據': json.dumps(case['metadata'], ensure_ascii=False)
+                })
+            
+            df = pd.DataFrame(df_data)
+            df.to_csv(filepath, index=False, encoding='utf-8-sig')
+        
+        else:
+            return jsonify({
+                'success': False,
+                'error': '不支援的導出格式'
+            }), 400
+        
+        return jsonify({
+            'success': True,
+            'download_url': f'/download-test-cases/{filename}'
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/download-test-cases/<filename>')
+def download_test_cases(filename):
+    """
+    下載測試案例文件
+    """
+    try:
+        filepath = app.config['UPLOAD_FOLDER'] / filename
+        if not filepath.exists():
+            return jsonify({'error': '文件不存在'}), 404
+            
+        return send_file(
+            filepath,
+            as_attachment=True,
+            download_name=filename
+        )
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 # 註冊增強版 API Blueprint

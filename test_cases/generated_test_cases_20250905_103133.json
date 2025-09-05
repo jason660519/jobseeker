@@ -1,0 +1,2069 @@
+{
+  "metadata": {
+    "total_cases": 100,
+    "generation_time": "2025-09-05T10:31:33.985247",
+    "generator_version": "1.0.0"
+  },
+  "statistics": {
+    "total_cases": 100,
+    "category_distribution": {
+      "job_search": 31,
+      "skill_query": 18,
+      "location_search": 14,
+      "salary_inquiry": 13,
+      "career_advice": 5,
+      "company_info": 3,
+      "interview_prep": 6,
+      "resume_help": 6,
+      "general_chat": 2,
+      "edge_case": 2
+    },
+    "complexity_distribution": {
+      "simple": 30,
+      "moderate": 48,
+      "complex": 19,
+      "extreme": 3
+    },
+    "language_distribution": {
+      "zh-TW": 56,
+      "zh-CN": 7,
+      "en-US": 34,
+      "ja-JP": 3,
+      "ko-KR": 0
+    },
+    "generation_time": "2025-09-05T10:31:19.148646"
+  },
+  "test_cases": [
+    {
+      "test_id": "3a4ac862-4315-4ed0-bce1-89aba9c14045",
+      "query": "我已經失業一年了，履歷空白期怎麼解釋",
+      "category": "edge_case",
+      "complexity": "complex",
+      "language": "en-US",
+      "expected_intent": "edge_case_handling_complex",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "我已經失業一年了，履歷空白期怎麼解釋",
+        "generated_at": "2025-09-05T10:31:19.145039"
+      },
+      "created_at": "2025-09-05T10:31:19.145042"
+    },
+    {
+      "test_id": "8f14522a-d535-48cb-a985-3a9eebf4718f",
+      "query": "關於career_advice的複雜問題",
+      "category": "career_advice",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "career_advice_complex",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於career_advice的複雜問題",
+        "generated_at": "2025-09-05T10:31:19.143386"
+      },
+      "created_at": "2025-09-05T10:31:19.143397"
+    },
+    {
+      "test_id": "c7a0440a-231c-4779-92d1-ad9f74f4167d",
+      "query": "GCP怎麼學",
+      "category": "skill_query",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "GCP"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "4aa545a2-3989-4e3d-953f-febbfd65115f",
+        "generated_at": "2025-09-05T10:31:19.148484"
+      },
+      "created_at": "2025-09-05T10:31:19.148487"
+    },
+    {
+      "test_id": "40df6dbc-239c-462d-9727-9a9449c5b855",
+      "query": "我想在基隆、信義區中選一個地方發展數位行銷專員職涯，請比較各地的機會和生活品質",
+      "category": "location_search",
+      "complexity": "complex",
+      "language": "ja-JP",
+      "expected_intent": "location_search_complex",
+      "expected_entities": {
+        "job_title": [
+          "行銷專員",
+          "數位行銷專員"
+        ],
+        "location": [
+          "基隆",
+          "信義區"
+        ],
+        "major": [
+          "行銷"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我想在{location_list}中選一個地方發展{job_title}職涯，請比較各地的機會和生活品質",
+        "generated_at": "2025-09-05T10:31:19.142297"
+      },
+      "created_at": "2025-09-05T10:31:19.142301"
+    },
+    {
+      "test_id": "5db5bb95-eaaf-45a5-bade-201f8df1eb39",
+      "query": "關於company_info的簡單問題",
+      "category": "company_info",
+      "complexity": "simple",
+      "language": "zh-CN",
+      "expected_intent": "company_inquiry",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於company_info的簡單問題",
+        "generated_at": "2025-09-05T10:31:19.143927"
+      },
+      "created_at": "2025-09-05T10:31:19.143930"
+    },
+    {
+      "test_id": "39a21437-6a76-4599-b396-8ca97f0cf674",
+      "query": "我salary合理?",
+      "category": "salary_inquiry",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "salary_inquiry",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "我的薪水合理嗎",
+        "generated_at": "2025-09-05T10:31:19.142788"
+      },
+      "created_at": "2025-09-05T10:31:19.142791"
+    },
+    {
+      "test_id": "d560a235-535c-45ed-8aa7-e7488216188f",
+      "query": "關於resume_help的簡單問題",
+      "category": "resume_help",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "resume_assistance",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "variant_of": "1d9509aa-09cd-4773-8e11-00326a3f4944",
+        "generated_at": "2025-09-05T10:31:19.148366"
+      },
+      "created_at": "2025-09-05T10:31:19.148369"
+    },
+    {
+      "test_id": "f3dfa723-d00b-4318-942e-1bf3434e3411",
+      "query": "關於interview_prep的複雜問題",
+      "category": "interview_prep",
+      "complexity": "complex",
+      "language": "zh-CN",
+      "expected_intent": "interview_help_complex",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於interview_prep的複雜問題",
+        "generated_at": "2025-09-05T10:31:19.144170"
+      },
+      "created_at": "2025-09-05T10:31:19.144174"
+    },
+    {
+      "test_id": "514a3697-7273-47ad-8b33-36fefa04b63d",
+      "query": "學Ansible對QA工程師有幫助嗎",
+      "category": "skill_query",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "job_title": [
+          "QA工程師"
+        ],
+        "skill": [
+          "Ansible"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "c6858aee-55af-4164-ab24-c0327921ac46",
+        "generated_at": "2025-09-05T10:31:19.148056"
+      },
+      "created_at": "2025-09-05T10:31:19.148062"
+    },
+    {
+      "test_id": "d5bcb24c-6f63-49fb-a160-af0c161a6920",
+      "query": "關於resume_help中等問題",
+      "category": "resume_help",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "resume_assistance",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於resume_help的中等問題",
+        "generated_at": "2025-09-05T10:31:19.144562"
+      },
+      "created_at": "2025-09-05T10:31:19.144565"
+    },
+    {
+      "test_id": "7bde855e-e9e3-4358-afd6-372042941f8e",
+      "query": "桃園Are there anyjob?",
+      "category": "location_search",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "location_search",
+      "expected_entities": {
+        "location": [
+          "桃園"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{location}有工作嗎",
+        "generated_at": "2025-09-05T10:31:19.142163"
+      },
+      "created_at": "2025-09-05T10:31:19.142168"
+    },
+    {
+      "test_id": "75e27118-df22-44eb-aa02-3c9ac10c46f7",
+      "query": "幫我搜尋資料科學家工作",
+      "category": "job_search",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "資料科學家"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "幫我搜尋{job_title}工作",
+        "generated_at": "2025-09-05T10:31:19.139662"
+      },
+      "created_at": "2025-09-05T10:31:19.139669"
+    },
+    {
+      "test_id": "9a989986-0f03-4f32-a0db-8207f7dff74a",
+      "query": "關於interview_prep的複雜問題",
+      "category": "interview_prep",
+      "complexity": "complex",
+      "language": "zh-CN",
+      "expected_intent": "interview_help_complex",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "variant_of": "f3dfa723-d00b-4318-942e-1bf3434e3411",
+        "generated_at": "2025-09-05T10:31:19.148199"
+      },
+      "created_at": "2025-09-05T10:31:19.148202"
+    },
+    {
+      "test_id": "321e2c6c-b32c-4d54-88aa-7b0cf85d47bc",
+      "query": "尋找派遣的後端工程師職位，地點在深圳",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "後端工程師"
+        ],
+        "location": [
+          "深圳"
+        ],
+        "work_type": [
+          "派遣"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "尋找{work_type}的{job_title}職位，地點在{location}",
+        "generated_at": "2025-09-05T10:31:19.140043"
+      },
+      "created_at": "2025-09-05T10:31:19.140047"
+    },
+    {
+      "test_id": "609c69ee-08ae-4505-821a-2337feca9718",
+      "query": "我想在新北找UI/UX設計師的工作，薪水要40-50K",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "設計師",
+          "UI/UX設計師"
+        ],
+        "location": [
+          "新北"
+        ],
+        "salary_range": [
+          "40-50K"
+        ],
+        "major": [
+          "設計"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我想在{location}找{job_title}的工作，薪水要{salary_range}",
+        "generated_at": "2025-09-05T10:31:19.140486"
+      },
+      "created_at": "2025-09-05T10:31:19.140490"
+    },
+    {
+      "test_id": "48a2fc4e-66fa-4eae-9bf1-9348ab93382b",
+      "query": "製造業的數位行銷專員薪資範圍",
+      "category": "salary_inquiry",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry",
+      "expected_entities": {
+        "job_title": [
+          "行銷專員",
+          "數位行銷專員"
+        ],
+        "company_type": [
+          "製造業"
+        ],
+        "industry": [
+          "製造業"
+        ],
+        "major": [
+          "行銷"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{company_type}的{job_title}薪資範圍",
+        "generated_at": "2025-09-05T10:31:19.143181"
+      },
+      "created_at": "2025-09-05T10:31:19.143184"
+    },
+    {
+      "test_id": "3224b5fe-7268-4ed9-91d0-57043c9e8c51",
+      "query": "學Flask要多久",
+      "category": "skill_query",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "Flask"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "1376cc5b-da3a-4d93-b408-4fca8ea7c3a7",
+        "generated_at": "2025-09-05T10:31:19.148277"
+      },
+      "created_at": "2025-09-05T10:31:19.148281"
+    },
+    {
+      "test_id": "ba2ff90f-e2bd-438c-bd8a-007e435d89f4",
+      "query": "尋找顧問的人資專員職位，地點在香港",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "人資專員"
+        ],
+        "location": [
+          "香港"
+        ],
+        "work_type": [
+          "顧問"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "尋找{work_type}的{job_title}職位，地點在{location}",
+        "generated_at": "2025-09-05T10:31:19.140523"
+      },
+      "created_at": "2025-09-05T10:31:19.140526"
+    },
+    {
+      "test_id": "1b2c4452-48f6-4e3f-8d69-f19aa3a25afe",
+      "query": "關於interview_prep簡單問題",
+      "category": "interview_prep",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "interview_help",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於interview_prep的簡單問題",
+        "generated_at": "2025-09-05T10:31:19.144131"
+      },
+      "created_at": "2025-09-05T10:31:19.144136"
+    },
+    {
+      "test_id": "594b2c93-3fe0-4585-9e52-6ee7b7aef407",
+      "query": "高雄Are there anyjob?",
+      "category": "location_search",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "location_search",
+      "expected_entities": {
+        "location": [
+          "高雄"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{location}有工作嗎",
+        "generated_at": "2025-09-05T10:31:19.142614"
+      },
+      "created_at": "2025-09-05T10:31:19.142618"
+    },
+    {
+      "test_id": "4d37768e-7cb0-43d0-9eb3-03333b52eb09",
+      "query": "關於interview_prep的中等問題",
+      "category": "interview_prep",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "interview_help",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於interview_prep的中等問題",
+        "generated_at": "2025-09-05T10:31:19.144231"
+      },
+      "created_at": "2025-09-05T10:31:19.144234"
+    },
+    {
+      "test_id": "7fb459b1-7204-40f4-a8f5-f0fd608dab04",
+      "query": "I want to findjob但不知道做什麼",
+      "category": "edge_case",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "edge_case_handling",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "我想找工作但不知道做什麼",
+        "generated_at": "2025-09-05T10:31:19.145001"
+      },
+      "created_at": "2025-09-05T10:31:19.145006"
+    },
+    {
+      "test_id": "9a66d564-c04d-4687-83a0-08eeceb53431",
+      "query": "關於career_advice複雜問題",
+      "category": "career_advice",
+      "complexity": "complex",
+      "language": "en-US",
+      "expected_intent": "career_advice_complex",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於career_advice的複雜問題",
+        "generated_at": "2025-09-05T10:31:19.143435"
+      },
+      "created_at": "2025-09-05T10:31:19.143439"
+    },
+    {
+      "test_id": "6111a6ec-8b69-435f-a35e-30395c93fee3",
+      "query": "我要應徵財務分析師",
+      "category": "job_search",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "財務分析師"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我要應徵{job_title}",
+        "generated_at": "2025-09-05T10:31:19.140768"
+      },
+      "created_at": "2025-09-05T10:31:19.140772"
+    },
+    {
+      "test_id": "10663c0a-1d9a-4e4a-bf76-a3ad84eacbd1",
+      "query": "Vue.js是什麼",
+      "category": "skill_query",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "Vue.js"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{skill}是什麼",
+        "generated_at": "2025-09-05T10:31:19.141990"
+      },
+      "created_at": "2025-09-05T10:31:19.141993"
+    },
+    {
+      "test_id": "d35d82e6-b59b-4d5f-9ad7-3450d7085b06",
+      "query": "比較location1和location2的產品經理薪資差異，考慮生活成本",
+      "category": "salary_inquiry",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry_complex",
+      "expected_entities": {
+        "job_title": [
+          "產品經理"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "比較{location1}和{location2}的{job_title}薪資差異，考慮生活成本",
+        "generated_at": "2025-09-05T10:31:19.142967"
+      },
+      "created_at": "2025-09-05T10:31:19.142970"
+    },
+    {
+      "test_id": "e050f43a-77f0-47b4-a7ef-135f1c9db6ec",
+      "query": "分析房地產業中DevOps工程師薪資成長趨勢",
+      "category": "salary_inquiry",
+      "complexity": "complex",
+      "language": "en-US",
+      "expected_intent": "salary_inquiry_complex",
+      "expected_entities": {
+        "job_title": [
+          "DevOps工程師"
+        ],
+        "industry": [
+          "房地產業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "分析{industry}中{job_title}的薪資成長趨勢",
+        "generated_at": "2025-09-05T10:31:19.142833"
+      },
+      "created_at": "2025-09-05T10:31:19.142837"
+    },
+    {
+      "test_id": "68dc88a0-fb23-4d51-93a9-fb058a104fc3",
+      "query": "在能源業工作，Terraform、Docker、領導能力、Java這些技能的重要性排序是什麼",
+      "category": "skill_query",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry_complex",
+      "expected_entities": {
+        "skill": [
+          "Java",
+          "Docker",
+          "Terraform",
+          "領導能力"
+        ],
+        "industry": [
+          "能源業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "在{industry}工作，{skill_list}這些技能的重要性排序是什麼",
+        "generated_at": "2025-09-05T10:31:19.141816"
+      },
+      "created_at": "2025-09-05T10:31:19.141820"
+    },
+    {
+      "test_id": "0d2cf2dc-21c1-4d1d-bc52-5d242573ffb0",
+      "query": "有沒有中小企業公司的後端工程師職缺",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "後端工程師"
+        ],
+        "company_type": [
+          "中小企業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "b576bf9b-cc34-4963-a824-c18b2f57387f",
+        "generated_at": "2025-09-05T10:31:19.148132"
+      },
+      "created_at": "2025-09-05T10:31:19.148135"
+    },
+    {
+      "test_id": "224b05a0-537d-4254-8bbb-bfa1d095b7db",
+      "query": "比較location1和location2的翻譯員薪資差異，考慮生活成本",
+      "category": "salary_inquiry",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry_complex",
+      "expected_entities": {
+        "job_title": [
+          "翻譯員"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "比較{location1}和{location2}的{job_title}薪資差異，考慮生活成本",
+        "generated_at": "2025-09-05T10:31:19.142926"
+      },
+      "created_at": "2025-09-05T10:31:19.142930"
+    },
+    {
+      "test_id": "d6b10efa-78b5-46a8-b92a-1d213f374160",
+      "query": "媒體業的產品經理薪資範圍",
+      "category": "salary_inquiry",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry",
+      "expected_entities": {
+        "job_title": [
+          "產品經理"
+        ],
+        "company_type": [
+          "媒體業"
+        ],
+        "industry": [
+          "媒體業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{company_type}的{job_title}薪資範圍",
+        "generated_at": "2025-09-05T10:31:19.143107"
+      },
+      "created_at": "2025-09-05T10:31:19.143110"
+    },
+    {
+      "test_id": "6812fee7-2352-4f8e-925c-591b734e6bcb",
+      "query": "關於general_chat的中等問題",
+      "category": "general_chat",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "general_conversation",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於general_chat的中等問題",
+        "generated_at": "2025-09-05T10:31:19.144788"
+      },
+      "created_at": "2025-09-05T10:31:19.144794"
+    },
+    {
+      "test_id": "78df1355-c463-487c-a6f1-3d8f743e2af3",
+      "query": "考慮薪資、生活成本、發展機會，location1和location2哪個更適合後端工程師",
+      "category": "location_search",
+      "complexity": "complex",
+      "language": "en-US",
+      "expected_intent": "location_search_complex",
+      "expected_entities": {
+        "job_title": [
+          "後端工程師"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "考慮薪資、生活成本、發展機會，{location1}和{location2}哪個更適合{job_title}",
+        "generated_at": "2025-09-05T10:31:19.142436"
+      },
+      "created_at": "2025-09-05T10:31:19.142441"
+    },
+    {
+      "test_id": "b8fb12b5-9886-4815-a9d2-1bb02f69880c",
+      "query": "我想轉職到財務分析師，需要什麼條件",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "財務分析師"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我想轉職到{job_title}，需要什麼條件",
+        "generated_at": "2025-09-05T10:31:19.139716"
+      },
+      "created_at": "2025-09-05T10:31:19.139721"
+    },
+    {
+      "test_id": "45d51b95-308e-4a28-843d-9db4cd7a11b8",
+      "query": "我有Node.js、專案管理、Spring Boot、深度學習技能，5-8年年經驗，在內湖區做專案經理應該拿多少薪水",
+      "category": "salary_inquiry",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry_complex",
+      "expected_entities": {
+        "job_title": [
+          "專案經理"
+        ],
+        "location": [
+          "內湖區"
+        ],
+        "skill": [
+          "Node.js",
+          "Spring Boot",
+          "深度學習",
+          "專案管理"
+        ],
+        "experience_years": [
+          "5-8年"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我有{skill_list}技能，{experience_years}年經驗，在{location}做{job_title}應該拿多少薪水",
+        "generated_at": "2025-09-05T10:31:19.142887"
+      },
+      "created_at": "2025-09-05T10:31:19.142891"
+    },
+    {
+      "test_id": "ec61f92a-58b3-4be1-aff1-b95e9b989722",
+      "query": "有沒有中小企業公司的後端工程師職缺",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "後端工程師"
+        ],
+        "company_type": [
+          "中小企業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "b576bf9b-cc34-4963-a824-c18b2f57387f",
+        "generated_at": "2025-09-05T10:31:19.148397"
+      },
+      "created_at": "2025-09-05T10:31:19.148400"
+    },
+    {
+      "test_id": "9b27e53c-8bcb-43dd-b00c-16ef65d69a02",
+      "query": "新加坡有工作嗎",
+      "category": "location_search",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "location_search",
+      "expected_entities": {
+        "location": [
+          "新加坡"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{location}有工作嗎",
+        "generated_at": "2025-09-05T10:31:19.142506"
+      },
+      "created_at": "2025-09-05T10:31:19.142510"
+    },
+    {
+      "test_id": "aba45576-a8e4-489a-add2-d8559fbe9bd3",
+      "query": "新加坡薪水水平",
+      "category": "salary_inquiry",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry",
+      "expected_entities": {
+        "location": [
+          "新加坡"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{location}薪水水平",
+        "generated_at": "2025-09-05T10:31:19.143072"
+      },
+      "created_at": "2025-09-05T10:31:19.143075"
+    },
+    {
+      "test_id": "1d9509aa-09cd-4773-8e11-00326a3f4944",
+      "query": "關於resume_help的簡單問題",
+      "category": "resume_help",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "resume_assistance",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於resume_help的簡單問題",
+        "generated_at": "2025-09-05T10:31:19.144621"
+      },
+      "created_at": "2025-09-05T10:31:19.144624"
+    },
+    {
+      "test_id": "c1c1a283-facf-4315-b2a5-c66f28334b38",
+      "query": "關於career_advice中等問題",
+      "category": "career_advice",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "career_advice",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於career_advice的中等問題",
+        "generated_at": "2025-09-05T10:31:19.143532"
+      },
+      "created_at": "2025-09-05T10:31:19.143535"
+    },
+    {
+      "test_id": "56aa8e5f-5dd9-4f2d-aa2c-612a1fb3e0ad",
+      "query": "我想轉職到行銷專員，需要什麼條件",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "行銷專員"
+        ],
+        "major": [
+          "行銷"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "f4a3e4ca-6af5-45df-80a0-513c5e227fd3",
+        "generated_at": "2025-09-05T10:31:19.148005"
+      },
+      "created_at": "2025-09-05T10:31:19.148015"
+    },
+    {
+      "test_id": "a12d3c57-5319-4133-90fd-aaef451780ad",
+      "query": "我想在花蓮找翻譯員job，salary要依experience調整",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "翻譯員"
+        ],
+        "location": [
+          "花蓮"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我想在{location}找{job_title}的工作，薪水要{salary_range}",
+        "generated_at": "2025-09-05T10:31:19.140338"
+      },
+      "created_at": "2025-09-05T10:31:19.140342"
+    },
+    {
+      "test_id": "f6192cc6-61d3-476d-bbbe-ba06b63da276",
+      "query": "有0-1年年經驗的數位行銷專員薪水",
+      "category": "salary_inquiry",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry",
+      "expected_entities": {
+        "job_title": [
+          "行銷專員",
+          "數位行銷專員"
+        ],
+        "experience_years": [
+          "0-1年"
+        ],
+        "major": [
+          "行銷"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "有{experience_years}年經驗的{job_title}薪水",
+        "generated_at": "2025-09-05T10:31:19.143145"
+      },
+      "created_at": "2025-09-05T10:31:19.143149"
+    },
+    {
+      "test_id": "337b13e6-3cd0-481d-93ed-1c1f4a70888a",
+      "query": "關於career_advice的中等問題",
+      "category": "career_advice",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "career_advice",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於career_advice的中等問題",
+        "generated_at": "2025-09-05T10:31:19.143322"
+      },
+      "created_at": "2025-09-05T10:31:19.143327"
+    },
+    {
+      "test_id": "076a1095-fb25-4e66-bb42-2db4bc369981",
+      "query": "政府機關的前端工程師薪資範圍",
+      "category": "salary_inquiry",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry",
+      "expected_entities": {
+        "job_title": [
+          "前端工程師"
+        ],
+        "company_type": [
+          "政府機關"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "6122e730-5e39-45a3-95ce-c5dc6a8d33b1",
+        "generated_at": "2025-09-05T10:31:19.148096"
+      },
+      "created_at": "2025-09-05T10:31:19.148100"
+    },
+    {
+      "test_id": "1901ba41-27b1-4254-99d6-c1ba5c1e3079",
+      "query": "關於company_info中等問題",
+      "category": "company_info",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "company_inquiry",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於company_info的中等問題",
+        "generated_at": "2025-09-05T10:31:19.143763"
+      },
+      "created_at": "2025-09-05T10:31:19.143767"
+    },
+    {
+      "test_id": "676bbec8-484c-45df-be6b-6e1c21193650",
+      "query": "關於career_advice的簡單問題",
+      "category": "career_advice",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "career_advice",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於career_advice的簡單問題",
+        "generated_at": "2025-09-05T10:31:19.143497"
+      },
+      "created_at": "2025-09-05T10:31:19.143500"
+    },
+    {
+      "test_id": "41ecc6c6-280e-4cc1-b267-bdcb7ff2a2c4",
+      "query": "在美國工作的生活成本",
+      "category": "location_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "location_search",
+      "expected_entities": {
+        "location": [
+          "美國"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "在{location}工作的生活成本",
+        "generated_at": "2025-09-05T10:31:19.142538"
+      },
+      "created_at": "2025-09-05T10:31:19.142541"
+    },
+    {
+      "test_id": "e35b1afa-55cf-48d6-957c-90749c8d39d2",
+      "query": "台中資料科學家job多?",
+      "category": "location_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "location_search",
+      "expected_entities": {
+        "job_title": [
+          "資料科學家"
+        ],
+        "location": [
+          "台中"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{location}的{job_title}工作多嗎",
+        "generated_at": "2025-09-05T10:31:19.142577"
+      },
+      "created_at": "2025-09-05T10:31:19.142581"
+    },
+    {
+      "test_id": "77bea0ec-576e-4f22-8f97-a3a4476e392c",
+      "query": "我想轉職到社群媒體經理，需要什麼條件",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "社群媒體經理"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我想轉職到{job_title}，需要什麼條件",
+        "generated_at": "2025-09-05T10:31:19.140233"
+      },
+      "created_at": "2025-09-05T10:31:19.140238"
+    },
+    {
+      "test_id": "98f6e33b-b29a-4903-83e0-9449daf49e17",
+      "query": "在餐飲業job，Python、Ansible、創意思考這些skills重要性排序是什麼",
+      "category": "skill_query",
+      "complexity": "complex",
+      "language": "en-US",
+      "expected_intent": "skill_inquiry_complex",
+      "expected_entities": {
+        "skill": [
+          "Python",
+          "Ansible",
+          "創意思考"
+        ],
+        "industry": [
+          "餐飲業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "在{industry}工作，{skill_list}這些技能的重要性排序是什麼",
+        "generated_at": "2025-09-05T10:31:19.141688"
+      },
+      "created_at": "2025-09-05T10:31:19.141691"
+    },
+    {
+      "test_id": "94979c5a-caab-4c62-999f-cd1eb50ad49e",
+      "query": "關於interview_prep中等問題",
+      "category": "interview_prep",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "interview_help",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於interview_prep的中等問題",
+        "generated_at": "2025-09-05T10:31:19.144330"
+      },
+      "created_at": "2025-09-05T10:31:19.144333"
+    },
+    {
+      "test_id": "0045188c-3285-43e5-a9f9-29ac096f8a59",
+      "query": "我要應徵後端工程師",
+      "category": "job_search",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "後端工程師"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我要應徵{job_title}",
+        "generated_at": "2025-09-05T10:31:19.140625"
+      },
+      "created_at": "2025-09-05T10:31:19.140629"
+    },
+    {
+      "test_id": "5ab1cc41-bf20-4bd9-918b-8655b157de7f",
+      "query": "關於general_chat中等問題",
+      "category": "general_chat",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "general_conversation",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於general_chat的中等問題",
+        "generated_at": "2025-09-05T10:31:19.144866"
+      },
+      "created_at": "2025-09-05T10:31:19.144869"
+    },
+    {
+      "test_id": "de80b71e-f7cd-435d-975b-d21bc1d4a3c5",
+      "query": "我想從current_job轉職到target_job，需要learn哪些skill_categoryskills",
+      "category": "skill_query",
+      "complexity": "complex",
+      "language": "en-US",
+      "expected_intent": "skill_inquiry_complex",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "我想從{current_job}轉職到{target_job}，需要學習哪些{skill_category}技能",
+        "generated_at": "2025-09-05T10:31:19.141862"
+      },
+      "created_at": "2025-09-05T10:31:19.141865"
+    },
+    {
+      "test_id": "99c804be-ed54-44bb-bbf5-12cd79b1f4ca",
+      "query": "我想轉職到數位行銷專員，需要什麼條件",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "行銷專員",
+          "數位行銷專員"
+        ],
+        "major": [
+          "行銷"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我想轉職到{job_title}，需要什麼條件",
+        "generated_at": "2025-09-05T10:31:19.140702"
+      },
+      "created_at": "2025-09-05T10:31:19.140706"
+    },
+    {
+      "test_id": "88d511b3-5afa-4b53-9933-89ac5ba4a90f",
+      "query": "希望找到製造業的人資專員職位，工作地點屏東，薪水60-80K，工作型態遠端工作",
+      "category": "job_search",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "job_search_complex",
+      "expected_entities": {
+        "job_title": [
+          "人資專員"
+        ],
+        "location": [
+          "屏東"
+        ],
+        "company_type": [
+          "製造業"
+        ],
+        "industry": [
+          "製造業"
+        ],
+        "work_type": [
+          "遠端工作"
+        ],
+        "salary_range": [
+          "60-80K"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "希望找到{company_type}的{job_title}職位，工作地點{location}，薪水{salary_range}，工作型態{work_type}",
+        "generated_at": "2025-09-05T10:31:19.139835"
+      },
+      "created_at": "2025-09-05T10:31:19.139840"
+    },
+    {
+      "test_id": "10f1847d-4482-4caa-abc1-1355d94d02c3",
+      "query": "我需要學Photoshop嗎",
+      "category": "skill_query",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "Photoshop"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我需要學{skill}嗎",
+        "generated_at": "2025-09-05T10:31:19.141959"
+      },
+      "created_at": "2025-09-05T10:31:19.141962"
+    },
+    {
+      "test_id": "f4a3e4ca-6af5-45df-80a0-513c5e227fd3",
+      "query": "我想轉職到行銷專員，需要什麼條件",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "行銷專員"
+        ],
+        "major": [
+          "行銷"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我想轉職到{job_title}，需要什麼條件",
+        "generated_at": "2025-09-05T10:31:19.140444"
+      },
+      "created_at": "2025-09-05T10:31:19.140448"
+    },
+    {
+      "test_id": "916cb93b-0a38-46cd-a1cb-0cdb33687998",
+      "query": "在台南工作的生活成本",
+      "category": "location_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "location_search",
+      "expected_entities": {
+        "location": [
+          "台南"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "在{location}工作的生活成本",
+        "generated_at": "2025-09-05T10:31:19.142474"
+      },
+      "created_at": "2025-09-05T10:31:19.142478"
+    },
+    {
+      "test_id": "6eeb305b-7615-4219-aa87-77325f91559c",
+      "query": "希望找到本土企業的QA工程師職位，工作地點信義區，薪水50-60K，工作型態遠端工作",
+      "category": "job_search",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "job_search_complex",
+      "expected_entities": {
+        "job_title": [
+          "QA工程師"
+        ],
+        "location": [
+          "信義區"
+        ],
+        "company_type": [
+          "本土企業"
+        ],
+        "work_type": [
+          "遠端工作"
+        ],
+        "salary_range": [
+          "50-60K"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "希望找到{company_type}的{job_title}職位，工作地點{location}，薪水{salary_range}，工作型態{work_type}",
+        "generated_at": "2025-09-05T10:31:19.140591"
+      },
+      "created_at": "2025-09-05T10:31:19.140595"
+    },
+    {
+      "test_id": "42f442cd-4881-47a5-8b4a-7a388e144497",
+      "query": "比較Photoshop、C++、Excel這些skills在房地產業、科技業、物流業不同產業中應用和重要性，並給出learn建議",
+      "category": "skill_query",
+      "complexity": "extreme",
+      "language": "en-US",
+      "expected_intent": "skill_inquiry_extreme",
+      "expected_entities": {
+        "skill": [
+          "C++",
+          "Excel",
+          "Photoshop"
+        ],
+        "industry": [
+          "科技業",
+          "物流業",
+          "房地產業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "比較{skill_list}這些技能在{industry_list}不同產業中的應用和重要性，並給出學習建議",
+        "generated_at": "2025-09-05T10:31:19.141597"
+      },
+      "created_at": "2025-09-05T10:31:19.141602"
+    },
+    {
+      "test_id": "58274b88-2fdc-40bf-b8c6-aeed82fa5245",
+      "query": "關於resume_help的複雜問題",
+      "category": "resume_help",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "resume_assistance_complex",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於resume_help的複雜問題",
+        "generated_at": "2025-09-05T10:31:19.144520"
+      },
+      "created_at": "2025-09-05T10:31:19.144526"
+    },
+    {
+      "test_id": "4aa545a2-3989-4e3d-953f-febbfd65115f",
+      "query": "GCP怎麼學",
+      "category": "skill_query",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "GCP"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{skill}怎麼學",
+        "generated_at": "2025-09-05T10:31:19.141893"
+      },
+      "created_at": "2025-09-05T10:31:19.141897"
+    },
+    {
+      "test_id": "d58cce4e-cdfb-4346-a972-60805ce6e9ba",
+      "query": "高雄Are there anyjob?",
+      "category": "location_search",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "location_search",
+      "expected_entities": {
+        "location": [
+          "高雄"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "594b2c93-3fe0-4585-9e52-6ee7b7aef407",
+        "generated_at": "2025-09-05T10:31:19.148427"
+      },
+      "created_at": "2025-09-05T10:31:19.148431"
+    },
+    {
+      "test_id": "bbe10067-39eb-42ba-8c61-756dca499b70",
+      "query": "比較Java、Vue.js這些skills在科技業、媒體業、金融業不同產業中應用和重要性，並給出learn建議",
+      "category": "skill_query",
+      "complexity": "extreme",
+      "language": "en-US",
+      "expected_intent": "skill_inquiry_extreme",
+      "expected_entities": {
+        "skill": [
+          "Java",
+          "Vue.js"
+        ],
+        "company_type": [
+          "金融業",
+          "媒體業"
+        ],
+        "industry": [
+          "科技業",
+          "金融業",
+          "媒體業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "比較{skill_list}這些技能在{industry_list}不同產業中的應用和重要性，並給出學習建議",
+        "generated_at": "2025-09-05T10:31:19.141033"
+      },
+      "created_at": "2025-09-05T10:31:19.141042"
+    },
+    {
+      "test_id": "5878a858-2d05-49d5-bd54-816aa16a731c",
+      "query": "分析台北在未來years年內農業產業的發展潛力，以及對後端工程師職位的影響",
+      "category": "location_search",
+      "complexity": "extreme",
+      "language": "zh-TW",
+      "expected_intent": "location_search_extreme",
+      "expected_entities": {
+        "job_title": [
+          "後端工程師"
+        ],
+        "location": [
+          "台北"
+        ],
+        "industry": [
+          "農業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "分析{location}在未來{years}年內{industry}產業的發展潛力，以及對{job_title}職位的影響",
+        "generated_at": "2025-09-05T10:31:19.142379"
+      },
+      "created_at": "2025-09-05T10:31:19.142383"
+    },
+    {
+      "test_id": "3169d88c-39ed-4cc7-9640-a8f94b904d8a",
+      "query": "在台南工作的生活成本",
+      "category": "location_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "location_search",
+      "expected_entities": {
+        "location": [
+          "台南"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "916cb93b-0a38-46cd-a1cb-0cdb33687998",
+        "generated_at": "2025-09-05T10:31:19.148306"
+      },
+      "created_at": "2025-09-05T10:31:19.148309"
+    },
+    {
+      "test_id": "72317267-c564-428f-934a-20875697daa7",
+      "query": "我想在花蓮找翻譯員job，salary要依experience調整",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "翻譯員"
+        ],
+        "location": [
+          "花蓮"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "a12d3c57-5319-4133-90fd-aaef451780ad",
+        "generated_at": "2025-09-05T10:31:19.148243"
+      },
+      "created_at": "2025-09-05T10:31:19.148247"
+    },
+    {
+      "test_id": "30da4145-576c-4c6b-ace8-b941b394c4c4",
+      "query": "希望找到醫療機構的UI/UX設計師職位，工作地點台北，薪水80-100K，工作型態契約工作",
+      "category": "job_search",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "job_search_complex",
+      "expected_entities": {
+        "job_title": [
+          "設計師",
+          "UI/UX設計師"
+        ],
+        "location": [
+          "台北"
+        ],
+        "company_type": [
+          "醫療機構"
+        ],
+        "work_type": [
+          "契約工作"
+        ],
+        "salary_range": [
+          "80-100K"
+        ],
+        "major": [
+          "設計"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "希望找到{company_type}的{job_title}職位，工作地點{location}，薪水{salary_range}，工作型態{work_type}",
+        "generated_at": "2025-09-05T10:31:19.140393"
+      },
+      "created_at": "2025-09-05T10:31:19.140398"
+    },
+    {
+      "test_id": "5b03bcb2-9c16-4b03-8fbf-074b7068fe00",
+      "query": "我想轉職到內容編輯，需要什麼條件",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "內容編輯"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "f4a3e4ca-6af5-45df-80a0-513c5e227fd3",
+        "generated_at": "2025-09-05T10:31:19.148336"
+      },
+      "created_at": "2025-09-05T10:31:19.148339"
+    },
+    {
+      "test_id": "fe114478-a554-4160-aecd-9d67655ef354",
+      "query": "幫我搜尋社群媒體經理工作",
+      "category": "job_search",
+      "complexity": "simple",
+      "language": "zh-CN",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "社群媒體經理"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "幫我搜尋{job_title}工作",
+        "generated_at": "2025-09-05T10:31:19.140662"
+      },
+      "created_at": "2025-09-05T10:31:19.140666"
+    },
+    {
+      "test_id": "476b65f5-1f91-461b-b974-1d5fb72c3534",
+      "query": "如何談薪水",
+      "category": "salary_inquiry",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "如何談薪水",
+        "generated_at": "2025-09-05T10:31:19.142750"
+      },
+      "created_at": "2025-09-05T10:31:19.142755"
+    },
+    {
+      "test_id": "c38d409f-f9de-4131-85b9-e3b4160cc6dc",
+      "query": "我有5-8年年數據分析經驗，想找產品經理工作",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "ja-JP",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "產品經理"
+        ],
+        "skill": [
+          "數據分析"
+        ],
+        "experience_years": [
+          "5-8年"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我有{experience_years}年{skill}經驗，想找{job_title}工作",
+        "generated_at": "2025-09-05T10:31:19.140144"
+      },
+      "created_at": "2025-09-05T10:31:19.140149"
+    },
+    {
+      "test_id": "7de7bf7e-5f3d-4df2-8a8a-f66b20aa8e82",
+      "query": "我有5-8年年Docker經驗，想找後端工程師工作",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "後端工程師"
+        ],
+        "skill": [
+          "Docker"
+        ],
+        "experience_years": [
+          "5-8年"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我有{experience_years}年{skill}經驗，想找{job_title}工作",
+        "generated_at": "2025-09-05T10:31:19.140087"
+      },
+      "created_at": "2025-09-05T10:31:19.140091"
+    },
+    {
+      "test_id": "60e1a74c-2e1e-4fa4-81b1-ce2751fabea6",
+      "query": "我Are there any應屆畢業年Illustratorexperience，想找內容編輯job",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "內容編輯"
+        ],
+        "skill": [
+          "Illustrator"
+        ],
+        "experience_years": [
+          "應屆畢業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我有{experience_years}年{skill}經驗，想找{job_title}工作",
+        "generated_at": "2025-09-05T10:31:19.140288"
+      },
+      "created_at": "2025-09-05T10:31:19.140292"
+    },
+    {
+      "test_id": "fa675433-b8f2-4bbd-9feb-de6b2db68878",
+      "query": "如何要求加薪到target_salary",
+      "category": "salary_inquiry",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "salary_inquiry",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "如何要求加薪到{target_salary}",
+        "generated_at": "2025-09-05T10:31:19.143004"
+      },
+      "created_at": "2025-09-05T10:31:19.143008"
+    },
+    {
+      "test_id": "c6858aee-55af-4164-ab24-c0327921ac46",
+      "query": "學Excel對社群媒體經理有幫助嗎",
+      "category": "skill_query",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "job_title": [
+          "社群媒體經理"
+        ],
+        "skill": [
+          "Excel"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "學{skill}對{job_title}有幫助嗎",
+        "generated_at": "2025-09-05T10:31:19.141182"
+      },
+      "created_at": "2025-09-05T10:31:19.141187"
+    },
+    {
+      "test_id": "8edce1cf-f122-467f-b09d-8305e3801388",
+      "query": "幫我搜尋人資專員工作",
+      "category": "job_search",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "人資專員"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "幫我搜尋{job_title}工作",
+        "generated_at": "2025-09-05T10:31:19.140735"
+      },
+      "created_at": "2025-09-05T10:31:19.140739"
+    },
+    {
+      "test_id": "3e67c293-f171-4279-977a-930ea2b22337",
+      "query": "上海適合設計師發展?",
+      "category": "location_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "location_search",
+      "expected_entities": {
+        "job_title": [
+          "設計師"
+        ],
+        "location": [
+          "上海"
+        ],
+        "major": [
+          "設計"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{location}適合{job_title}發展嗎",
+        "generated_at": "2025-09-05T10:31:19.142246"
+      },
+      "created_at": "2025-09-05T10:31:19.142250"
+    },
+    {
+      "test_id": "9d09ffd1-3775-4d6a-b44c-8ad8bc6641c7",
+      "query": "比較location1和location2job機會",
+      "category": "location_search",
+      "complexity": "moderate",
+      "language": "en-US",
+      "expected_intent": "location_search",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "比較{location1}和{location2}的工作機會",
+        "generated_at": "2025-09-05T10:31:19.142338"
+      },
+      "created_at": "2025-09-05T10:31:19.142341"
+    },
+    {
+      "test_id": "46a99da7-a7be-4c8b-9ded-b527bad97827",
+      "query": "關於resume_help的中等問題",
+      "category": "resume_help",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "resume_assistance",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於resume_help的中等問題",
+        "generated_at": "2025-09-05T10:31:19.144592"
+      },
+      "created_at": "2025-09-05T10:31:19.144595"
+    },
+    {
+      "test_id": "5a18345e-cc46-4169-a0f0-264d26a87781",
+      "query": "PowerBI有用嗎",
+      "category": "skill_query",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "PowerBI"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{skill}有用嗎",
+        "generated_at": "2025-09-05T10:31:19.141634"
+      },
+      "created_at": "2025-09-05T10:31:19.141638"
+    },
+    {
+      "test_id": "4afddc63-f16b-48d4-95bc-542805966669",
+      "query": "關於company_info的中等問題",
+      "category": "company_info",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "company_inquiry",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於company_info的中等問題",
+        "generated_at": "2025-09-05T10:31:19.143796"
+      },
+      "created_at": "2025-09-05T10:31:19.143799"
+    },
+    {
+      "test_id": "80bae802-c1f5-4c7f-8457-5f52551b2fc2",
+      "query": "找桃園設計師job",
+      "category": "job_search",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "設計師"
+        ],
+        "location": [
+          "桃園"
+        ],
+        "major": [
+          "設計"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "找{location}的{job_title}工作",
+        "generated_at": "2025-09-05T10:31:19.140002"
+      },
+      "created_at": "2025-09-05T10:31:19.140007"
+    },
+    {
+      "test_id": "a704afa8-0487-4cfd-bc12-80386925732a",
+      "query": "希望找到製造業的內容編輯職位，工作地點日本，薪水200K以上，工作型態全職",
+      "category": "job_search",
+      "complexity": "complex",
+      "language": "zh-TW",
+      "expected_intent": "job_search_complex",
+      "expected_entities": {
+        "job_title": [
+          "內容編輯"
+        ],
+        "location": [
+          "日本"
+        ],
+        "company_type": [
+          "製造業"
+        ],
+        "industry": [
+          "製造業"
+        ],
+        "work_type": [
+          "全職"
+        ],
+        "salary_range": [
+          "200K以上"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "希望找到{company_type}的{job_title}職位，工作地點{location}，薪水{salary_range}，工作型態{work_type}",
+        "generated_at": "2025-09-05T10:31:19.139890"
+      },
+      "created_at": "2025-09-05T10:31:19.139894"
+    },
+    {
+      "test_id": "c0e35e24-6f61-47e8-a877-3b611bab2657",
+      "query": "學機器學習對前端工程師有幫助嗎",
+      "category": "skill_query",
+      "complexity": "moderate",
+      "language": "zh-CN",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "job_title": [
+          "前端工程師"
+        ],
+        "skill": [
+          "機器學習"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "學{skill}對{job_title}有幫助嗎",
+        "generated_at": "2025-09-05T10:31:19.141134"
+      },
+      "created_at": "2025-09-05T10:31:19.141139"
+    },
+    {
+      "test_id": "c12f4f19-8865-4d09-aff3-381fdb500f18",
+      "query": "我有3-5年年專案管理經驗，想找行銷專員工作",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-CN",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "行銷專員"
+        ],
+        "skill": [
+          "專案管理"
+        ],
+        "experience_years": [
+          "3-5年"
+        ],
+        "major": [
+          "行銷"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我有{experience_years}年{skill}經驗，想找{job_title}工作",
+        "generated_at": "2025-09-05T10:31:19.139773"
+      },
+      "created_at": "2025-09-05T10:31:19.139778"
+    },
+    {
+      "test_id": "81b8ae2d-edbb-4e9b-8cfc-b23fbfdca1fc",
+      "query": "關於interview_prep的簡單問題",
+      "category": "interview_prep",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "interview_help",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "關於interview_prep的簡單問題",
+        "generated_at": "2025-09-05T10:31:19.144201"
+      },
+      "created_at": "2025-09-05T10:31:19.144204"
+    },
+    {
+      "test_id": "d2143199-3041-43fc-beba-85d59def7605",
+      "query": "專案管理和skill2哪個比較重要",
+      "category": "skill_query",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "專案管理"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{skill}和{skill2}哪個比較重要",
+        "generated_at": "2025-09-05T10:31:19.141087"
+      },
+      "created_at": "2025-09-05T10:31:19.141091"
+    },
+    {
+      "test_id": "e4678d4d-e0ab-42f5-bf7b-9660e5191824",
+      "query": "我要應徵產品經理",
+      "category": "job_search",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "產品經理"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我要應徵{job_title}",
+        "generated_at": "2025-09-05T10:31:19.139553"
+      },
+      "created_at": "2025-09-05T10:31:19.139603"
+    },
+    {
+      "test_id": "1376cc5b-da3a-4d93-b408-4fca8ea7c3a7",
+      "query": "學Illustrator要多久",
+      "category": "skill_query",
+      "complexity": "simple",
+      "language": "en-US",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "Illustrator"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "學{skill}要多久",
+        "generated_at": "2025-09-05T10:31:19.141728"
+      },
+      "created_at": "2025-09-05T10:31:19.141735"
+    },
+    {
+      "test_id": "d276666d-8574-4d4e-a15a-04828bca5b34",
+      "query": "我想在香港找財務分析師的工作，薪水要40-50K",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "財務分析師"
+        ],
+        "location": [
+          "香港"
+        ],
+        "salary_range": [
+          "40-50K"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "variant_of": "609c69ee-08ae-4505-821a-2337feca9718",
+        "generated_at": "2025-09-05T10:31:19.148167"
+      },
+      "created_at": "2025-09-05T10:31:19.148170"
+    },
+    {
+      "test_id": "b576bf9b-cc34-4963-a824-c18b2f57387f",
+      "query": "有沒有中小企業公司的後端工程師職缺",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "後端工程師"
+        ],
+        "company_type": [
+          "中小企業"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "有沒有{company_type}公司的{job_title}職缺",
+        "generated_at": "2025-09-05T10:31:19.140189"
+      },
+      "created_at": "2025-09-05T10:31:19.140193"
+    },
+    {
+      "test_id": "5d2a435c-9cd5-42b4-8b66-7c2e4c160867",
+      "query": "比較location1和location2的工作機會",
+      "category": "location_search",
+      "complexity": "moderate",
+      "language": "ja-JP",
+      "expected_intent": "location_search",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "template": "比較{location1}和{location2}的工作機會",
+        "generated_at": "2025-09-05T10:31:19.142203"
+      },
+      "created_at": "2025-09-05T10:31:19.142207"
+    },
+    {
+      "test_id": "ea2ec65c-b225-432b-b0aa-f757a1464c2c",
+      "query": "關於resume_help的簡單問題",
+      "category": "resume_help",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "resume_assistance",
+      "expected_entities": {},
+      "context": null,
+      "metadata": {
+        "variant_of": "1d9509aa-09cd-4773-8e11-00326a3f4944",
+        "generated_at": "2025-09-05T10:31:19.148457"
+      },
+      "created_at": "2025-09-05T10:31:19.148460"
+    },
+    {
+      "test_id": "6122e730-5e39-45a3-95ce-c5dc6a8d33b1",
+      "query": "政府機關的軟體工程師薪資範圍",
+      "category": "salary_inquiry",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "salary_inquiry",
+      "expected_entities": {
+        "job_title": [
+          "軟體工程師"
+        ],
+        "company_type": [
+          "政府機關"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{company_type}的{job_title}薪資範圍",
+        "generated_at": "2025-09-05T10:31:19.143039"
+      },
+      "created_at": "2025-09-05T10:31:19.143042"
+    },
+    {
+      "test_id": "f87d1c41-2fcd-4112-8421-395951cabe8c",
+      "query": "Ansible是什麼",
+      "category": "skill_query",
+      "complexity": "simple",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "Ansible"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "{skill}是什麼",
+        "generated_at": "2025-09-05T10:31:19.141926"
+      },
+      "created_at": "2025-09-05T10:31:19.141929"
+    },
+    {
+      "test_id": "fc83b2ad-8ec9-4552-9254-10db5f0fbd5c",
+      "query": "有沒有醫療機構公司的財務分析師职位",
+      "category": "job_search",
+      "complexity": "moderate",
+      "language": "zh-CN",
+      "expected_intent": "job_search",
+      "expected_entities": {
+        "job_title": [
+          "財務分析師"
+        ],
+        "company_type": [
+          "醫療機構"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "有沒有{company_type}公司的{job_title}職缺",
+        "generated_at": "2025-09-05T10:31:19.139952"
+      },
+      "created_at": "2025-09-05T10:31:19.139957"
+    },
+    {
+      "test_id": "6fedc41e-d701-43e8-83d4-0b23c3ffe6d5",
+      "query": "我想學溝通技巧，有推薦的課程嗎",
+      "category": "skill_query",
+      "complexity": "moderate",
+      "language": "zh-TW",
+      "expected_intent": "skill_inquiry",
+      "expected_entities": {
+        "skill": [
+          "溝通技巧"
+        ]
+      },
+      "context": null,
+      "metadata": {
+        "template": "我想學{skill}，有推薦的課程嗎",
+        "generated_at": "2025-09-05T10:31:19.141767"
+      },
+      "created_at": "2025-09-05T10:31:19.141770"
+    }
+  ]
+}
